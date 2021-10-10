@@ -1,0 +1,17 @@
+{
+  "targets": {
+    "atlas-2020": {
+      "hosting": {
+        "business": [
+          "atlas-business"
+        ],
+        "consumer": [
+          "atlas-consumer"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "atlas-business"
+  }
+}

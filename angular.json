@@ -3,5 +3,290 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-  }
+    "atlas-business": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/atlas-business",
+      "sourceRoot": "projects/atlas-business/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/atlas-business",
+            "index": "projects/atlas-business/src/index.html",
+            "main": "projects/atlas-business/src/main.ts",
+            "polyfills": "projects/atlas-business/src/polyfills.ts",
+            "tsConfig": "projects/atlas-business/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/atlas-business/src/favicon.ico",
+              "projects/atlas-business/src/assets"
+            ],
+            "styles": [
+              "projects/atlas-business/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/atlas-business/src/environments/environment.ts",
+                  "with": "projects/atlas-business/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "atlas-business:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "atlas-business:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "atlas-business:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/atlas-business/src/test.ts",
+            "polyfills": "projects/atlas-business/src/polyfills.ts",
+            "tsConfig": "projects/atlas-business/tsconfig.spec.json",
+            "karmaConfig": "projects/atlas-business/karma.conf.js",
+            "assets": [
+              "projects/atlas-business/src/favicon.ico",
+              "projects/atlas-business/src/assets"
+            ],
+            "styles": [
+              "projects/atlas-business/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/atlas-business/tsconfig.app.json",
+              "projects/atlas-business/tsconfig.spec.json",
+              "projects/atlas-business/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/atlas-business/e2e/protractor.conf.js",
+            "devServerTarget": "atlas-business:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "atlas-business:serve:production"
+            }
+          }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
+        }
+      }
+    },
+    "atlas-consumer": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/atlas-consumer",
+      "sourceRoot": "projects/atlas-consumer/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/atlas-consumer",
+            "index": "projects/atlas-consumer/src/index.html",
+            "main": "projects/atlas-consumer/src/main.ts",
+            "polyfills": "projects/atlas-consumer/src/polyfills.ts",
+            "tsConfig": "projects/atlas-consumer/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/atlas-consumer/src/favicon.ico",
+              "projects/atlas-consumer/src/assets"
+            ],
+            "styles": [
+              "projects/atlas-consumer/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/atlas-consumer/src/environments/environment.ts",
+                  "with": "projects/atlas-consumer/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "atlas-consumer:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "atlas-consumer:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "atlas-consumer:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/atlas-consumer/src/test.ts",
+            "polyfills": "projects/atlas-consumer/src/polyfills.ts",
+            "tsConfig": "projects/atlas-consumer/tsconfig.spec.json",
+            "karmaConfig": "projects/atlas-consumer/karma.conf.js",
+            "assets": [
+              "projects/atlas-consumer/src/favicon.ico",
+              "projects/atlas-consumer/src/assets"
+            ],
+            "styles": [
+              "projects/atlas-consumer/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/atlas-consumer/tsconfig.app.json",
+              "projects/atlas-consumer/tsconfig.spec.json",
+              "projects/atlas-consumer/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/atlas-consumer/e2e/protractor.conf.js",
+            "devServerTarget": "atlas-consumer:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "atlas-consumer:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "atlas-core": {
+      "projectType": "library",
+      "root": "projects/atlas-core",
+      "sourceRoot": "projects/atlas-core/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/atlas-core/tsconfig.lib.json",
+            "project": "projects/atlas-core/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/atlas-core/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/atlas-core/src/test.ts",
+            "tsConfig": "projects/atlas-core/tsconfig.spec.json",
+            "karmaConfig": "projects/atlas-core/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/atlas-core/tsconfig.lib.json",
+              "projects/atlas-core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "atlas-business"
 }

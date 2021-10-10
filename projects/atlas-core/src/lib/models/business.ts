@@ -1,4 +1,4 @@
-import { Address } from './Address';
+import { Address } from "./address";
 
 /////////// REMEMBER TO SAVE EVERY BYTE OF STORAGE ///////////
 export class Business {

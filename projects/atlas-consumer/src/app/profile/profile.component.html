@@ -1,0 +1,1069 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="z-index: 2">
+  <a class="navbar-brand" href="profile#home" (click)="home()">
+    <img
+      src="assets/icons/atlas-small.png"
+      width="35"
+      height="35"
+      class="ml-2 d-inline-block"
+    />
+    THE COFFEE SHOP!</a
+  >
+
+  <ul style="justify-content: flex-start">
+    <li class="nav-item">
+      <a class="nav-link" href="profile#home" (click)="home()">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:void(0)" (click)="order()"
+        >Products</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="profile#about" (click)="home()">About</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="profile#contact" (click)="home()">Contact us</a>
+    </li>
+  </ul>
+
+  <ul style="justify-content: flex-end">
+    <li *ngIf="!isCheckoutSection" class="m-0">
+      <button
+        mat-flat-button
+        (click)="checkout()"
+        matBadge="{{ cartMap.size }}"
+        class="py-1 btn btn-success justify-content-flex-start"
+        *ngIf="cartMap.size > 0"
+      >
+        <i class="fas fa-shopping-bag"></i>
+        &nbsp;Checkout
+      </button>
+    </li>
+    <li class="m-0">
+      <button
+        mat-flat-button
+        (click)="account()"
+        class="py-1 btn btn-warning justify-content-flex-start"
+      >
+        <i class="fas fa-user-alt"></i>
+        &nbsp;My Account
+      </button>
+    </li>
+  </ul>
+
+  <!-- Social Icon  -->
+  <!-- <ul
+    class="col-lg-1 navbar-nav nav-flex-icons"
+    style="justify-content: flex-end"
+  >
+    <li class="nav-item navbar-item-nopadding">
+      <a class="nav-link"><i class="fab fa-facebook"></i></a>
+    </li>
+    <li class="nav-item navbar-item-nopadding">
+      <a class="nav-link"><i class="fab fa-instagram"></i></a>
+    </li>
+    <li class="nav-item navbar-item-nopadding">
+      <a class="nav-link"><i class="fab fa-twitter"></i></a>
+    </li>
+  </ul> -->
+</nav>
+
+<!-- Dashboard -->
+
+<div *ngIf="!isOrderSection && !isAccountSection">
+  <section
+    id="home"
+    style="
+      background: url(assets/images/profile/coffee.jpg);
+      background-size: cover;
+    "
+    class="fwh-slide"
+  ></section>
+  <section id="about" style="background: #22a6e4" class="fwh-slide">
+    <h2 style="color: #f4f4f4">Section 2</h2>
+  </section>
+
+  <section id="contact" style="background: #22e4b3" class="fwh-slide">
+    <h2 style="color: #f4f4f4">Section 3</h2>
+  </section>
+</div>
+
+<!-- Cart -->
+
+<div
+  *ngIf="isOrderSection && !isCheckoutSection"
+  style="height: calc(100% - 65px); margin-top: 65px"
+>
+  <div class="row mt-2">
+    <div class="col-lg-3" *ngFor="let item of items; index as i">
+      <mat-card class="profile-card list">
+        <mat-card-header class="justify-content-center">
+          <mat-card-title>{{ item.name }}</mat-card-title>
+        </mat-card-header>
+        <img
+          mat-card-image
+          src="{{ item.photoUrl[0] }}"
+          height="400px"
+          class="mb-0"
+        />
+
+        <mat-card-actions class="profile-card-actions">
+          <button
+            *ngIf="!cartMap.has(i)"
+            mat-flat-button
+            (click)="addToCart(i)"
+            style="
+              padding-top: 0.38em;
+              padding-bottom: 0.38em;
+              background: #f5f5f5;
+              font-size: 18px;
+            "
+          >
+            Add to cart
+          </button>
+
+          <div class="row" *ngIf="cartMap.has(i)">
+            <div class="col-4">
+              <mat-form-field appearance="outline" style="display: inline">
+                <mat-select
+                  [(value)]="cartMap.get(i).unit"
+                  (selectionChange)="unitChange(i, $event.value)"
+                >
+                  <mat-option
+                    *ngFor="let unit of items[i].units"
+                    [value]="unit.unit"
+                  >
+                    {{ unit.unit }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div
+              class="col-4 pl-3"
+              style="display: flex; justify-content: center; margin: auto"
+            >
+              <h5 class="text-success">&#8377; {{ cartMap.get(i).price }}</h5>
+            </div>
+
+            <div
+              class="col-4"
+              style="display: flex; flex-direction: row-reverse"
+            >
+              <button
+                mat-icon-button
+                (click)="removeFromCart(i)"
+                style="background: #f5f5f5; font-size: 18px"
+              >
+                <i class="fas fa-minus-circle"></i>
+              </button>
+              <h5 style="display: inline; margin: auto" class="mx-2">
+                {{ cartMap.get(i).qty }}
+              </h5>
+              <button
+                mat-icon-button
+                (click)="addToCart(i)"
+                style="background: #f5f5f5; font-size: 18px"
+              >
+                <i class="fas fa-plus-circle"></i>
+              </button>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout -->
+
+<div
+  class="row"
+  *ngIf="isCheckoutSection"
+  style="height: calc(100% - 65px); margin-top: 65px"
+>
+  <div class="col-lg-8">
+    <mat-card class="profile-card">
+      <mat-card-header class="ml-0">
+        <h5 class="mt-2">Cart Summary</h5>
+        <div class="col mb-3" style="justify-content: flex-end; display: flex">
+          <button mat-flat-button color="warn" (click)="goBackToOrderSection()">
+            <i class="fas fa-arrow-left"></i>
+            Go Back To Products
+          </button>
+        </div>
+      </mat-card-header>
+
+      <!-- Stepper -->
+
+      <mat-horizontal-stepper [linear]="false" #stepper>
+        <mat-step [stepControl]="firstFormGroup" label="Confirm Items">
+          <div class="row my-2">
+            <div class="col-lg-1"><b>S. No.</b></div>
+            <div class="col-lg-5"><b>Product Name</b></div>
+            <div
+              class="col-lg-2"
+              style="display: flex; justify-content: center; margin: auto"
+            >
+              <b>Unit</b>
+            </div>
+            <div
+              class="col-lg-2"
+              style="display: flex; justify-content: center; margin: auto"
+            >
+              <b>Qty</b>
+            </div>
+            <div
+              class="col-lg-2"
+              style="display: flex; justify-content: center; margin: auto"
+            >
+              <b>Price</b>
+            </div>
+          </div>
+
+          <div
+            class="row list"
+            *ngFor="let cartItem of cartMap | keyvalue; index as index"
+          >
+            <div class="col-lg-1">
+              <p>{{ index + 1 }}</p>
+            </div>
+
+            <div class="col-lg-5">
+              <p>{{ cartItem.value.name }}</p>
+            </div>
+
+            <div class="col-lg-2">
+              <mat-form-field appearance="outline" style="display: inline">
+                <mat-select
+                  [(value)]="cartItem.value.unit"
+                  (selectionChange)="unitChange(cartItem.key, $event.value)"
+                >
+                  <mat-option
+                    *ngFor="let unit of items[cartItem.key].units"
+                    [value]="unit.unit"
+                  >
+                    {{ unit.unit }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div
+              class="col-lg-2"
+              style="display: flex; justify-content: center"
+            >
+              <button
+                mat-icon-button
+                (click)="addToCart(cartItem.key)"
+                style="font-size: 18px"
+              >
+                <i class="fas fa-plus-circle"></i>
+              </button>
+              <h5 style="display: inline; margin: auto" class="mx-2">
+                {{ cartItem.value.qty }}
+              </h5>
+              <button
+                mat-icon-button
+                (click)="removeFromCart(cartItem.key)"
+                style="font-size: 18px"
+              >
+                <i class="fas fa-minus-circle"></i>
+              </button>
+            </div>
+
+            <div
+              class="col-lg-2"
+              style="display: flex; justify-content: center; margin: auto"
+            >
+              <h5 class="text-success">&#8377; {{ cartItem.value.price }}</h5>
+            </div>
+          </div>
+
+          <div class="row mt-2" style="justify-content: flex-end">
+            <button
+              mat-stroked-button
+              class="mr-2"
+              (click)="goBackToOrderSection()"
+            >
+              Back
+            </button>
+
+            <button
+              mat-button
+              matStepperNext
+              class="btn-success"
+              (click)="itemsNext()"
+            >
+              Next
+            </button>
+          </div>
+        </mat-step>
+
+        <mat-step label="Mobile Verification">
+          <div class="row">
+            <div class="col-lg-4">
+              <p>
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>Mobile No. (10 digit)</mat-label>
+                  <input
+                    id="mobile"
+                    matInput
+                    [(ngModel)]="client.mobile"
+                    required
+                    maxlength="10"
+                    name="customerMobile"
+                    [disabled]="otpSuccess"
+                  />
+                </mat-form-field>
+              </p>
+            </div>
+          </div>
+
+          <div *ngIf="otpSuccess" class="row">
+            <div class="col-lg-4">
+              <p>
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>6 digit verification code</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="code"
+                    maxlength="10"
+                    name="verificationCode"
+                  />
+                </mat-form-field>
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="btn-verify">
+              <button
+                *ngIf="!otpSuccess"
+                [disabled]="
+                  !(client.mobile && client.mobile.length == 10) || otpRequested
+                "
+                mat-stroked-button
+                class="btn-success"
+                (click)="getOtp()"
+              >
+                Send OTP
+                <i
+                  class="fa fa-spinner fa-spin"
+                  *ngIf="otpRequested && !otpSuccess"
+                ></i>
+              </button>
+              <button
+                *ngIf="otpSuccess"
+                [disabled]="!(code && code.length == 6) || verification"
+                mat-stroked-button
+                class="btn-success"
+                (click)="verify(stepper)"
+              >
+                Verify
+                <i class="fa fa-spinner fa-spin" *ngIf="verification"></i>
+              </button>
+            </div>
+            <div class="ml-2">
+              <button
+                mat-stroked-button
+                matStepperPrevious
+                (click)="verifyBack()"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </mat-step>
+
+        <mat-step [stepControl]="secondFormGroup" label="Customer details">
+          <div class="row">
+            <div class="col-lg-4">
+              <p>
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>Full Name</mat-label>
+                  <input
+                    id="customer-name"
+                    matInput
+                    [(ngModel)]="client.name"
+                    required
+                    type="text"
+                    name="customerName"
+                  />
+                </mat-form-field>
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4">
+              <p>
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>Email-Id (Optional)</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="client.email"
+                    type="email"
+                    name="customerEmail"
+                  />
+                </mat-form-field>
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 mr-3">
+              <p class="m-0">
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>PAN (optional)</mat-label>
+                  <input
+                    matInput
+                    oninput="this.value = this.value.toUpperCase()"
+                    [(ngModel)]="client.pan"
+                    type="text"
+                    name="customerPAN"
+                  />
+                </mat-form-field>
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <p class="m-0">
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>GSTIN (optional)</mat-label>
+                  <input
+                    matInput
+                    oninput="this.value = this.value.toUpperCase()"
+                    [(ngModel)]="client.gst"
+                    type="text"
+                    name="customerGST"
+                  />
+                </mat-form-field>
+              </p>
+            </div>
+          </div>
+
+          <div class="row" style="justify-content: flex-end">
+            <button
+              mat-stroked-button
+              matStepperPrevious
+              class="mr-2"
+              (click)="customerBack()"
+            >
+              Back
+            </button>
+            <button
+              mat-stroked-button
+              matStepperNext
+              [ngClass]="{
+                'btn-success':
+                  client.name && client.mobile && client.mobile.length == 10
+              }"
+              [disabled]="
+                !(client.name && client.mobile && client.mobile.length == 10)
+              "
+              (click)="customerNextStep()"
+            >
+              Next
+            </button>
+          </div>
+        </mat-step>
+
+        <mat-step label="Address Details">
+          <h5>Delivery Mode</h5>
+
+          <div class="row my-3">
+            <mat-radio-group (change)="deliveryMode($event)">
+              <mat-radio-button value="pickup" class="mr-3" checked>Self Pickup</mat-radio-button>
+              <mat-radio-button value="delivery">Deliver to an Address</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div *ngIf="!pickup">
+            <h5>Billing Address</h5>
+            <div class="row mt-2">
+              <div class="col-lg-5 mr-3">
+                <p>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <mat-label>Address Line 1</mat-label>
+                    <input
+                      id="address-1"
+                      matInput
+                      [(ngModel)]="client.address.line1"
+                      required
+                      type="text"
+                      name="customerName"
+                    />
+                  </mat-form-field>
+                </p>
+              </div>
+
+              <div class="col-lg-5">
+                <p>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <mat-label>Address Line 2 (Optional)</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="client.address.line2"
+                      type="text"
+                      name="customerName"
+                    />
+                  </mat-form-field>
+                </p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-2 pr-2">
+                <p>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <mat-label>Pincode</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="client.address.pin"
+                      required
+                      [pattern]="'[0-9]*'"
+                      type="number"
+                      maxlength="6"
+                      name="customerAddressPin"
+                    />
+                  </mat-form-field>
+                </p>
+              </div>
+
+              <div class="col-lg-3 mr-3">
+                <p>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <mat-label>District</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="client.address.district"
+                      required
+                      type="text"
+                      name="customerName"
+                    />
+                  </mat-form-field>
+                </p>
+              </div>
+
+              <div class="col-lg-3">
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>State</mat-label>
+                  <mat-select
+                    required
+                    name="supplyState"
+                    [(ngModel)]="client.address.state"
+                  >
+                    <mat-option *ngFor="let state of states" [value]="state">
+                      {{ state }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <mat-checkbox
+                  name="shippingAddressSame"
+                  [(ngModel)]="shippingAddressSame"
+                  (click)="checkboxClick()"
+                  >Use same as shipping address</mat-checkbox
+                >
+              </div>
+            </div>
+
+            <div class="mt-2" *ngIf="!shippingAddressSame">
+              <h5>Shipping Address</h5>
+
+              <div class="row mt-2">
+                <div class="col-lg-5 mr-3">
+                  <p>
+                    <mat-form-field appearance="outline" style="width: 100%">
+                      <mat-label>Shipping Address Line 1</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="shippingAddress.line1"
+                        required
+                        type="text"
+                        name="customerName"
+                      />
+                    </mat-form-field>
+                  </p>
+                </div>
+
+                <div class="col-lg-5">
+                  <p>
+                    <mat-form-field appearance="outline" style="width: 100%">
+                      <mat-label>Address Line 2 (Optional)</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="shippingAddress.line2"
+                        type="text"
+                        name="customerName"
+                      />
+                    </mat-form-field>
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-2 pr-2">
+                  <p>
+                    <mat-form-field appearance="outline" style="width: 100%">
+                      <mat-label>Pincode</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="shippingAddress.pin"
+                        required
+                        [pattern]="'[0-9]*'"
+                        type="number"
+                        maxlength="6"
+                        name="customerShippingPin"
+                      />
+                    </mat-form-field>
+                  </p>
+                </div>
+
+                <div class="col-lg-3 mr-3">
+                  <p>
+                    <mat-form-field appearance="outline" style="width: 100%">
+                      <mat-label>District</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="shippingAddress.district"
+                        required
+                        type="text"
+                        name="customerName"
+                      />
+                    </mat-form-field>
+                  </p>
+                </div>
+
+                <div class="col-lg-3">
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <mat-label>State</mat-label>
+                    <mat-select
+                      required
+                      name="supplyState"
+                      [(ngModel)]="shippingAddress.state"
+                    >
+                      <mat-option *ngFor="let state of states" [value]="state">
+                        {{ state }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="justify-content: flex-end">
+            <button
+              mat-stroked-button
+              matStepperPrevious
+              class="mr-2"
+              (click)="addressBackStep()"
+            >
+              Back
+            </button>
+            <button
+              mat-stroked-button
+              matStepperNext
+              class="btn-success"
+              (click)="addressNextStep()"
+              [ngClass]="{
+                'btn-success':
+                pickup || (client.address.line1 &&
+                  client.address.pin &&
+                  client.address.pin.toString().length == 6 &&
+                  client.address.district &&
+                  client.address.state &&
+                  (shippingAddressSame ||
+                    (shippingAddress.line1 &&
+                      shippingAddress.pin &&
+                      shippingAddress.pin.toString().length == 6 &&
+                      shippingAddress.district &&
+                      shippingAddress.state)))
+              }"
+              [disabled]="
+                !(pickup || (
+                  client.address.line1 &&
+                  client.address.pin &&
+                  client.address.pin.toString().length == 6 &&
+                  client.address.district &&
+                  client.address.state &&
+                  (shippingAddressSame ||
+                    (shippingAddress.line1 &&
+                      shippingAddress.pin &&
+                      shippingAddress.pin.toString().length == 6 &&
+                      shippingAddress.district &&
+                      shippingAddress.state)))
+                )
+              "
+            >
+              Confirm
+            </button>
+          </div>
+        </mat-step>
+
+        <mat-step label="Place Order">
+          <div class="row">
+            <div class="col">
+              <h4
+                style="display: flex; justify-content: center; font-weight: 100"
+              >
+                Please verify order summary & click Confirm.
+              </h4>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col" style="display: flex; justify-content: center">
+              <button
+                mat-stroked-button
+                matStepperNext
+                class="mr-2 btn-success"
+                (click)="placeOrder()"
+                [disabled]="orderRequested"
+              >
+                Confirm & Place Order
+                <i class="fa fa-spinner fa-spin" *ngIf="orderRequested"></i>
+              </button>
+              <button
+                id="place-order-back"
+                mat-stroked-button
+                matStepperPrevious
+                (click)="placeOrderBackStep()"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </mat-card>
+  </div>
+
+  <div class="col-lg-4">
+    <mat-card class="profile-card">
+      <mat-card-header class="justify-content-center">
+        <mat-card-title>Order Summary</mat-card-title>
+      </mat-card-header>
+
+      <h5>Items ({{ cartMap.size }})</h5>
+
+      <div class="row mt-4 mb-2">
+        <div class="col-lg-7">
+          <h6>Product</h6>
+        </div>
+        <div class="col-lg-2">
+          <h6>Qty</h6>
+        </div>
+        <div class="col-lg-3">
+          <h6>Price (&#8377;)</h6>
+        </div>
+      </div>
+
+      <hr />
+
+      <div *ngFor="let cartItem of cartMap | keyvalue" class="row mt-2">
+        <div class="col-lg-7">
+          <h6>{{ cartItem.value.name }} ( {{ cartItem.value.unit }} )</h6>
+        </div>
+        <div class="col-lg-2">
+          <h6>{{ cartItem.value.qty }}</h6>
+        </div>
+        <div class="col-lg-3">
+          <h6>{{ cartItem.value.price }}</h6>
+        </div>
+      </div>
+
+      <div *ngIf="customerNext">
+        <h5 class="mt-4 mb-2">Customer Details</h5>
+
+        <h6>Name : {{ client.name }}</h6>
+
+        <div class="row mt-2">
+          <div class="col-4">
+            <h6>Mob : {{ client.mobile }}</h6>
+          </div>
+          <div class="col-8">
+            <h6>Email : {{ client.email }}</h6>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-4">
+            <h6>PAN : {{ client.pan }}</h6>
+          </div>
+          <div class="col-8">
+            <h6>GST : {{ client.gst }}</h6>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="addressNext">
+        <h5 class="mt-4 mb-3">
+          {{
+            pickup ? "Delivery Mode : Self Pickup" : (shippingAddressSame ? "Billing/Shipping Address" : "Billing Address")
+          }}
+        </h5>
+
+        <div *ngIf="!pickup">
+        <h6 class="mb-3">
+          {{ client.address.line1 }}, {{ client.address.line2 }},
+          {{ client.address.district }}, {{ client.address.state }} -
+          {{ client.address.pin }}
+        </h6>
+
+        <div *ngIf="!shippingAddressSame">
+          <h5 class="mt-4 mb-3">Shipping Address</h5>
+          <h6>
+            {{ shippingAddress.line1 }}, {{ shippingAddress.line2 }},
+            {{ shippingAddress.district }}, {{ shippingAddress.state }} -
+            {{ shippingAddress.pin }}
+          </h6>
+        </div>
+      </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div
+  class="row"
+  *ngIf="isAccountSection"
+  style="
+    height: calc(100% - 65px);
+    margin-top: 65px;
+    margin-left: 150px;
+    margin-right: 150px;
+  "
+>
+  <!-- Verification -->
+  <div *ngIf="isVerified" class="col">
+    <mat-card class="profile-card">
+      <mat-card-header class="ml-0">
+        <h5 class="mt-2">Verification</h5>
+      </mat-card-header>
+
+      <div class="row">
+        <div class="col-lg-4">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Mobile No. (10 digit)</mat-label>
+              <input
+                id="mobile"
+                matInput
+                [(ngModel)]="client.mobile"
+                required
+                maxlength="10"
+                name="customerMobile"
+                [disabled]="otpSuccess"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="otpSuccess" class="row">
+        <div class="col-lg-4">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>6 digit verification code</mat-label>
+              <input
+                matInput
+                [(ngModel)]="code"
+                maxlength="10"
+                name="verificationCode"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="btn-verify">
+          <button
+            *ngIf="!otpSuccess"
+            [disabled]="
+              !(client.mobile && client.mobile.length == 10) || otpRequested
+            "
+            mat-stroked-button
+            class="btn-success"
+            (click)="getOtp()"
+          >
+            Send OTP
+            <i
+              class="fa fa-spinner fa-spin"
+              *ngIf="otpRequested && !otpSuccess"
+            ></i>
+          </button>
+          <button
+            *ngIf="otpSuccess"
+            [disabled]="!(code && code.length == 6) || verification"
+            mat-stroked-button
+            class="btn-success"
+            (click)="verify()"
+          >
+            Verify
+            <i class="fa fa-spinner fa-spin" *ngIf="verification"></i>
+          </button>
+        </div>
+        <div class="ml-2">
+          <button mat-stroked-button (click)="verifyBack()">Back</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Order User details -->
+  <div class="col">
+    <mat-tab-group mat-stretch-tabs *ngIf="!isVerified">
+      <mat-tab label="My Orders">
+        <mat-card class="order-card" *ngFor="let order of orders">
+          <div class="row" style="padding: 16px; background: #eeeeee">
+            <div class="col-lg-2">
+              <h5>Date</h5>
+              <p>{{ getDate(order.createdTimeUTC) }}</p>
+            </div>
+            <div class="col-lg-2">
+              <h5>Status</h5>
+              <p>{{ order.status[0].status }}</p>
+            </div>
+            <div class="col-lg-2">
+              <h5>Total</h5>
+              <p>&#8377; {{ order.total }}</p>
+            </div>
+            <div class="col-lg-6">
+              <h5># Order Id</h5>
+              <p>{{ order.vId }}</p>
+            </div>
+          </div>
+
+          <mat-card-content class="px-4 pb-4">
+            <div class="row">
+              <div class="col-lg-10">
+                <div
+                  *ngFor="let item of order.items; index as i"
+                  class="row mt-4"
+                >
+                  <div>
+                    <img class="img-img" [src]="url" />
+                  </div>
+                  <div class="col-lg-8 ml-4">
+                    <div class="row">
+                      <h5>{{ item.name }}</h5>
+                    </div>
+                    <div class="row mt-2">
+                      <h6>
+                        <i>{{ item.qty }} x {{ item.unit }}</i>
+                      </h6>
+                    </div>
+                    <div class="row mt-3">
+                      <h6 class="text-success">&#8377; {{ item.total }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2 mt-4">
+                <div class="row">
+                  <button
+                    mat-flat-button
+                    (click)="account()"
+                    class="btn btn-danger m-0"
+                    style="float: right; width: 100%"
+                  >
+                    <i class="far fa-times-circle"></i>
+                    &nbsp;Cancel Order
+                  </button>
+                </div>
+                <div class="row mt-2">
+                  <button
+                    mat-flat-button
+                    class="btn btn-warning m-0"
+                    style="float: right; width: 100%"
+                  >
+                    <i class="fas fa-question"></i>
+                    &nbsp;Need help
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <div
+          class="row mt-2 mb-4"
+          style="display: flex; justify-content: center"
+        >
+          <button
+            mat-flat-button
+            (click)="increaseOrderLimit()"
+            class="col-lg-4 py-2 btn btn-secondary"
+          >
+            <i
+              class="fas fa-redo-alt"
+              [ngClass]="{
+                'fa-spin': orders.length === 0
+              }"
+            ></i>
+            &nbsp;{{
+              orders.length === 0 ? "Loading Orders ..." : "Load more orders"
+            }}
+          </button>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Settings">
+        <mat-accordion multi>
+          <div>
+            <!-- Personal Data -->
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Personal data </mat-panel-title>
+                <mat-panel-description>
+                  Type your name and age
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <mat-form-field appearance="fill">
+                <mat-label>First name</mat-label>
+                <input matInput />
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Middle name</mat-label>
+                <input matInput />
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Last name</mat-label>
+                <input matInput />
+              </mat-form-field>
+            </mat-expansion-panel>
+
+            <!-- Preferences -->
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Preferences </mat-panel-title>
+                <mat-panel-description> Preferences </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <mat-form-field appearance="fill">
+                <mat-label>First name</mat-label>
+                <input matInput />
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Age</mat-label>
+                <input matInput type="number" min="1" />
+              </mat-form-field>
+            </mat-expansion-panel>
+          </div>
+        </mat-accordion>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+<div id="recaptcha-container"></div>

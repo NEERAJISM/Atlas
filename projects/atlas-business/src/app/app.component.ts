@@ -11,8 +11,8 @@ export class AppComponent {
 
   tc: Address;
 
-  // constructor(com : CommonUtil){
-  //   com.showSnackBar('');
-  // }
+  constructor(com : CommonUtil){
+    com.showSnackBar('This i show legends are made!!');
+  }
 
 }

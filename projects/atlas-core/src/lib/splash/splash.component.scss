@@ -1,0 +1,105 @@
+.splash {
+  width: 125px;
+  height: 125px;
+  margin: auto;
+  display: block;
+}
+
+.vertical-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+#loadingProgressG {
+  width: 110px;
+  height: 5px;
+  overflow: hidden;
+  background-color: rgb(217, 95, 136);
+  margin: auto;
+  border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+}
+
+.loadingProgressG {
+  background-color: rgb(255, 255, 255);
+  margin-top: 0;
+  margin-left: -96px;
+  animation-name: bounce_loadingProgressG;
+  -o-animation-name: bounce_loadingProgressG;
+  -ms-animation-name: bounce_loadingProgressG;
+  -webkit-animation-name: bounce_loadingProgressG;
+  -moz-animation-name: bounce_loadingProgressG;
+  animation-duration: 1.035s;
+  -o-animation-duration: 1.035s;
+  -ms-animation-duration: 1.035s;
+  -webkit-animation-duration: 1.035s;
+  -moz-animation-duration: 1.035s;
+  animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  -o-animation-timing-function: linear;
+  -ms-animation-timing-function: linear;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-timing-function: linear;
+  width: 96px;
+  height: 7px;
+}
+
+@keyframes bounce_loadingProgressG {
+  0% {
+    margin-left: -96px;
+  }
+
+  100% {
+    margin-left: 96px;
+  }
+}
+
+@-o-keyframes bounce_loadingProgressG {
+  0% {
+    margin-left: -96px;
+  }
+
+  100% {
+    margin-left: 96px;
+  }
+}
+
+@-ms-keyframes bounce_loadingProgressG {
+  0% {
+    margin-left: -96px;
+  }
+
+  100% {
+    margin-left: 96px;
+  }
+}
+
+@-webkit-keyframes bounce_loadingProgressG {
+  0% {
+    margin-left: -96px;
+  }
+
+  100% {
+    margin-left: 96px;
+  }
+}
+
+@-moz-keyframes bounce_loadingProgressG {
+  0% {
+    margin-left: -96px;
+  }
+
+  100% {
+    margin-left: 96px;
+  }
+}

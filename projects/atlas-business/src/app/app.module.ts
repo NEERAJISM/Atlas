@@ -1,20 +1,30 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { AngularFireModule } from '@angular/fire';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AtlasCoreModule } from 'atlas-core';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AtlasCoreModule } from 'atlas-core';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { LoginModule } from './login/login.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AtlasCoreModule
+    AtlasCoreModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    LoginModule,
+    DashboardModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    NgbModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

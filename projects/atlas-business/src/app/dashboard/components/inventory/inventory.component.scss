@@ -1,0 +1,31 @@
+table {
+  width: 100%;
+}
+
+td, th {
+  width: 10%;
+}
+
+.mat-form-field {
+  font-size: 16px;
+  width: 100%;
+}
+
+.mat-cell {
+  font-size: 16px;
+}
+
+.mat-paginator {
+  font-size: 16px;
+}
+
+.mat-header-cell {
+  background-color:#eeeeee;
+  color: #212121;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mat-row:nth-child(even){
+  background-color:#fafafa;
+  }

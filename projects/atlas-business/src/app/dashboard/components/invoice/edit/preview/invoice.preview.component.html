@@ -1,0 +1,15 @@
+<mat-dialog-content style="max-height: 75vh;">
+  <div class="col-lg-12">
+    <pdf-viewer
+    [src]="data"
+    [show-borders]="true"
+    [zoom]="1.25"
+    [fit-to-page]="true"
+  ></pdf-viewer>
+  </div>
+
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button class="btn-success" mat-raised-button (click)="doAction()">Create Invoice</button>
+  <button mat-raised-button color="warn" (click)="closeDialog()">Go Back</button>
+</div>

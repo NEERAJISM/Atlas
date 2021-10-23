@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>
+  This action will remove "{{ data.name }}" from Products ?
+</h1>
+<div mat-dialog-actions>
+  <button
+    class="py-2"
+    style="font-size: 1.2em"
+    mat-raised-button
+    mat-dialog-close
+    color="warn"
+    (click)="submit()"
+  >
+    Remove
+  </button>
+  <button class="py-2" style="font-size: 1.2em" mat-button mat-dialog-close>
+    Cancel
+  </button>
+</div>

@@ -1,0 +1,26 @@
+.example-tab-icon {
+  margin-right: 8px;
+}
+
+.center-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-img {
+  height: 175px;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.order-card {
+  margin: 30px;
+  background: #fafafa;
+  padding: 0;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding: 0 !important;
+}

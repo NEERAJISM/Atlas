@@ -1,0 +1,701 @@
+<spinner *ngIf="showSpinner"></spinner>
+
+<div class="container-fluid mt-2">
+  <div class="row mt-4">
+    <div class="col">
+      <h5>
+        Invoice Details
+        <i
+          class="fas"
+          [ngClass]="{
+            'fa-exclamation-circle text-danger': !isInvoiceDetailValid,
+            'fa-check-circle text-success': isInvoiceDetailValid
+          }"
+        ></i>
+      </h5>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-lg-2">
+      <p class="m-0">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Invoice date</mat-label>
+          <input
+            matInput
+            required
+            [(ngModel)]="invoiceDate"
+            [matDatepicker]="picker"
+            (click)="picker.open()"
+            (dateChange)="checkDueDate()"
+            onkeydown="event.preventDefault()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+      </p>
+    </div>
+
+    <div class="col-lg-2">
+      <p class="m-0">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Supply state</mat-label>
+          <mat-select
+            class="mat-input-element"
+            required
+            name="supplyState"
+            [(ngModel)]="supplyState"
+          >
+            <mat-option *ngFor="let state of states" [value]="state">
+              {{ state }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+    </div>
+
+    <div class="col-lg-2">
+      <p class="m-0">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Supply place</mat-label>
+          <input
+            name="supplyPlace"
+            [(ngModel)]="supplyPlace"
+            (ngModelChange)="supplyPlaceChange()"
+            matInput
+            required
+            type="text"
+          />
+        </mat-form-field>
+      </p>
+    </div>
+
+    <div class="col-lg-2">
+      <p class="m-0">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Payment Status</mat-label>
+          <mat-select
+            class="mat-input-element"
+            required
+            name="paymentTerms"
+            [(ngModel)]="paymentTerms"
+            (ngModelChange)="paymentStatusChange()"
+          >
+            <mat-option *ngFor="let term of allPaymentTerms" [value]="term">
+              {{ term }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+    </div>
+
+    <div class="col-lg-2" *ngIf="customDueDate">
+      <p class="m-0">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Due date</mat-label>
+          <input
+            matInput
+            [(ngModel)]="dueDate"
+            [matDatepicker]="picker_due"
+            (click)="picker_due.open()"
+            (dateChange)="checkDueDate()"
+            onkeydown="event.preventDefault()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker_due"
+          ></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker_due></mat-datepicker>
+        </mat-form-field>
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Customer Details -->
+
+    <div class="col col-lg-4">
+      <div class="row">
+        <div class="col">
+          <h5>
+            Customer Details
+            <i
+              class="fas"
+              [ngClass]="{
+                'fa-exclamation-circle text-danger': !isCustomerDetailValid,
+                'fa-check-circle text-success': isCustomerDetailValid
+              }"
+            ></i>
+          </h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Select / Type Customer name</mat-label>
+
+              <input
+                matInput
+                required
+                [ngModel]="client.name"
+                (ngModelChange)="clientNameChange($event)"
+                type="text"
+                name="customerName"
+                [matAutocomplete]="autoClient"
+                [formControl]="clientControl"
+              />
+
+              <mat-autocomplete #autoClient="matAutocomplete">
+                <mat-option
+                  *ngFor="let option of clientObservable | async"
+                  [value]="option.name"
+                >
+                  {{ option.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-5">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>PAN (optional)</mat-label>
+              <input
+                matInput
+                [(ngModel)]="client.pan"
+                type="text"
+                name="customerPAN"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+        <div class="col-lg-7 pl-0">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>GSTIN (optional)</mat-label>
+              <input
+                matInput
+                [(ngModel)]="client.gst"
+                type="text"
+                name="customerGST"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-5">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Mobile No. (10 digit)</mat-label>
+              <input
+                matInput
+                [ngModel]="client.mobile"
+                (ngModelChange)="customerDetailChange()"
+                required
+                type="text"
+                name="customerMobile"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+        <div class="col-lg-7 pl-0">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Email-Id</mat-label>
+              <input
+                matInput
+                [(ngModel)]="client.email"
+                type="email"
+                name="customerEmail"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Billing Address -->
+
+    <div class="col col-lg-4">
+      <div class="row">
+        <div class="col-lg-6">
+          <h5>
+            Billing Address
+            <i
+              class="fas"
+              [ngClass]="{
+                'fa-exclamation-circle text-danger': !isBillingAddressValid,
+                'fa-check-circle text-success': isBillingAddressValid
+              }"
+            ></i>
+          </h5>
+        </div>
+        <div class="col-lg-6" style="display: grid; justify-content: end">
+          <mat-checkbox [(ngModel)]="shippingAddressSame"
+            >Use same as shipping address</mat-checkbox
+          >
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Address line 1</mat-label>
+
+              <input
+                matInput
+                required
+                [(ngModel)]="client.address.line1"
+                (ngModelChange)="billingAddressChange()"
+                type="text"
+                name="billingAddress_1"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-9">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Address line 2 (optional)</mat-label>
+              <input
+                matInput
+                [(ngModel)]="client.address.line2"
+                type="text"
+                name="billingAddress_2"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+        <div class="col-lg-3 pl-0">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Pincode</mat-label>
+              <input
+                matInput
+                required
+                [(ngModel)]="client.address.pin"
+                (ngModelChange)="billingAddressChange()"
+                type="number"
+                name="billingAddress_pincode"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 pr-0">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>District</mat-label>
+              <input
+                matInput
+                required
+                [(ngModel)]="client.address.district"
+                (ngModelChange)="billingAddressChange()"
+                type="text"
+                name="billingAddress_district"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+        <div class="col-lg-6">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>State</mat-label>
+              <mat-select
+                class="mat-input-element"
+                required
+                name="billingAddress_state"
+                [(ngModel)]="client.address.state"
+                (ngModelChange)="billingAddressChange()"
+              >
+                <mat-option *ngFor="let state of states" [value]="state">
+                  {{ state }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shipping Address -->
+
+    <div class="col col-lg-4" *ngIf="!shippingAddressSame">
+      <div class="row">
+        <div class="col-lg-6">
+          <h5>
+            Shipping Address
+            <i
+              class="fas"
+              [ngClass]="{
+                'fa-exclamation-circle text-danger': !isShippingAddressValid,
+                'fa-check-circle text-success': isShippingAddressValid
+              }"
+            ></i>
+          </h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Address line 1</mat-label>
+
+              <input
+                matInput
+                required
+                [(ngModel)]="shippingAddress.line1"
+                (ngModelChange)="shippingAddressChange()"
+                type="text"
+                name="shippingAddress_1"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-9">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Address line 2 (optional)</mat-label>
+              <input
+                matInput
+                [(ngModel)]="shippingAddress.line2"
+                type="text"
+                name="shippingAddress_2"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+        <div class="col-lg-3 pl-0">
+          <p class="m-0">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Pincode</mat-label>
+              <input
+                matInput
+                required
+                [(ngModel)]="shippingAddress.pin"
+                (ngModelChange)="shippingAddressChange()"
+                type="number"
+                name="shippingAddress_pincode"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>District</mat-label>
+              <input
+                matInput
+                required
+                [(ngModel)]="shippingAddress.district"
+                (ngModelChange)="shippingAddressChange()"
+                type="text"
+                name="shippingAddress_district"
+              />
+            </mat-form-field>
+          </p>
+        </div>
+        <div class="col-lg-6">
+          <p>
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>State</mat-label>
+              <mat-select
+                class="mat-input-element"
+                required
+                name="shippingAddress_state"
+                [(ngModel)]="shippingAddress.state"
+                (ngModelChange)="shippingAddressChange()"
+              >
+                <mat-option *ngFor="let state of states" [value]="state">
+                  {{ state }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h5 class="my-4">
+    Item Summary
+    <i
+      class="fas"
+      [ngClass]="{
+        'fa-exclamation-circle text-danger': !isItemSummaryValid,
+        'fa-check-circle text-success': isItemSummaryValid
+      }"
+    ></i>
+  </h5>
+
+  <!-- Form Begins -->
+
+  <form>
+    <div class="row mt-3" *ngFor="let item of items; index as i">
+      <div class="ml-3" style="display: flex; align-items: center">
+        <h5>{{ i + 1 + "." }}</h5>
+      </div>
+
+      <!-- Product -->
+
+      <div class="col-lg-4">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label> Type / Select Product name</mat-label>
+
+            <input
+              matInput
+              required
+              [(ngModel)]="item.name"
+              (ngModelChange)="itemChange()"
+              type="text"
+              name="product_{{ i }}"
+              placeholder="Pick one"
+              aria-label="Number"
+              [matAutocomplete]="autoProduct"
+              [formControl]="controls[i]"
+            />
+
+            <mat-autocomplete
+              #autoProduct="matAutocomplete"
+              (optionSelected)="productSelected($event.option.value, i)"
+            >
+              <mat-option
+                *ngFor="let option of observables[i] | async"
+                [value]="option.name"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- Unit -->
+
+      <div class="col-lg-1">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Unit</mat-label>
+
+            <input
+              matInput
+              required
+              type="text"
+              [(ngModel)]="item.unit"
+              (ngModelChange)="itemChange()"
+              name="unit_{{ i }}"
+              placeholder="Pick one"
+              aria-label="Number"
+              [matAutocomplete]="autoUnit"
+              [formControl]="unitControls[i]"
+            />
+
+            <mat-autocomplete
+              #autoUnit="matAutocomplete"
+              (optionSelected)="unitSelected($event.option.value, i)"
+            >
+              <mat-option
+                *ngFor="let option of unitObservables[i] | async"
+                [value]="option.unit"
+              >
+                {{ option.unit }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- Price -->
+
+      <div class="col-lg-1">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Price (&#8377;)</mat-label>
+            <input
+              name="price_{{ i }}"
+              [(ngModel)]="item.price"
+              (ngModelChange)="itemChange()"
+              matInput
+              required
+              type="number"
+              min="0"
+              onkeyup="if(this.value<0){this.value= this.value * -1}"
+            />
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- Qty / Pcs -->
+
+      <div class="col-lg-1">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Qty / Pcs</mat-label>
+            <input
+              name="qty_{{ i }}"
+              [(ngModel)]="item.qty"
+              (ngModelChange)="calculate($event)"
+              matInput
+              required
+              type="number"
+              min="1"
+              onkeyup="if(this.value<0){this.value= this.value * -1}"
+            />
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- Discount -->
+
+      <div class="col-lg-1">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Discount (&#8377;)</mat-label>
+            <input
+              name="discount_{{ i }}"
+              [(ngModel)]="item.discount"
+              matInput
+              type="number"
+              min="0"
+              onkeyup="if(this.value<0){this.value= this.value * -1}"
+            />
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- TAX / GST -->
+
+      <div class="col-lg-1">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>TAX / GST (%)</mat-label>
+
+            <mat-select required name="tax_{{ i }}" [(ngModel)]="item.tax">
+              <mat-option *ngFor="let option of optionsTax" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- TAX -->
+
+      <div class="col-lg-1">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>TAX (&#8377;)</mat-label>
+            <input
+              readonly
+              name="taxValue_{{ i }}"
+              value="{{ calculate(item) }}"
+              matInput
+              type="number"
+            />
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- Total -->
+
+      <div class="col-lg-1">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Total (&#8377;)</mat-label>
+            <input
+              readonly
+              name="total_{{ i }}"
+              [(ngModel)]="item.total"
+              matInput
+              type="number"
+            />
+          </mat-form-field>
+        </p>
+      </div>
+
+      <div class="col">
+        <button
+          class="mt-2"
+          mat-raised-button
+          color="warn"
+          (click)="removeItem(i)"
+        >
+          <i class="fas fa-trash text-white py-3" style="font-size: 1.4em"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="row my-2 mb-5">
+    <div style="margin: auto">
+      <button
+        class="mr-2 mt-2"
+        mat-raised-button
+        color="warn"
+        (click)="addItem()"
+      >
+        <i class="fas fa-plus text-white py-3" style="font-size: 1.4em"></i>
+        Add new item
+      </button>
+    </div>
+  </div>
+
+  <div class="row my-2 mb-5"></div>
+
+  <div
+    class="row p-2"
+    style="background-color: #123548; position: fixed; bottom: 0; width: 100%"
+  >
+    <button
+      class="ml-3 btn-success"
+      mat-raised-button
+      (click)="openPreviewDialog()"
+    >
+      <i class="fas fa-check text-white py-3" style="font-size: 1.6em"></i>
+      &nbsp; Create Invoice
+    </button>
+
+    <button class="ml-4 btn-info" mat-raised-button (click)="saveAsDraft()">
+      <i class="fas fa-save text-white py-3" style="font-size: 1.6em"></i>
+      &nbsp; Save as Draft
+    </button>
+
+    <button
+      class="ml-4"
+      mat-raised-button
+      color="warn"
+      (click)="goBackToInvoiceComponent()"
+    >
+      <i class="fas fa-times text-white py-3" style="font-size: 1.6em"></i>
+      &nbsp; Go Back
+    </button>
+
+    <div class="col-lg-2 ml-auto">
+      <h6 class="text-light">TAX : &#8377; {{ calculateTotalTax() }}</h6>
+      <h5 class="text-light mb-0">Total : &#8377; {{ calculateTotal() }}</h5>
+    </div>
+  </div>
+</div>

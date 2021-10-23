@@ -1,0 +1,64 @@
+<mat-drawer-container class="dashboard-container" autosize>
+  <!-- Sidenav -->
+
+  <mat-drawer
+    #drawer
+    class="dashboard-drawer"
+    mode="side"
+    opened
+    [@openClose]="showMenuName ? 'open' : 'closed'"
+  >
+    <mat-toolbar class="drawer-toolbar">
+      <img
+        src="assets/icons/atlas-small.png"
+        alt="Atlas"
+        class="atlas-icon ml-0 mr-2"
+        (click)="toggleMenu()"
+      />
+      <h3 *ngIf="showMenuName" class="font-weight-light mr-5 text-white" style="font-size: 30px;">
+        Atlas
+      </h3>
+    </mat-toolbar>
+
+    <mat-nav-list class="mat-selection-list">
+      <mat-list-item
+        style="cursor: pointer;"
+        routerLinkActive
+        #rla="routerLinkActive"
+        *ngFor="let item of menu"
+        routerLink="{{ item.link }}"
+      >
+        <i
+          class="{{ item.icon }}"
+          matTooltip="{{ item.name }}"
+          [matTooltipPosition]="'after'"
+          [ngClass]="rla.isActive ? 'text-white' : 'text-white-50'"
+        ></i>
+        <p
+          style="font-size: 14px;"
+          class="mb-0"
+          [ngClass]="rla.isActive ? 'text-white' : 'text-white-50'"
+          *ngIf="showMenuName"
+        >
+          {{ item.name }}
+        </p>
+      </mat-list-item>
+    </mat-nav-list>
+
+    <mat-divider></mat-divider>
+
+    <button class="mr-3 float-right" mat-icon-button (click)="toggleMenu()">
+      <i
+        class="fas text-white-50"
+        [ngClass]="showMenuName ? 'fa-chevron-left' : 'fa-chevron-right'"
+      ></i>
+    </button>
+  </mat-drawer>
+
+  <!--  Content  -->
+
+  <mat-drawer-content class="drawer-content">
+    <app-dashboard-header></app-dashboard-header>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

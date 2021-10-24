@@ -18,6 +18,7 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,7 @@ import { ProfileComponent } from './profile/profile.component';
     MatRadioModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
   ],
-  declarations: [AppComponent, ProfileComponent],
+  declarations: [AppComponent, ProfileComponent, SearchComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

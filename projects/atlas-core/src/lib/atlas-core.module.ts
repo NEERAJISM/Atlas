@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -19,6 +20,7 @@ import { SplashComponent } from './splash/splash.component';
     MatSnackBarModule,
     MatProgressSpinnerModule,
     BrowserAnimationsModule,
+    HttpClientModule
   ],
   declarations: [SplashComponent, SpinnerComponent],
   exports: [SplashComponent, SpinnerComponent],

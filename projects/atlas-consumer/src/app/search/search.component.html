@@ -1,0 +1,41 @@
+<div class="context">
+  <img src="assets/icons/Atlas.png" alt="Atlas" class="splash" />
+
+  <div class="search_box">
+    <input matInput type="text" placeholder="Search business name..." />
+  </div>
+  <div style="display: flex; justify-content: center" class="mt-2">
+    <mat-form-field appearance="fill" style="padding: 0; width: 140px">
+      <span matPrefix>
+        &nbsp;&nbsp; <i class="fas fa-map-marker-alt"></i> &nbsp;&nbsp;</span
+      >
+      <input
+        matInput
+        class="text-primary"
+        placeholder="pin-code"
+        type="text"
+        maxlength="6"
+        [(ngModel)]="pincode"
+        (ngModelChange)="pinCheck($event)"
+      />
+    </mat-form-field>
+  </div>
+  <div style="display: flex; justify-content: center">
+    <h5 *ngIf="displayLoc">{{location}}</h5>
+  </div>
+</div>
+
+<div class="area">
+  <ul class="circles">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+</div>

@@ -1,9 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class CommonUtil {
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar, private httpClient: HttpClient) {}
 
   showSnackBar(message: string, dur?: number) {
     this.snackBar.open(message, 'Close', {
@@ -22,5 +23,9 @@ export class CommonUtil {
     const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);
     const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
     return da + ' ' + mo + ' ' + ye;
+  }
+
+  httpGet(url: string){
+    return this.httpClient.get(url);
   }
 }

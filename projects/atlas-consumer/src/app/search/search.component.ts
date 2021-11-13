@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { CommonUtil } from 'atlas-core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -14,6 +15,8 @@ export class SearchComponent {
   location = '';
   pincode: string = '';
   rateControl = new FormControl('', [Validators.max(100), Validators.min(0)]);
+
+  filteredOptions: Observable<string[]>;
 
   constructor(private util: CommonUtil) {}
 

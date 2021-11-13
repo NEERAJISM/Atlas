@@ -1,8 +1,15 @@
 <div class="context">
+  <h4 style="font-family: 'Mulish', sans-serif;"><b>&nbsp;&nbsp;ATLAS</b> SEARCH</h4>
+
   <img src="assets/icons/Atlas.png" alt="Atlas" class="splash" />
 
   <div class="search_box">
-    <input matInput type="text" placeholder="Search business name..." />
+    <input matInput type="text" placeholder="Search business name..." [matAutocomplete]="auto" />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
   </div>
   <div style="display: flex; justify-content: center" class="mt-2">
     <mat-form-field appearance="fill" style="padding: 0; width: 140px">
@@ -10,6 +17,7 @@
         &nbsp;&nbsp; <i class="fas fa-map-marker-alt"></i> &nbsp;&nbsp;</span
       >
       <input
+        style="font-family: 'Mulish', sans-serif;"
         matInput
         class="text-primary"
         placeholder="pin-code"
@@ -21,7 +29,7 @@
     </mat-form-field>
   </div>
   <div style="display: flex; justify-content: center">
-    <h5 *ngIf="displayLoc">{{location}}</h5>
+    <h5 style="font-family: 'Mulish', sans-serif;" *ngIf="displayLoc">{{location}}</h5>
   </div>
 </div>
 

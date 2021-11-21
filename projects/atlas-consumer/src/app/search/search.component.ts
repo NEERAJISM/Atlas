@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CommonUtil } from 'atlas-core';
 import { Observable } from 'rxjs';
 
@@ -18,7 +19,17 @@ export class SearchComponent {
 
   filteredOptions: Observable<string[]>;
 
-  constructor(private util: CommonUtil) {}
+  public appPages = [
+    { title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
+    { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
+    { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },
+    { title: 'Archived', url: '/folder/Archived', icon: 'archive' },
+    { title: 'Trash', url: '/folder/Trash', icon: 'trash' },
+    { title: 'Spam', url: '/folder/Spam', icon: 'warning' },
+  ];
+  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+
+  constructor(private util: CommonUtil, public router: Router) {}
 
   pinCheck(pin) {
     if (this.pincode.length == 6) {
@@ -35,5 +46,10 @@ export class SearchComponent {
     } else {
       this.displayLoc = false;
     }
+  }
+
+  route(){
+    console.log('.. Routing ....')
+    this.router.navigateByUrl('/profile');
   }
 }

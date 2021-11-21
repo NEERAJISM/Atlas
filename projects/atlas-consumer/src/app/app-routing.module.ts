@@ -12,11 +12,11 @@ const routes: Routes = [
     path: 'profile',
     component: ProfileComponent,
   },
-  {
-    // Always keep this in the END
-    path: '**',
-    redirectTo: '',
-  },
+  // {
+  //   // Always keep this in the END
+  //   path: '**',
+  //   redirectTo: '',
+  // },
 ];
 
 @NgModule({

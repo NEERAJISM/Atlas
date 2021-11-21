@@ -1,56 +1,110 @@
-<div class="context">
-  <h4 style="font-family: 'Mulish', sans-serif;"><b>&nbsp;&nbsp;ATLAS</b> SEARCH</h4>
+<ion-header>
+  <ion-toolbar
+    style="--background: linear-gradient(315deg, #0abcf9 0%, #2c69d1 74%)"
+  >
+    <ion-title style="font-family: 'Mulish', sans-serif; color: white"
+      ><b>ATLAS</b> SEARCH</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
 
-  <img src="assets/icons/Atlas.png" alt="Atlas" class="splash" />
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="4" size-md="1">
+        <ion-item class="ion-no-padding">
+          <ion-icon name="location-outline"></ion-icon>
+          <ion-input
+            type="text"
+            maxlength="6"
+            clearOnEdit="true"
+            placeholder="pin-code"
+            value="314025"
+            [(ngModel)]="pincode"
+            (ngModelChange)="pinCheck($event)"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12" size-md="auto" class="ion-text-center">
+        <h5 style="font-family: 'Mulish', sans-serif;" *ngIf="displayLoc">{{location}}</h5>
+      </ion-col>
+    </ion-row>
 
-  <div class="search_box">
-    <input matInput type="text" placeholder="Search business name..." [matAutocomplete]="auto" />
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-        {{ option }}
-      </mat-option>
-    </mat-autocomplete>
-  </div>
+    <ion-row class="ion-justify-content-center">
+    </ion-row>
 
-  <div class="mt-3" style="display: flex; justify-content: center">
-    <button class="px-4 btn-primary" mat-raised-button>Search</button>
-    <button class="px-4 ml-3 btn-secondary" mat-raised-button>Clear</button>
-  </div>
+    <ion-row class="ion-margin-top ion-margin-bottom">
+      <ion-col size-md="6" offset-md="3">
+        <ion-input
+          class="search_box"
+          clearInput
+          placeholder="Search business..."
+        ></ion-input>
+      </ion-col>
+    </ion-row>
 
+    <ion-row>
+      <ion-col>
+        <h1>Top Business based on your search</h1>
+      </ion-col>
+    </ion-row>
 
-  <div style="display: flex; justify-content: center" class="mt-2">
-    <mat-form-field appearance="fill" style="padding: 0; width: 140px">
-      <span matPrefix>
-        &nbsp;&nbsp; <i class="fas fa-map-marker-alt"></i> &nbsp;&nbsp;</span
-      >
-      <input
-        style="font-family: 'Mulish', sans-serif;"
-        matInput
-        class="text-primary"
-        placeholder="pin-code"
-        type="text"
-        maxlength="6"
-        [(ngModel)]="pincode"
-        (ngModelChange)="pinCheck($event)"
-      />
-    </mat-form-field>
-  </div>
-  <div style="display: flex; justify-content: center">
-    <h5 style="font-family: 'Mulish', sans-serif;" *ngIf="displayLoc">Searching in : {{location}}</h5>
-  </div>
-</div>
+    <ion-row>
+      <ion-col size="12" size-sm>
+        <ion-card (click)="route()">
+          <img src="https://mdbootstrap.com/img/Photos/Others/images/41.jpg" />
+          <ion-card-header>
+            <ion-card-subtitle>Destination</ion-card-subtitle>
+            <ion-card-title>Madison, WI</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
+            Madison was named the capital of the Wisconsin Territory in 1836.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
 
-<!-- <div class="area">
-  <ul class="circles">
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-  </ul>
-</div> -->
+      <ion-col size="12" size-sm>
+        <ion-card>
+          <img src="https://mdbootstrap.com/img/Photos/Others/images/48.jpg" />
+          <ion-card-header>
+            <ion-card-subtitle>Destination</ion-card-subtitle>
+            <ion-card-title>Madison, WI</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
+            Madison was named the capital of the Wisconsin Territory in 1836.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-sm>
+        <ion-card>
+          <img src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg" />
+          <ion-card-header>
+            <ion-card-subtitle>Destination</ion-card-subtitle>
+            <ion-card-title>Madison, WI</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
+            Madison was named the capital of the Wisconsin Territory in 1836.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-sm>
+        <ion-card>
+          <img src="https://mdbootstrap.com/img/Photos/Others/images/44.jpg" />
+          <ion-card-header>
+            <ion-card-subtitle>Destination</ion-card-subtitle>
+            <ion-card-title>Madison, WI</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
+            Madison was named the capital of the Wisconsin Territory in 1836.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

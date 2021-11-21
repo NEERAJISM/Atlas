@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
+import { IonicModule } from '@ionic/angular';
 import { AtlasCoreModule } from 'atlas-core';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -41,6 +42,7 @@ import { SearchComponent } from './search/search.component';
     MatRadioModule,
     MatAutocompleteModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    IonicModule.forRoot(),
   ],
   declarations: [AppComponent, ProfileComponent, SearchComponent],
   providers: [],

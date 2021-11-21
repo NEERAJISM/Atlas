@@ -1,0 +1,6 @@
+{
+	"appId": "com.atlas.consumer",
+	"appName": "atlas-consumer",
+	"webDir": "../../dist/atlas-consumer",
+	"bundledWebRuntime": false
+}

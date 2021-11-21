@@ -1,0 +1,10 @@
+{
+    "name": "atlas-consumer",
+    "version": "0.0.0",
+    "license": "MIT",
+    "private": true,
+    "dependencies": {
+        "@capacitor/cli": "^3.3.2",
+        "@capacitor/core": "^3.3.2"
+    }
+}

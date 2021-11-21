@@ -1,0 +1,13 @@
+{
+  "projects": {
+    "atlas-consumer": {
+      "name": "atlas-consumer",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular",
+      "root": "projects/atlas-consumer"
+    }
+  },
+  "defaultProject": "atlas-consumer"
+}

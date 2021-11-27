@@ -1,12 +1,28 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Address, AuthService, Business, Client, CommonUtil, Constants, FirebaseUtil, Item, Order, OrderStatus, Product, Status, Unit } from 'atlas-core';
+import {
+  Address,
+  AuthService,
+  Business,
+  Client,
+  CommonUtil,
+  Constants,
+  FirebaseUtil,
+  Item,
+  Order,
+  OrderStatus,
+  Product,
+  Status,
+  Unit,
+} from 'atlas-core';
 import firebase from 'firebase/app';
 import { fromEvent, merge, Observable, Observer, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+
+import { NavController, IonContent } from '@ionic/angular';
 
 class CartItem {
   name = '';
@@ -21,6 +37,14 @@ class CartItem {
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+  @ViewChild(IonContent) content: IonContent;
+  @ViewChild('home') home: any;
+  @ViewChild('about') about: any;
+  @ViewChild('services') services: any;
+  @ViewChild('projects') projects: any;
+  @ViewChild('team') team: any;
+  @ViewChild('footer') footer: any;
+
   isAccountSection = false;
   isOrderSection = false;
   isCheckoutSection = false;
@@ -63,6 +87,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
   limit = 3;
   url = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
 
+
+  // slider config
+
+  sliderConfig = {
+    spaceBetween: 10,
+    centeredSlides: true,
+    slidesPerView: 1,
+    autoplay:true,
+    loop:true
+  };
+
+  // **** Assets for Custom web  *****
+
+  landingBackground1 = 'assets/images/profile/arch-1.jpg';
+
+  service1 = 'assets/images/profile/service-1.jpg';
+  service2 = 'assets/images/profile/service-2.jpg';
+  service3 = 'assets/images/profile/service-3.jpg';
+
+  rameshji = 'assets/images/profile/rameshji.jpg';
+  aashika = 'assets/images/profile/aashika.jpg';
+  deepikaji = 'assets/images/profile/deepikaji.jpg';
+  chirag = 'assets/images/profile/chirag.jpg';
+  logo = 'assets/images/profile/logo.jpg';
+
+
   constructor(
     private location: Location,
     private router: Router,
@@ -71,6 +121,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private commonUtil: CommonUtil,
     private fbUtil: FirebaseUtil
   ) {
+
+    console.log('Width - ' + window.innerWidth)
+
+    if(window.innerWidth > 1000) {
+      this.sliderConfig.slidesPerView = 1.8;
+    }
+
     this.createOnline$().subscribe((isOnline) => {
       if (!isOnline) {
         window.alert("You're offline. Please check your internet.");
@@ -83,6 +140,33 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (router.url === '/profile#account') {
       this.account();
     }
+  }
+
+  public scrollElement(element: string) {
+    let target;
+
+    switch (element) {
+      case 'home':
+        target = this.home;
+        break;
+      case 'about':
+        target = this.about;
+        break;
+      case 'services':
+        target = this.services;
+        break;
+      case 'projects':
+        target = this.projects;
+        break;
+      case 'team':
+        target = this.team;
+        break;
+      case 'footer':
+        target = this.footer;
+        break;
+    }
+
+    this.content.scrollToPoint(0, target.nativeElement.offsetTop, 1000);
   }
 
   ngOnInit() {
@@ -200,12 +284,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     console.log('Loaded ' + this.orders.length + ' orders');
   }
 
-  home() {
-    document.documentElement.scrollTop = 0;
-    this.isOrderSection = false;
-    this.isCheckoutSection = false;
-    this.isAccountSection = false;
-  }
+  // home() {
+  //   document.documentElement.scrollTop = 0;
+  //   this.isOrderSection = false;
+  //   this.isCheckoutSection = false;
+  //   this.isAccountSection = false;
+  // }
 
   order() {
     this.location.replaceState('profile#products');
@@ -371,10 +455,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     order.client = this.client;
     order.client.userId = this.userData.uid;
-    order.shippingAddress = this.pickup ? new Address() : (this.shippingAddressSame ? this.client.address : this.shippingAddress);
+    order.shippingAddress = this.pickup
+      ? new Address()
+      : this.shippingAddressSame
+      ? this.client.address
+      : this.shippingAddress;
 
     order.bizId = this.bizInfo.id;
-    order.bizName = "Lakecity Waters";
+    order.bizName = 'Lakecity Waters';
     order.bizMob = '+91 - 8877073059';
 
     const status: OrderStatus = new OrderStatus();

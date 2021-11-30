@@ -2,8 +2,8 @@
   <ion-toolbar>
     <ion-title
       style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
-      >
-      <img style="height: 35px;" src="{{logo}}">
+    >
+      <img style="height: 35px" src="{{ logo }}" />
       <b>&nbsp;Maharaja</b> Architects Pvt. Ltd.</ion-title
     >
 
@@ -19,29 +19,33 @@
 </ion-header>
 
 <ion-content>
-  
   <section
     #home
     style="
-      background: url('{{landingBackground1}}');
+      background: url('{{ landingBackground1 }}');
       background-size: cover;
     "
     class="fwh-slide"
   >
-    <ion-grid>
-      <ion-row>
-        <ion-col size-md="5" offset-md="7" class="ion-margin-top">
-          <b
-            style="
-              font-family: 'Mulish', sans-serif;
-              color: white;
-              font-size: 120px;
-            "
-            >Come Explore with us!</b
-          >
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-row class="ion-text-end">
+      <ion-col size="11" class="ion-text-end">
+        <b
+          style="
+            font-family: 'Mulish', sans-serif;
+            color: white;
+            font-size: {{ landingFont }}px
+          "
+          >Providing <br />
+          innovative <br />
+          designs!</b
+        >
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="11" class="ion-text-end">
+        <ion-button (click)="scrollElement('footer')">Contact us</ion-button>
+      </ion-col>
+    </ion-row>
   </section>
 
   <section #about class="ion-padding my-5">
@@ -126,9 +130,9 @@
     </ion-row>
 
     <ion-row>
-      <ion-col size-md="3" class="mx-md-5">
+      <ion-col size="12" size-md="3" class="mx-md-5">
         <ion-card>
-          <img src="{{service1}}" />
+          <img src="{{ service1 }}" />
           <ion-card-header>
             <ion-card-title
               >Structural Consultancy for New Construction</ion-card-title
@@ -148,9 +152,9 @@
         </ion-card>
       </ion-col>
 
-      <ion-col size-md="3" class="mx-md-5">
+      <ion-col size="12" size-md="3" class="mx-md-5">
         <ion-card>
-          <img src="{{service2}}" />
+          <img src="{{ service2 }}" />
           <ion-card-header>
             <ion-card-title>Building Repair Consultancy</ion-card-title>
           </ion-card-header>
@@ -169,9 +173,9 @@
         </ion-card>
       </ion-col>
 
-      <ion-col size-md="3" class="mx-md-5">
+      <ion-col size="12" size-md="3" class="mx-md-5">
         <ion-card>
-          <img src="{{service3}}" />
+          <img src="{{ service3 }}" />
           <ion-card-header>
             <ion-card-title
               >Project Management & Construction Supervision</ion-card-title
@@ -206,31 +210,25 @@
         <ion-slides [options]="sliderConfig">
           <ion-slide style="width: 800px">
             <ion-card>
-              <img style="max-height: 400px" src="{{service1}}" />
+              <img style="max-height: 400px" src="{{ project1 }}" />
               <ion-card-header>
-                <ion-card-title
-                  >Structural Consultancy for New Construction</ion-card-title
-                >
+                <ion-card-title>Project 1</ion-card-title>
               </ion-card-header>
             </ion-card>
           </ion-slide>
           <ion-slide style="width: 800px">
             <ion-card>
-              <img style="max-height: 400px" src="{{service2}}" />
+              <img style="max-height: 400px" src="{{ project2 }}" />
               <ion-card-header>
-                <ion-card-title
-                  >Structural Consultancy for New Construction</ion-card-title
-                >
+                <ion-card-title>Project 2</ion-card-title>
               </ion-card-header>
             </ion-card>
           </ion-slide>
           <ion-slide style="width: 800px">
             <ion-card>
-              <img style="max-height: 400px" src="{{service3}}" />
+              <img style="height: 400px" src="{{ project3 }}" />
               <ion-card-header>
-                <ion-card-title
-                  >Structural Consultancy for New Construction</ion-card-title
-                >
+                <ion-card-title>Project 3</ion-card-title>
               </ion-card-header>
             </ion-card>
           </ion-slide>
@@ -252,7 +250,7 @@
       <ion-col size="12" size-md="3" class="ion-text-center">
         <img
           style="width: 150px; height: 150px; border-radius: 50%"
-          src="{{rameshji}}"
+          src="{{ rameshji }}"
         />
         <h5 class="mt-3">Mr. Ramesh M. Patidar</h5>
         <h6>Chairman, MD</h6>
@@ -262,7 +260,7 @@
       <ion-col size="12" size-md="3" class="ion-text-center">
         <img
           style="width: 150px; height: 150px; border-radius: 50%"
-          src="{{aashika}}"
+          src="{{ aashika }}"
         />
         <h5 class="mt-3">Mrs. Aashika Patidar</h5>
         <h6>Director</h6>
@@ -272,7 +270,7 @@
       <ion-col size="12" size-md="3" class="ion-text-center">
         <img
           style="width: 150px; height: 150px; border-radius: 50%"
-          src="{{deepikaji}}"
+          src="{{ deepikaji }}"
         />
         <h5 class="mt-3">Mrs. Deepika Patidar</h5>
         <h6>Interior Head</h6>
@@ -282,7 +280,7 @@
       <ion-col size="12" size-md="3" class="ion-text-center">
         <img
           style="width: 150px; height: 150px; border-radius: 50%"
-          src="{{chirag}}"
+          src="{{ chirag }}"
         />
         <h5 class="mt-3">Mr. Chirag Patidar</h5>
         <i>B.E. Civil, M. Tech.-Structural Engineer <br />(Exp - 3 yrs)</i>
@@ -292,7 +290,7 @@
 
   <section #footer style="background: #224353">
     <ion-row class="py-5">
-      <ion-col offset-md="1" size-md="3" class="text-light">
+      <ion-col size="12" offset-md="1" size-md="3" class="text-light">
         <div class="pl-4">
           <h6 class="text-uppercase font-weight-bold text-light">
             <strong>Contact Us</strong>
@@ -317,7 +315,7 @@
         </div>
       </ion-col>
 
-      <ion-col size-md="4">
+      <ion-col size="12" size-md="4">
         <h6 class="text-uppercase font-weight-bold text-light">
           <strong>Write a query to us</strong>
         </h6>
@@ -336,10 +334,10 @@
           <ion-textarea></ion-textarea>
         </ion-item>
 
-        <ion-button class="mt-3">Submit</ion-button>
+        <ion-button class="mt-3" (click)="presentToast()">Submit</ion-button>
       </ion-col>
 
-      <ion-col offset-md="1" size-md="3">
+      <ion-col size="12" offset-md="1" size-md="3">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3773.0685696167448!2d72.81209441516837!3d18.972578887147357!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce71b4849e3b%3A0xe3dae3a45416f64a!2sMaharaja%20Architects%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1638014872891!5m2!1sen!2sin"
           width="300"

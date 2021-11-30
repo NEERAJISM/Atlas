@@ -12,6 +12,7 @@
     }
   },
   "projects": {
-    "default": "atlas-business"
+    "default": "atlas-business",
+    "atlas-staging": "atlas-2020"
   }
 }

@@ -21,8 +21,7 @@ import firebase from 'firebase/app';
 import { fromEvent, merge, Observable, Observer, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
-
-import { NavController, IonContent } from '@ionic/angular';
+import { NavController, IonContent, ToastController, ToastOptions } from '@ionic/angular';
 
 class CartItem {
   name = '';
@@ -98,6 +97,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     loop:true
   };
 
+  landingFont = 70;
+  isDesktop = false;
+
   // **** Assets for Custom web  *****
 
   landingBackground1 = 'assets/images/profile/arch-1.jpg';
@@ -105,6 +107,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   service1 = 'assets/images/profile/service-1.jpg';
   service2 = 'assets/images/profile/service-2.jpg';
   service3 = 'assets/images/profile/service-3.jpg';
+
+  project1 = 'assets/images/profile/project-1.jpg';
+  project2 = 'assets/images/profile/project-2.jpg';
+  project3 = 'assets/images/profile/project-3.jpg';
 
   rameshji = 'assets/images/profile/rameshji.jpg';
   aashika = 'assets/images/profile/aashika.jpg';
@@ -119,13 +125,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private _formBuilder: FormBuilder,
     private auth: AuthService,
     private commonUtil: CommonUtil,
-    private fbUtil: FirebaseUtil
+    private fbUtil: FirebaseUtil,
+    public toastController: ToastController
   ) {
-
-    console.log('Width - ' + window.innerWidth)
 
     if(window.innerWidth > 1000) {
       this.sliderConfig.slidesPerView = 1.8;
+      this.landingFont = 120;
+      this.isDesktop = true;
     }
 
     this.createOnline$().subscribe((isOnline) => {
@@ -167,6 +174,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     this.content.scrollToPoint(0, target.nativeElement.offsetTop, 1000);
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: "Thanks. Your query has been registerd. we'll reachout to you.",
+      duration: 2000,
+      position: this.isDesktop ? 'top' : 'bottom'
+    });
+    toast.present();
   }
 
   ngOnInit() {

@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar [style.color]="profile.color">
     <ion-title
       style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
     >
-      <img style="height: 35px" src="{{ logo }}" />
-      <b>&nbsp;Maharaja</b> Architects Pvt. Ltd.</ion-title
+      <img style="height: 35px" src="{{ profile.icon }}" />
+      <b>&nbsp; {{profile.title}} </b></ion-title
     >
 
     <ion-buttons class="hidden-md-down" slot="primary" collapse="true">
@@ -19,10 +19,11 @@
 </ion-header>
 
 <ion-content>
+  
   <section
     #home
     style="
-      background: url('{{ landingBackground1 }}');
+      background: url('{{ profile.background }}');
       background-size: cover;
     "
     class="fwh-slide"
@@ -30,20 +31,20 @@
     <ion-row class="ion-text-end">
       <ion-col size="11" class="ion-text-end">
         <b
+          [style.font-size]="landingFont"
           style="
             font-family: 'Mulish', sans-serif;
             color: white;
-            font-size: {{ landingFont }}px
           "
-          >Providing <br />
-          innovative <br />
-          designs!</b
+          >
+            <div *ngFor='let caption of profile.caption.split(" ")'>{{caption}}</div>
+          </b
         >
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size="11" class="ion-text-end">
-        <ion-button (click)="scrollElement('footer')">Contact us</ion-button>
+        <ion-button (click)="routeToOrder()">Contact us</ion-button>
       </ion-col>
     </ion-row>
   </section>
@@ -57,7 +58,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row>
+    <ion-row *ngFor="let paragraph of pages.about[0].paragraph">
       <ion-col
         offset-md="2"
         size-md="8"
@@ -68,56 +69,11 @@
         "
       >
         <i class="ion-text-center">
-          Maharaja Architects Pvt. Ltd. is specializing in rendering services
-          for repairs &amp; restoration of civil structures. In the relatively
-          short span of time, we have carried out quality jobs using a
-          systematic &amp; scientific approach and applying a professional
-          attitude to largely unorganized sector. From 1998 till now, we also
-          worked in the name of “R. M. Patidar &amp; Associates” as Repair board
-          Architect.
+          {{paragraph}}
         </i>
       </ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-col
-        offset-md="2"
-        size-md="8"
-        style="
-          font-family: 'Mulish', sans-serif;
-          text-align: justify;
-          text-justify: inter-word;
-        "
-      >
-        <i class="ion-text-center" style="font-family: 'Mulish', sans-serif">
-          We take this opportunity to introduce ourselves as Civil and
-          Structural Consultants Specialized in “New Construction” and Building
-          “Repairs &amp; Restorations” , who assist the client on all aspect of
-          services carrying out their project in the most smooth and economical
-          way.
-        </i>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col
-        offset-md="2"
-        size-md="8"
-        style="
-          font-family: 'Mulish', sans-serif;
-          text-align: justify;
-          text-justify: inter-word;
-        "
-      >
-        <i class="ion-text-center">
-          The company has a Team of Structural Design Engineer- Architect,
-          Project Managers, Executive Engineers – supervisors, Structural
-          Auditor, Valuer and Marketing Team, who have got vast experience in
-          Consulting &amp; Executing services for New Construction and Building
-          Repairs and Rehabilitation Projects.
-        </i>
-      </ion-col>
-    </ion-row>
   </section>
 
   <section #services class="ion-padding my-5">

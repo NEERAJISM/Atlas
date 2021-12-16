@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar class="my-2">
+    <ion-row>
+      <ion-col size="10" offset-md="3" size-md="6">
+        <ion-searchbar></ion-searchbar>
+      </ion-col>
+      <ion-col>
+        <ion-button>
+          <ion-icon slot="start" name="bag-handle-outline"></ion-icon>
+          Cart
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-row class="mx-md-5">
+    <ion-col size="12" size-sm>
+      <ion-card>
+        <img src="https://mdbootstrap.com/img/Photos/Others/images/51.jpg" />
+        <ion-card-header>
+          <ion-card-title>Dennis Lingo</ion-card-title>
+          <ion-card-subtitle>Men Slim fit Casual Shirt</ion-card-subtitle>
+          <ion-row>
+            <ion-col class="ion-no-padding">
+              <p style="height: 100%; align-items: center; display: flex;">Rs. 554</p>
+            </ion-col>
+            <ion-col>
+              <ion-select placeholder="Select One" interface="popover">
+                <ion-select-option value="f">Female</ion-select-option>
+                <ion-select-option value="m">Male</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          
+          <ion-row *ngIf="display" >
+            <ion-col>
+              <ion-button expand="block" (click)="click()">Add to Cart</ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="!display">
+              <ion-col>
+                <ion-button expand="block">
+                  <ion-icon name="add-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+              <ion-col style="display: flex; justify-content: center; align-items: center;">
+                <h5>1</h5>
+              </ion-col>
+              <ion-col>
+                <ion-button expand="block">
+                  <ion-icon name="remove-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+          </ion-row>
+
+        </ion-card-header>
+        
+      </ion-card>
+    </ion-col>
+
+    <ion-col size="12" size-sm>
+      <ion-card>
+        <img src="https://mdbootstrap.com/img/Photos/Others/images/31.jpg" />
+        <ion-card-header>
+          <ion-card-title>Dennis Lingo</ion-card-title>
+          <ion-card-subtitle>Men Slim fit Casual Shirt</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content> Rs. 554 </ion-card-content>
+      </ion-card>
+    </ion-col>
+
+    <ion-col size="12" size-sm>
+      <ion-card>
+        <img src="https://mdbootstrap.com/img/Photos/Others/images/21.jpg" />
+        <ion-card-header>
+          <ion-card-title>Dennis Lingo</ion-card-title>
+          <ion-card-subtitle>Men Slim fit Casual Shirt</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content> Rs. 554 </ion-card-content>
+      </ion-card>
+    </ion-col>
+
+    <ion-col size="12" size-sm>
+      <ion-card>
+        <img src="https://mdbootstrap.com/img/Photos/Others/images/11.jpg" />
+        <ion-card-header>
+          <ion-card-title>Dennis Lingo</ion-card-title>
+          <ion-card-subtitle>Men Slim fit Casual Shirt</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content> Rs. 554 </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

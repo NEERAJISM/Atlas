@@ -19,7 +19,9 @@ import { AtlasCoreModule } from 'atlas-core';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { OmsComponent } from './oms/oms.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ProfileService } from './profile/profile.service';
 import { SearchComponent } from './search/search.component';
 
 @NgModule({
@@ -44,8 +46,8 @@ import { SearchComponent } from './search/search.component';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     IonicModule.forRoot(),
   ],
-  declarations: [AppComponent, ProfileComponent, SearchComponent],
-  providers: [],
+  declarations: [AppComponent, ProfileComponent, SearchComponent, OmsComponent],
+  providers: [ProfileService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

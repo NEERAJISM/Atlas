@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IonContent, ToastController } from '@ionic/angular';
 import {
   Address,
   AuthService,
@@ -13,15 +14,16 @@ import {
   Item,
   Order,
   OrderStatus,
+  Pages,
   Product,
+  Profile,
   Status,
-  Unit,
+  Unit
 } from 'atlas-core';
 import firebase from 'firebase/app';
-import { fromEvent, merge, Observable, Observer, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { NavController, IonContent, ToastController, ToastOptions } from '@ionic/angular';
+import { ProfileService } from './profile.service';
 
 class CartItem {
   name = '';
@@ -97,12 +99,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     loop:true
   };
 
-  landingFont = 70;
+  landingFont = "70px";
   isDesktop = false;
 
   // **** Assets for Custom web  *****
-
-  landingBackground1 = 'assets/images/profile/arch-1.jpg';
 
   service1 = 'assets/images/profile/service-1.jpg';
   service2 = 'assets/images/profile/service-2.jpg';
@@ -118,6 +118,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   chirag = 'assets/images/profile/chirag.jpg';
   logo = 'assets/images/profile/logo.jpg';
 
+  profile: Profile;
+  pages: Pages;
 
   constructor(
     private location: Location,
@@ -126,27 +128,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private commonUtil: CommonUtil,
     private fbUtil: FirebaseUtil,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private service: ProfileService
   ) {
 
     if(window.innerWidth > 1000) {
       this.sliderConfig.slidesPerView = 1.8;
-      this.landingFont = 120;
+      this.landingFont = "120px";
       this.isDesktop = true;
     }
 
-    this.createOnline$().subscribe((isOnline) => {
-      if (!isOnline) {
-        window.alert("You're offline. Please check your internet.");
-      }
-    });
-
     this.init();
+    this.profile = this.service.getProfile();
+    this.pages = this.service.getPages();
+    
+  }
 
-    this.isOrderSection = router.url === '/profile#products';
-    if (router.url === '/profile#account') {
-      this.account();
-    }
+  routeToOrder(){
+    this.router.navigateByUrl('/order');
   }
 
   public scrollElement(element: string) {
@@ -570,16 +569,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     // }, 100);
   }
 
-  createOnline$() {
-    return merge<boolean>(
-      fromEvent(window, 'offline').pipe(map(() => false)),
-      fromEvent(window, 'online').pipe(map(() => true)),
-      new Observable((sub: Observer<boolean>) => {
-        sub.next(navigator.onLine);
-        sub.complete();
-      })
-    );
-  }
+  
 
   increaseOrderLimit() {
     this.limit += 3;

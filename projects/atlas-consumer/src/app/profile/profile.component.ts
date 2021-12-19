@@ -299,13 +299,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     console.log('Loaded ' + this.orders.length + ' orders');
   }
 
-  // home() {
-  //   document.documentElement.scrollTop = 0;
-  //   this.isOrderSection = false;
-  //   this.isCheckoutSection = false;
-  //   this.isAccountSection = false;
-  // }
-
   order() {
     this.location.replaceState('profile#products');
     document.documentElement.scrollTop = 0;

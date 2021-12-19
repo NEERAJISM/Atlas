@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Product, Unit } from 'atlas-core';
 
 class CartItem {
@@ -23,7 +24,7 @@ export class OmsComponent {
   unitDisplayMap: Map<number, number> = new Map();
   cartMap: Map<number, CartItem> = new Map();
 
-  constructor() {
+  constructor(private router: Router) {
     this.init();
   }
 
@@ -125,5 +126,11 @@ export class OmsComponent {
     this.items.forEach((item, i) => {
       this.displayMap.set(i, item.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
     });
+  }
+
+  routeToCheckout(){
+    if(this.cartMap.size > 0) {
+      this.router.navigateByUrl('/checkout');
+    }
   }
 }

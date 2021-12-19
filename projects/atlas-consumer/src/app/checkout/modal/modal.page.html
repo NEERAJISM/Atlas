@@ -1,0 +1,48 @@
+<ion-content class="ion-padding">
+  <ion-row class="mt-4">
+    <ion-col offset="1" size="8">
+      <h3>Verify / Login</h3>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="mt-4">
+    <ion-col offset="0" offsetMd="1">
+        <ion-text>Please enter your 10-digit mobile number </ion-text>
+    </ion-col>
+  </ion-row>
+
+  <ion-row >
+    <ion-col offset="0" offsetMd="1" size="10" size-md="5">
+      <ion-item>
+        <ion-label>+91</ion-label>
+        <ion-input maxlength="10" placeholder="Mobile Number" [(ngModel)]="mobile" (ngModelChange)="mobileChange()"></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="mt-4" *ngIf="otpRequested" text-center>
+    <ion-col offset="0" offsetMd="1">
+     <ion-input class="otp" #otp1 required maxLength="1" [(ngModel)]="otp_1" (keyup)="otpController($event,otp2,'')">
+     </ion-input>
+     <ion-input class="otp"  #otp2 required maxLength="1" [(ngModel)]="otp_2" (keyup)="otpController($event,otp3,otp1)">
+     </ion-input>
+     <ion-input class="otp"  #otp3 required maxLength="1" [(ngModel)]="otp_3" (keyup)="otpController($event,otp4,otp2)">
+     </ion-input>
+     <ion-input class="otp"  #otp4  required maxLength="1" [(ngModel)]="otp_4" (keyup)="otpController($event,otp5,otp3)">
+     </ion-input>
+     <ion-input class="otp"  #otp5  required maxLength="1" [(ngModel)]="otp_5" (keyup)="otpController($event, otp6 ,otp4)">
+    </ion-input>
+    <ion-input class="otp"  #otp6  required maxLength="1" [(ngModel)]="otp_6" (keyup)="otpController($event,'',otp5)">
+    </ion-input>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="mt-4">
+    <ion-col offset="1" size="8">
+      <ion-button (click)="requestOTP()">{{otpRequested ?  (verifying ? "Verifying" : "Verify") : "Send"}} OTP &nbsp; 
+        <ion-spinner *ngIf="verifying" name="crescent"></ion-spinner>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>
+<div id="recaptcha-container"></div>

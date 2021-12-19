@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -17,8 +17,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicModule } from '@ionic/angular';
 import { AtlasCoreModule } from 'atlas-core';
 import { environment } from '../environments/environment';
+import { AccountComponent } from './account/account.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AppService } from './app.service';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { ModalPage } from './checkout/modal/modal.page';
 import { OmsComponent } from './oms/oms.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileService } from './profile/profile.service';
@@ -46,8 +50,11 @@ import { SearchComponent } from './search/search.component';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     IonicModule.forRoot(),
   ],
-  declarations: [AppComponent, ProfileComponent, SearchComponent, OmsComponent],
-  providers: [ProfileService],
+  declarations: [AppComponent, ProfileComponent, SearchComponent, OmsComponent, AccountComponent, CheckoutComponent, ModalPage],
+  providers: [ProfileService, AppService],
   bootstrap: [AppComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
 })
 export class AppModule {}

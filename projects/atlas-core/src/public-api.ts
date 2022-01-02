@@ -2,6 +2,7 @@ export * from './lib/atlas-core.module';
 export * from './lib/constants';
 export * from './lib/models/address';
 export * from './lib/models/business';
+export * from './lib/models/cart';
 export * from './lib/models/client';
 export * from './lib/models/invoice';
 export * from './lib/models/invoice.preview';

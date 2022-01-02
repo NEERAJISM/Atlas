@@ -1,14 +1,22 @@
 <ion-header>
   <ion-toolbar class="my-2">
     <ion-row>
-      <ion-col size="9" offset-md="3" size-md="6">
+      <ion-col>
+        <ion-title
+      style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
+    >
+      <img style="height: 35px" src="{{ profile_icon }}" />
+      <b>&nbsp; ABCD </b></ion-title
+    >
+      </ion-col>
+      <ion-col size="9" size-md="6">
         <ion-searchbar [(ngModel)]="search" (ngModelChange)="updateSearchResults()"></ion-searchbar>
       </ion-col>
       <ion-col>
         <ion-button (click)="routeToCheckout()">
           <ion-icon slot="start" name="bag-handle-outline"></ion-icon>
           Cart &nbsp;
-          <ion-badge color="warning">{{cartMap.size}}</ion-badge>
+          <ion-badge color="warning">{{cartSize}}</ion-badge>
 
         </ion-button>
       </ion-col>
@@ -47,7 +55,7 @@
             </ion-col>
           </ion-row>
 
-          <ion-row *ngIf="!cartMap.has(i)">
+          <ion-row *ngIf="!(cartMap.has(items[i].id) && cartMap.get(items[i].id).has(items[i].units[unitDisplayMap.get(i)].unit))">
             <ion-col>
               <ion-button expand="block" (click)="addToCart(i)"
                 >Add to Cart</ion-button
@@ -55,7 +63,7 @@
             </ion-col>
           </ion-row>
 
-          <ion-row *ngIf="cartMap.has(i)">
+          <ion-row *ngIf="cartMap.has(items[i].id) && cartMap.get(items[i].id).has(items[i].units[unitDisplayMap.get(i)].unit)">
             <ion-col>
               <ion-button expand="block" (click)="addToCart(i)">
                 <ion-icon name="add-outline"></ion-icon>
@@ -68,7 +76,7 @@
                 align-items: center;
               "
             >
-              <h5>{{ cartMap.get(i).qty }}</h5>
+              <h5>{{ cartMap.get(items[i].id).get(items[i].units[unitDisplayMap.get(i)].unit) }}</h5>
             </ion-col>
             <ion-col>
               <ion-button expand="block" (click)="removeFromCart(i)">

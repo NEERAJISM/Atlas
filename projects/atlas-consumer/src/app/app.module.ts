@@ -22,7 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { CheckoutComponent } from './checkout/checkout.component';
-import { ModalPage } from './checkout/modal/modal.page';
+import { ModalPage } from './oms/modal/modal.page';
 import { OmsComponent } from './oms/oms.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileService } from './profile/profile.service';

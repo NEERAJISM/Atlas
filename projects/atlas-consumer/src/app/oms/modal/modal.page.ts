@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from 'atlas-core';
 import firebase from 'firebase/app';
 import { AppService } from '../../app.service';
@@ -62,6 +62,7 @@ export class ModalPage {
       this.confirmationResult
         .confirm(code)
         .then((result) => {
+          this.service.setUser(result.user);
           this.service.closeModal('close');
         })
         .catch((error) => {})

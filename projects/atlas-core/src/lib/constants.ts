@@ -14,6 +14,7 @@ export class Constants {
   static readonly BUSINESS = 'BUSINESS';
 
   static readonly USER = 'USER';
+  static readonly CART = 'CART';
 
   // old
   static readonly USER_DB = 'UserDB';

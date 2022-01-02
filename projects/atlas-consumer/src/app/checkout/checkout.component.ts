@@ -1,20 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AppService } from '../app.service';
-import { ModalPage } from './modal/modal.page';
+import { ModalPage } from '../oms/modal/modal.page';
 import { Location } from '@angular/common';
+import { Profile } from 'atlas-core';
 
 @Component({
   selector: 'app-account',
   templateUrl: './checkout.component.html',
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
+  profile: Profile;
+
   constructor(
     public modalController: ModalController,
     private service: AppService,
     private location: Location
   ) {
-    setTimeout(() => this.presentModal(), 700);
+    // setTimeout(() => this.presentModal(), 700);
+    this.profile = this.service.getProfile();
   }
 
   ngOnInit(): void {

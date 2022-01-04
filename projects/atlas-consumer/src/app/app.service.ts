@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { About, Pages, Profile } from 'atlas-core';
+import { About, Pages, Product, Profile, Unit } from 'atlas-core';
 import { BehaviorSubject } from 'rxjs';
-import firebase from 'firebase/app';
 
 @Injectable()
 export class AppService {
-  user: firebase.User;
+  items: Product[] = [];
 
   private profile: Profile = new Profile();
   private pages: Pages = new Pages();
@@ -17,19 +16,21 @@ export class AppService {
   }
 
   constructor() {
+    this.init();
+  }
+
+  private init() {
     if (true) {
       this.getProfile_Maharaja();
     } else {
       this.getProfile_MohanChem();
     }
+
+    this.initItems();
   }
 
-  public getUser() {
-    return this.user;
-  }
-
-  public setUser(user: firebase.User) {
-    this.user = user;
+  public getItems() {
+    return this.items;
   }
 
   public getProfile() {
@@ -73,5 +74,61 @@ export class AppService {
       'The highly developed state-of-the-art infrastructure is known to be one of the finest in the nation. The facility is laced with modernized technology and advanced machinery. For the purpose of achieving smooth operations, we have divided our infrastructure into several units. The units guided by qualified and expert professionals work effectively and efficiently, in order to achieve several organizational objectives. All the products we provide in the market are further sent for a number of quality checks, for final assurance.'
     );
     this.pages.about.push(about);
+  }
+
+  private initItems() {
+    const unit1 = new Unit();
+    unit1.unit = '500 gm';
+    unit1.price = 500;
+
+    const unit2 = new Unit();
+    unit2.unit = '1 kg';
+    unit2.price = 1000;
+
+    const unit3 = new Unit();
+    unit3.unit = '5 kg';
+    unit3.price = 2500;
+
+    const product1 = new Product();
+    product1.name = 'Veg Pasta';
+    product1.id = '1';
+    product1.units.push(unit1);
+    product1.units.push(unit2);
+    product1.units.push(unit3);
+    product1.photoUrl.push('assets/images/profile/food1.jpg');
+
+    const product2 = new Product();
+    product2.name = 'French Toast';
+    product2.id = '2';
+    product2.units.push(unit1);
+    product2.units.push(unit2);
+    product2.units.push(unit3);
+    product2.photoUrl.push('assets/images/profile/food2.jpg');
+
+    const product3 = new Product();
+    product3.name = 'Yoghurt';
+    product3.id = '3';
+    product3.units.push(unit1);
+    product3.units.push(unit2);
+    product3.units.push(unit3);
+    product3.photoUrl.push('assets/images/profile/food3.jpg');
+
+    const product4 = new Product();
+    product4.name = 'Pancake';
+    product4.id = '4';
+    product4.units.push(unit1);
+    product4.units.push(unit2);
+    product4.units.push(unit3);
+    product4.photoUrl.push('assets/images/profile/food4.jpg');
+
+    this.items.push(product1);
+    this.items.push(product2);
+    this.items.push(product3);
+    this.items.push(product4);
+    this.items.push(product4);
+    this.items.push(product4);
+    this.items.push(product4);
+    this.items.push(product4);
+    this.items.push(product4);
   }
 }

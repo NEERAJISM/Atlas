@@ -23,6 +23,10 @@ export class AuthService {
     this.authSubscription();
   }
 
+  getUserId() {
+    return this.afAuth.user;
+  }
+
   authSubscription() {
     this.afAuth.authState.subscribe((user) => {
       this.userData = user;

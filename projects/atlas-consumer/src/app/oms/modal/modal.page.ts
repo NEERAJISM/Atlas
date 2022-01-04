@@ -62,7 +62,6 @@ export class ModalPage {
       this.confirmationResult
         .confirm(code)
         .then((result) => {
-          this.service.setUser(result.user);
           this.service.closeModal('close');
         })
         .catch((error) => {})
@@ -72,9 +71,5 @@ export class ModalPage {
 
   mobileChange(){
     this.otpRequested = false;
-  }
-
-  goBack(){
-    // this.service.closeModal('back');
   }
 }

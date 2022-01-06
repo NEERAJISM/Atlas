@@ -3,7 +3,7 @@
     <ion-title
       style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
     >
-      <img style="height: 35px" src="{{ profile.icon }}" />
+      <img style="height: 35px" src="{{ profile.icon }}" (click)="home()" />
       <b>&nbsp; {{ profile.title }} </b></ion-title
     >
   </ion-toolbar>
@@ -14,41 +14,33 @@
     <ion-col offset-md="2" size-md="5">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>Items in your Cart</ion-card-title>
+          <ion-card-title>
+            <ion-row>
+              <ion-col>
+                {{cartItems.length}} Items
+
+              </ion-col>
+              <ion-col class="ion-text-end">
+                Total: &#8377;1049 
+              </ion-col>
+            </ion-row>
+          </ion-card-title>
         </ion-card-header>
 
-        <ion-item button>
+        <ion-item button *ngFor="let item of cartItems">
           <ion-thumbnail slot="start">
             <img
-              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw=="
+              src="{{items.get(item.itemId).photoUrl}}"
             />
           </ion-thumbnail>
           <ion-label>
-            <h3>H3 Title Text</h3>
-            <p>Icon on right</p>
+            <h3><b>{{items.get(item.itemId).name}}</b> &nbsp;<i>({{item.unit}})</i></h3>
+            <p>Qty : {{item.qty }}</p>
+            <h5>Rs : {{units.get(item.itemId).price }}</h5>
           </ion-label>
-          <ion-icon name="close-circle" slot="end"></ion-icon>
+          <ion-icon name="close-circle" slot="end" (click)="removeFromCart(item)"></ion-icon>
         </ion-item>
 
-        <ion-item href="#" class="ion-activated">
-          <ion-icon name="wifi" slot="start"></ion-icon>
-          <ion-label>Card Link Item 1 activated</ion-label>
-        </ion-item>
-
-        <ion-item href="#">
-          <ion-icon name="wine" slot="start"></ion-icon>
-          <ion-label>Card Link Item 2</ion-label>
-        </ion-item>
-
-        <ion-item class="ion-activated">
-          <ion-icon name="warning" slot="start"></ion-icon>
-          <ion-label>Card Button Item 1 activated</ion-label>
-        </ion-item>
-
-        <ion-item>
-          <ion-icon name="walk" slot="start"></ion-icon>
-          <ion-label>Card Button Item 2</ion-label>
-        </ion-item>
       </ion-card>
     </ion-col>
 
@@ -85,7 +77,7 @@
                   <ion-button>Confirm Order</ion-button>
               </ion-col>
               <ion-col>
-                <ion-button expand="block" color="danger">Go Back</ion-button>
+                <ion-button expand="block" color="danger" (click)="back()">Go Back</ion-button>
             </ion-col>
           </ion-row>
         </ion-card-content>

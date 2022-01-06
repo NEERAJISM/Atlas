@@ -1,9 +1,26 @@
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import {
+  Address,
+  AuthService,
+  Cart,
+  CartItem,
+  Client,
+  CommonUtil,
+  Constants,
+  FirebaseUtil,
+  Item,
+  Order,
+  OrderStatus,
+  Product,
+  Profile,
+  Status,
+  Unit
+} from 'atlas-core';
+import { v4 as uuidv4 } from 'uuid';
 import { AppService } from '../app.service';
 import { ModalPage } from '../oms/modal/modal.page';
-import { Location } from '@angular/common';
-import { Profile } from 'atlas-core';
 
 @Component({
   selector: 'app-account',
@@ -11,14 +28,36 @@ import { Profile } from 'atlas-core';
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
   profile: Profile;
+  client = new Client();
+
+  shippingAddressSame = true;
+  shippingAddress: Address = new Address();
+
+  items: Map<string, Product> = new Map();
+  units: Map<string, Unit> = new Map();
+
+  cartItems: CartItem[] = [];
+  orderRequested = false;
 
   constructor(
     public modalController: ModalController,
     private service: AppService,
-    private location: Location
+    private authService: AuthService,
+    private location: Location,
+    private fbUtil: FirebaseUtil,
+    private commonUtil: CommonUtil
   ) {
-    // setTimeout(() => this.presentModal(), 700);
     this.profile = this.service.getProfile();
+    this.mapItems(this.service.getItems());
+
+    this.authService.getUserId().subscribe((user) => {
+      if (!user) {
+        setTimeout(() => this.presentModal(), 700);
+      } else {
+        this.client.id = user.uid;
+        this.initForUser();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -41,5 +80,145 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       backdropDismiss: false,
     });
     return await modal.present();
+  }
+
+  home() {
+    this.service.goHome();
+  }
+
+  back(){
+    this.service.goBack();
+  }
+
+  initForUser() {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.USER + '/' + this.client.id + '/' + Constants.CART)
+      .doc('bizId')
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          var cart = new Cart();
+          Object.assign(cart, doc.data());
+          this.cartItems = cart.items;
+          this.mapUnits();
+        }
+      });
+  }
+
+  mapItems(allItems: Product[]) {
+    allItems.forEach((product) => {
+      this.items.set(product.id, product);
+    });
+  }
+
+  mapUnits() {
+    this.cartItems.forEach((item) => {
+      this.units.set(
+        item.itemId,
+        this.items
+          .get(item.itemId)
+          .units.find((unit) => item.unit === unit.unit)
+      );
+    });
+  }
+
+  placeOrder() {
+    // TODO Show referenece number / send email to customer
+
+    // create or get user - based on mobile no verification
+
+    const order: Order = new Order();
+    order.id = this.fbUtil.getId();
+    order.vId = uuidv4();
+    order.createdTimeUTC = Date.now();
+
+    order.client = this.client;
+    order.shippingAddress = this.shippingAddressSame
+      ? this.client.address
+      : this.shippingAddress;
+
+    order.bizId = 'bizId';
+    order.bizName = 'Lakecity Waters';
+    order.bizMob = '+91 - 8877073059';
+
+    const status: OrderStatus = new OrderStatus();
+    status.status = Status.New;
+    status.time = Date.now();
+    order.status.push(status);
+
+    let totalV = 0;
+    let totalTaxV = 0;
+    // cart items
+    this.cartItems.forEach((item) => {
+      const i = new Item();
+
+      var itemRef = this.items.get(item.itemId);
+
+      i.id = itemRef.id;
+      i.name = itemRef.name;
+      i.qty = item.qty;
+      i.price = this.units.get(i.id).price;
+      i.unit = item.unit;
+
+      // discount & tax
+      i.tax = '0';
+      i.taxValue = this.commonUtil.getTax(i.price, 0);
+      i.total = i.price + i.taxValue;
+
+      totalV += i.total;
+      totalTaxV += i.taxValue;
+      order.items.push(i);
+    });
+
+    order.total = totalV;
+    order.totalTaxableValue = totalTaxV;
+
+    const doc = this.fbUtil.toJson(order);
+
+    this.orderRequested = true;
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + order.bizId + '/' + Constants.ORDERS
+      )
+      .doc(order.id)
+      .set(doc)
+      .catch(() =>
+        this.commonUtil.showSnackBar(
+          'Error occurred, Please check Internet connectivity'
+        )
+      )
+      .then(() =>
+        this.fbUtil
+          .getInstance()
+          .collection(
+            Constants.USER + '/' + order.client.userId + '/' + Constants.ORDERS
+          )
+          .doc(order.id)
+          .set(doc)
+      )
+      .finally(() => {
+        this.orderRequested = false;
+        window.alert('Order Placed successfuly!!! - ' + uuidv4());
+        // TODO replace by resetting all
+        location.reload();
+      });
+  }
+
+  getDate(epoch: number) {
+    return this.commonUtil.getFormattedDate(new Date(epoch));
+  }
+
+  removeFromCart(item: CartItem){
+    this.cartItems.splice(this.cartItems.indexOf(item), 1);
+    var cart = new Cart();
+    cart.items = this.cartItems;
+    const doc = this.fbUtil.toJson(cart);
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.USER + '/' + this.client.id + '/' + Constants.CART)
+      .doc("bizId")
+      .set(doc);
   }
 }

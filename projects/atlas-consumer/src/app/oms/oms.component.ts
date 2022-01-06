@@ -69,16 +69,16 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.uid + '/' + Constants.CART)
-      .doc(this.uid)
+      .doc("bizId")
       .get()
       .subscribe((doc) => {
         if (doc.data()) {
           const cart = new Cart();
           Object.assign(cart, doc.data());
           cart.items.forEach((item) => {
+            this.cartSize++;
             if (!this.cartMap.has(item.itemId)) {
               this.cartMap.set(item.itemId, new Map());
-              this.cartSize++;
             }
             var m = this.cartMap.get(item.itemId);
             m.set(item.unit, item.qty);
@@ -182,7 +182,11 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.uid + '/' + Constants.CART)
-      .doc(this.uid)
+      .doc("bizId")
       .set(doc);
+  }
+
+  home(){
+    this.service.goHome();
   }
 }

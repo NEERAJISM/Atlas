@@ -1,4 +1,6 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { About, Pages, Product, Profile, Unit } from 'atlas-core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -15,8 +17,16 @@ export class AppService {
     this.modal.next(s);
   }
 
-  constructor() {
+  constructor(private router: Router, private location: Location) {
     this.init();
+  }
+
+  goHome() {
+    this.router.navigateByUrl('');
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   private init() {
@@ -121,14 +131,27 @@ export class AppService {
     product4.units.push(unit3);
     product4.photoUrl.push('assets/images/profile/food4.jpg');
 
+    const product5 = new Product();
+    product5.name = 'Pancake - Banana';
+    product5.id = '5';
+    product5.units.push(unit1);
+    product5.units.push(unit2);
+    product5.units.push(unit3);
+    product5.photoUrl.push('assets/images/profile/food4.jpg');
+
+    const product6 = new Product();
+    product6.name = 'Yoghurt - Honey';
+    product6.id = '6';
+    product6.units.push(unit1);
+    product6.units.push(unit2);
+    product6.units.push(unit3);
+    product6.photoUrl.push('assets/images/profile/food3.jpg');
+
     this.items.push(product1);
     this.items.push(product2);
     this.items.push(product3);
     this.items.push(product4);
-    this.items.push(product4);
-    this.items.push(product4);
-    this.items.push(product4);
-    this.items.push(product4);
-    this.items.push(product4);
+    this.items.push(product5);
+    this.items.push(product6);
   }
 }

@@ -3,7 +3,7 @@ import { Address } from './address';
 // A subset of User
 export class Client {
   id: string;
-  userId: string;
+  userId: string;  // like user name / kerberos
 
   name: string;
   pan: string;

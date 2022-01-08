@@ -9,7 +9,8 @@ export class Order {
   userId: string;
 
   client: Client = new Client();
-  shippingAddress: Address = new Address();  // shipping address is related to Order
+  billingAddress: Address = new Address();
+  shippingAddress: Address = new Address();
 
   bizId: string;
   bizName: string;

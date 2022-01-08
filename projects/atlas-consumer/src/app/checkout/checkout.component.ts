@@ -1,6 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import {
+  AlertController,
+  ModalController,
+  ToastController,
+} from '@ionic/angular';
 import {
   Address,
   AuthService,
@@ -16,7 +20,7 @@ import {
   Product,
   Profile,
   Status,
-  Unit
+  Unit,
 } from 'atlas-core';
 import { v4 as uuidv4 } from 'uuid';
 import { AppService } from '../app.service';
@@ -25,13 +29,11 @@ import { ModalPage } from '../oms/modal/modal.page';
 @Component({
   selector: 'app-account',
   templateUrl: './checkout.component.html',
+  styleUrls: ['./checkout.component.scss'],
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
   profile: Profile;
   client = new Client();
-
-  shippingAddressSame = true;
-  shippingAddress: Address = new Address();
 
   items: Map<string, Product> = new Map();
   units: Map<string, Unit> = new Map();
@@ -39,14 +41,28 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   cartItems: CartItem[] = [];
   orderRequested = false;
 
+  edit_address = false;
+  shippingAddressSame = true;
+  shippingAddress: Address = new Address();
+  billingAddress: Address = new Address();
+
+  total = 0;
+  isDesktop = false;
+
   constructor(
     public modalController: ModalController,
+    public alertController: AlertController,
+    public toastController: ToastController,
     private service: AppService,
     private authService: AuthService,
     private location: Location,
     private fbUtil: FirebaseUtil,
     private commonUtil: CommonUtil
   ) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
+    this.getClient();
     this.profile = this.service.getProfile();
     this.mapItems(this.service.getItems());
 
@@ -58,6 +74,35 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.initForUser();
       }
     });
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      position: this.isDesktop ? 'top' : 'bottom',
+      message: 'Your order has been placed succesfully.',
+      duration: 3000,
+    });
+    toast.present();
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Confirmation',
+      message: 'Please confirm your order.',
+      buttons: [
+        {
+          text: 'Confirm',
+          handler: () => {
+            this.placeOrder();
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await alert.present();
   }
 
   ngOnInit(): void {
@@ -82,11 +127,23 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     return await modal.present();
   }
 
-  home() {
-    this.service.goHome();
+  getClient() {
+    this.shippingAddress.name = 'Neeraj Patidar';
+    this.shippingAddress.mobile = '8877073059';
+    this.shippingAddress.email = 'abc@gmail.com';
+    this.shippingAddress.line1 =
+      'c/o Balkrishna Patidar, Patidar basti, Gamda Brahmaniya';
+    this.shippingAddress.line2 = 'Sagwara';
+    this.shippingAddress.district = 'Dungarpur';
+    this.shippingAddress.state = 'Rajasthan';
+    this.shippingAddress.pin = 314025;
   }
 
-  back(){
+  home() {
+    this.service.go('');
+  }
+
+  back() {
     this.service.goBack();
   }
 
@@ -102,6 +159,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           Object.assign(cart, doc.data());
           this.cartItems = cart.items;
           this.mapUnits();
+          this.calcTotal();
         }
       });
   }
@@ -115,12 +173,62 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   mapUnits() {
     this.cartItems.forEach((item) => {
       this.units.set(
-        item.itemId,
+        item.itemId + '-' + item.unit,
         this.items
           .get(item.itemId)
           .units.find((unit) => item.unit === unit.unit)
       );
     });
+  }
+
+  getDate(epoch: number) {
+    return this.commonUtil.getFormattedDate(new Date(epoch));
+  }
+
+  removeFromCart(i: number) {
+    this.cartItems.splice(i, 1);
+    this.syncCart();
+  }
+
+  syncCart() {
+    this.calcTotal();
+    var cart = new Cart();
+    cart.items = this.cartItems;
+    const doc = this.fbUtil.toJson(cart);
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.USER + '/' + this.client.id + '/' + Constants.CART)
+      .doc('bizId')
+      .set(doc);
+  }
+
+  editAddress() {
+    this.edit_address = true;
+  }
+
+  saveAddress() {
+    this.edit_address = false;
+  }
+
+  checkbox() {
+    this.billingAddress = { ...this.shippingAddress };
+  }
+
+  calcTotal() {
+    this.total = 0;
+    this.cartItems.forEach((item) => {
+      this.total +=
+        this.units.get(item.itemId + '-' + item.unit).price * item.qty;
+    });
+  }
+
+  updateItem(i: number, add: boolean) {
+    add ? this.cartItems[i].qty++ : this.cartItems[i].qty--;
+    if (this.cartItems[i].qty < 1) {
+      this.removeFromCart(i);
+      return;
+    }
+    this.syncCart();
   }
 
   placeOrder() {
@@ -134,9 +242,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     order.createdTimeUTC = Date.now();
 
     order.client = this.client;
-    order.shippingAddress = this.shippingAddressSame
-      ? this.client.address
-      : this.shippingAddress;
+    order.shippingAddress = this.shippingAddress;
+    order.billingAddress = this.shippingAddressSame
+      ? this.shippingAddress
+      : this.billingAddress;
 
     order.bizId = 'bizId';
     order.bizName = 'Lakecity Waters';
@@ -154,16 +263,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       const i = new Item();
 
       var itemRef = this.items.get(item.itemId);
-
       i.id = itemRef.id;
       i.name = itemRef.name;
       i.qty = item.qty;
-      i.price = this.units.get(i.id).price;
+      i.price = this.units.get(i.id + '-' + item.unit).price;
       i.unit = item.unit;
 
       // discount & tax
       i.tax = '0';
-      i.taxValue = this.commonUtil.getTax(i.price, 0);
+      i.taxValue = 0;
       i.total = i.price + i.taxValue;
 
       totalV += i.total;
@@ -184,41 +292,28 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       )
       .doc(order.id)
       .set(doc)
+      .then(() =>
+        this.fbUtil
+          .getInstance()
+          .collection(
+            Constants.USER + '/' + order.client.id + '/' + Constants.ORDERS
+          )
+          .doc(order.id)
+          .set(doc)
+      )
+      .then(() => {
+        this.presentToast();
+        this.cartItems = [];
+        this.syncCart();
+        this.service.go('/account');
+      })
       .catch(() =>
         this.commonUtil.showSnackBar(
           'Error occurred, Please check Internet connectivity'
         )
       )
-      .then(() =>
-        this.fbUtil
-          .getInstance()
-          .collection(
-            Constants.USER + '/' + order.client.userId + '/' + Constants.ORDERS
-          )
-          .doc(order.id)
-          .set(doc)
-      )
       .finally(() => {
         this.orderRequested = false;
-        window.alert('Order Placed successfuly!!! - ' + uuidv4());
-        // TODO replace by resetting all
-        location.reload();
       });
-  }
-
-  getDate(epoch: number) {
-    return this.commonUtil.getFormattedDate(new Date(epoch));
-  }
-
-  removeFromCart(item: CartItem){
-    this.cartItems.splice(this.cartItems.indexOf(item), 1);
-    var cart = new Cart();
-    cart.items = this.cartItems;
-    const doc = this.fbUtil.toJson(cart);
-    this.fbUtil
-      .getInstance()
-      .collection(Constants.USER + '/' + this.client.id + '/' + Constants.CART)
-      .doc("bizId")
-      .set(doc);
   }
 }

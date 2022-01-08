@@ -21,8 +21,8 @@ export class AppService {
     this.init();
   }
 
-  goHome() {
-    this.router.navigateByUrl('');
+  go(url: string) {
+    this.router.navigateByUrl(url);
   }
 
   goBack() {

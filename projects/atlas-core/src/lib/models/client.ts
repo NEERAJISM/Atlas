@@ -5,12 +5,12 @@ export class Client {
   id: string;
   userId: string;  // like user name / kerberos
 
-  name: string;
+  name: string;  // remove
   pan: string;
   gst: string;
 
-  mobile: string;
-  email: string;
+  mobile: string; // remove
+  email: string; // remove
 
   address: Address = new Address();
 }

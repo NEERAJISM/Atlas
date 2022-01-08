@@ -187,6 +187,6 @@ export class OmsComponent implements OnInit, OnDestroy {
   }
 
   home(){
-    this.service.goHome();
+    this.service.go('');
   }
 }

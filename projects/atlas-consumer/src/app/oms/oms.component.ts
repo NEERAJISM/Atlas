@@ -11,6 +11,7 @@ import {
   Product,
   Profile,
 } from 'atlas-core';
+import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
 import { ModalPage } from './modal/modal.page';
 
@@ -33,6 +34,9 @@ export class OmsComponent implements OnInit, OnDestroy {
 
   uid: string;
 
+  // subscriptions
+  subscriptions: Subscription[] = [];
+
   constructor(
     private router: Router,
     public modalController: ModalController,
@@ -44,35 +48,51 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.init();
     this.profile = this.service.getProfile();
 
-    this.authService.getUserId().subscribe((user) => {
-      if (!user) {
-        setTimeout(() => this.presentModal(), 700);
-      } else {
-        this.uid = user.uid;
-        this.initForUser();
-      }
-    });
+    this.subscriptions.push(
+      this.authService.getUserId().subscribe((user) => {
+        if (!user) {
+          setTimeout(() => this.presentModal(), 700);
+        } else {
+          this.uid = user.uid;
+          this.initForUser();
+        }
+      })
+    );
   }
 
   ngOnInit(): void {
-    this.service.modalCloseEvent.subscribe((s) => {
-      if (s === 'close') {
-        this.modalController.dismiss();
+    this.subscriptions.push(
+      this.service.modalCloseEvent.subscribe((s) => {
+        if (s === 'close') {
+          this.modalController.dismiss();
+          this.initForUser();
+        } else if (s === 'back') {
+          this.location.back();
+        }
+      })
+    );
+
+    this.subscriptions.push(
+      this.service.cartUpdatedEvent.subscribe((s) => {
         this.initForUser();
-      } else if (s === 'back') {
-        this.location.back();
-      }
-    });
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.modalController.dismiss();
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   initForUser() {
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.uid + '/' + Constants.CART)
-      .doc("bizId")
+      .doc('bizId')
       .get()
       .subscribe((doc) => {
         if (doc.data()) {
+          this.cartSize = 0;
           const cart = new Cart();
           Object.assign(cart, doc.data());
           cart.items.forEach((item) => {
@@ -85,10 +105,6 @@ export class OmsComponent implements OnInit, OnDestroy {
           });
         }
       });
-  }
-
-  ngOnDestroy(): void {
-    this.modalController.dismiss();
   }
 
   async presentModal() {
@@ -182,11 +198,11 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.uid + '/' + Constants.CART)
-      .doc("bizId")
+      .doc('bizId')
       .set(doc);
   }
 
-  home(){
+  home() {
     this.service.go('');
   }
 }

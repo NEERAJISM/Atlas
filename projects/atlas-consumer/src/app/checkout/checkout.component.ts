@@ -199,7 +199,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .getInstance()
       .collection(Constants.USER + '/' + this.client.id + '/' + Constants.CART)
       .doc('bizId')
-      .set(doc);
+      .set(doc)
+      .finally(() => this.service.cartUpdated(''));
   }
 
   editAddress() {

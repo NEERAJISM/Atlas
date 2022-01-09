@@ -7,14 +7,21 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class AppService {
   items: Product[] = [];
-
   private profile: Profile = new Profile();
   private pages: Pages = new Pages();
+
+  // custom events
   private modal = new BehaviorSubject<string>('');
   modalCloseEvent = this.modal.asObservable();
+  private cart = new BehaviorSubject<string>('');
+  cartUpdatedEvent = this.cart.asObservable();
 
   closeModal(s: string) {
     this.modal.next(s);
+  }
+
+  cartUpdated(s: string) {
+    this.cart.next(s);
   }
 
   constructor(private router: Router, private location: Location) {

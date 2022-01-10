@@ -17,10 +17,14 @@
         ></ion-searchbar>
       </ion-col>
       <ion-col size="3">
-        <ion-button (click)="routeToCheckout()">
+        <ion-button *ngIf="isDesktop" (click)="routeToCheckout()" disabled="{{ cartSize == 0 }}">
           <ion-icon slot="start" name="bag-handle-outline"></ion-icon>
           <ion-text class="d-none d-md-block"> Cart &nbsp;</ion-text>
           <ion-badge color="warning">{{ cartSize }}</ion-badge>
+        </ion-button>
+
+        <ion-button (click)="account()">
+          <ion-icon name="person-circle-outline"></ion-icon>
         </ion-button>
       </ion-col>
     </ion-row>
@@ -28,6 +32,14 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- fab placed to the bottom end -->
+  <ion-fab *ngIf="!isDesktop && cartSize > 0" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="routeToCheckout()">
+      <ion-icon name="cart-outline"></ion-icon>
+      <ion-badge color="warning" style="position: absolute; top: 1mm; right: 3mm;" >{{ cartSize }}</ion-badge>
+    </ion-fab-button>
+  </ion-fab>
+
   <ion-row noWrap class="mx-md-5">
     <ion-col
       *ngFor="let item of items; index as i"

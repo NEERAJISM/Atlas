@@ -37,6 +37,8 @@ export class OmsComponent implements OnInit, OnDestroy {
   // subscriptions
   subscriptions: Subscription[] = [];
 
+  isDesktop = false;
+
   constructor(
     private router: Router,
     public modalController: ModalController,
@@ -45,6 +47,10 @@ export class OmsComponent implements OnInit, OnDestroy {
     private fbUtil: FirebaseUtil,
     private authService: AuthService
   ) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
+
     this.init();
     this.profile = this.service.getProfile();
 
@@ -177,9 +183,11 @@ export class OmsComponent implements OnInit, OnDestroy {
   }
 
   routeToCheckout() {
-    if (this.cartMap.size > 0) {
-      this.router.navigateByUrl('/checkout');
-    }
+    this.router.navigateByUrl('/checkout');
+  }
+
+  account() {
+    this.router.navigateByUrl('/account');
   }
 
   updateCart() {

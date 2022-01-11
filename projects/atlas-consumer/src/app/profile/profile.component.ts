@@ -296,7 +296,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   updateOrders(result: Order[]) {
     this.orders = result;
-    console.log('Loaded ' + this.orders.length + ' orders');
   }
 
   order() {

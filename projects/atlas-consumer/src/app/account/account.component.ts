@@ -8,11 +8,15 @@ import { Subscription } from 'rxjs';
 })
 export class AccountComponent {
   limit = 5;
+  isDesktop = false;
 
   orders: Order[] = [];
   orderSubscription: Subscription;
 
   constructor(public fbUtil: FirebaseUtil, private commonUtil : CommonUtil) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
     this.loadOrders();
   }
 

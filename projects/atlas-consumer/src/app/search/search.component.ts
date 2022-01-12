@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 export class SearchComponent {
   value: string = '';
 
+  isDesktop = false;
   displayLoc = false;
   location = '';
   pincode: string = '';
@@ -29,7 +30,11 @@ export class SearchComponent {
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
-  constructor(private util: CommonUtil, public router: Router) {}
+  constructor(private util: CommonUtil, public router: Router) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
+  }
 
   pinCheck(pin) {
     if (this.pincode.length == 6) {

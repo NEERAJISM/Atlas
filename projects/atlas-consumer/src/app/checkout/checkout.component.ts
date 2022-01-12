@@ -273,7 +273,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       // discount & tax
       i.tax = '0';
       i.taxValue = 0;
-      i.total = i.price + i.taxValue;
+      i.total = i.price * i.qty + i.taxValue;
 
       totalV += i.total;
       totalTaxV += i.taxValue;

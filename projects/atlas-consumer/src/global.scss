@@ -86,3 +86,7 @@ invisible {
   .hidden-xl-down {
     display: none !important;
   }
+
+  .no-click {
+    pointer-events:none;
+  }

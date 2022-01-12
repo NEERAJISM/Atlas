@@ -21,49 +21,68 @@
   <ion-row *ngFor="let order of orders">
     <ion-col offset-md="2" size-md="8" size="12">
       <ion-card>
-        <ion-card-header>
+        <ion-card-header style="background: #e0e0e0">
           <ion-row>
             <ion-col sizeMd="2">
               <b>
                 {{ getDate(order.createdTimeUTC) }}
               </b>
             </ion-col>
-            <ion-col sizeMd="8" class="ion-text-center">
+            <ion-col sizeMd="5" class="ion-text-center">
               <b> Order# </b>
               {{ order.vId }}
             </ion-col>
-            <ion-col sizeMd="2" class="ion-text-end text-success">
-              <b>Total - &#8377; {{ order.total }}</b>
+            <ion-col sizeMd="3" class="ion-text-center">
+              Delivering To: <b> {{ order.billingAddress.name }} </b>
+            </ion-col>
+            <ion-col sizeMd="2" class="ion-text-end">
+              Status -
+              <b class="text-success">{{
+                order.status[order.status.length - 1].status
+              }}</b>
             </ion-col>
           </ion-row>
         </ion-card-header>
         <ion-card-content>
-          <ion-item button *ngFor="let item of order.items; index as i">
-            <ion-thumbnail slot="start" style="width: 75px; height: 75px">
-              <img src="assets/images/profile/food1.jpg" />
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <b>{{ item.name }}</b> &nbsp;<i>({{ item.unit }})</i>
-              </h3>
+          <ion-row>
+            <ion-col sizeMd="8">
+              <ion-item *ngFor="let item of order.items; index as i">
+                <ion-thumbnail slot="start" style="width: 75px; height: 75px">
+                  <img src="assets/images/profile/food1.jpg" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3>
+                    <b>{{ item.name }}</b> &nbsp;<i>({{ item.unit }})</i>
+                  </h3>
 
-              <ion-row>
-                <h5>Rs : {{ item.price }}</h5>
-              </ion-row>
+                  <ion-row>
+                    <h5>Rs : {{ item.price }}</h5>
+                  </ion-row>
 
-              <ion-row>
-                <ion-col
-                  class="ion-no-padding text-success d-flex align-items-center"
-                >
-                  <h5>
-                    <b>Total : {{ item.qty }}</b>
-                  </h5>
-                </ion-col>
-              </ion-row>
-            </ion-label>
-          </ion-item>
+                  <ion-row>
+                    <ion-col class="ion-no-padding d-flex align-items-center">
+                      <h5>
+                        <b>Qty : {{ item.qty }}</b>
+                      </h5>
+                    </ion-col>
+                  </ion-row>
+                </ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col sizeMd="4" class="ion-text-end text-success">
+              <b>Total - &#8377; {{ order.total }}</b>
+            </ion-col>
+          </ion-row>
         </ion-card-content>
       </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col offset-md="2" size-md="8" size="12">
+      <ion-button expand="block" (click)="increaseOrderLimit()"
+        >Show Previous Orders</ion-button
+      >
     </ion-col>
   </ion-row>
 </ion-content>

@@ -8,13 +8,11 @@ import { IonContent } from '@ionic/angular';
 export class LandingComponent {
   @ViewChild(IonContent) content: IonContent;
   @ViewChild('home') home: any;
-  @ViewChild('about') about: any;
-  @ViewChild('services') services: any;
-  @ViewChild('projects') projects: any;
-  @ViewChild('team') team: any;
+  @ViewChild('features') features: any;
   @ViewChild('footer') footer: any;
 
   isDesktop = false;
+  clicked = false;
 
   constructor() {
     if (window.innerWidth > 1000) {
@@ -29,23 +27,14 @@ export class LandingComponent {
       case 'home':
         target = this.home;
         break;
-      case 'about':
-        target = this.about;
-        break;
-      case 'services':
-        target = this.services;
-        break;
-      case 'projects':
-        target = this.projects;
-        break;
-      case 'team':
-        target = this.team;
+      case 'features':
+        target = this.features;
         break;
       case 'footer':
         target = this.footer;
+        this.clicked = true;
         break;
     }
-
     this.content.scrollToPoint(0, target.nativeElement.offsetTop, 1000);
   }
 }

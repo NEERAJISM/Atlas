@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, ToastController } from '@ionic/angular';
+import { IonContent, Platform, ToastController } from '@ionic/angular';
 import {
   Address,
   AuthService,
@@ -11,18 +11,15 @@ import {
   CommonUtil,
   Constants,
   FirebaseUtil,
-  Item,
   Order,
-  OrderStatus,
   Pages,
   Product,
   Profile,
-  Status,
-  Unit
+  Unit,
 } from 'atlas-core';
 import firebase from 'firebase/app';
 import { Subscription } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
+import { AppService } from '../app.service';
 import { ProfileService } from './profile.service';
 
 class CartItem {
@@ -35,7 +32,6 @@ class CartItem {
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild(IonContent) content: IonContent;
@@ -88,18 +84,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
   limit = 3;
   url = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
 
-
   // slider config
 
   sliderConfig = {
     spaceBetween: 10,
     centeredSlides: true,
     slidesPerView: 1,
-    autoplay:true,
-    loop:true
+    autoplay: true,
+    loop: true,
   };
 
-  landingFont = "70px";
+  landingFont = '70px';
   isDesktop = false;
 
   // **** Assets for Custom web  *****
@@ -129,22 +124,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private commonUtil: CommonUtil,
     private fbUtil: FirebaseUtil,
     public toastController: ToastController,
-    private service: ProfileService
+    private service: ProfileService,
+    private platform: Platform,
+    private appService: AppService
   ) {
-
-    if(window.innerWidth > 1000) {
+    if (window.innerWidth > 1000) {
       this.sliderConfig.slidesPerView = 1.8;
-      this.landingFont = "120px";
+      this.landingFont = '120px';
       this.isDesktop = true;
     }
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      console.log('Back called');
+      appService.go('');
+    });
 
     this.init();
     this.profile = this.service.getProfile();
     this.pages = this.service.getPages();
-    
   }
 
-  routeToOrder(){
+  routeToOrder() {
     this.router.navigateByUrl('/order');
   }
 
@@ -179,7 +179,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const toast = await this.toastController.create({
       message: "Thanks. Your query has been registerd. we'll reachout to you.",
       duration: 2000,
-      position: this.isDesktop ? 'top' : 'bottom'
+      position: this.isDesktop ? 'top' : 'bottom',
     });
     toast.present();
   }
@@ -371,8 +371,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  itemsNext() {
-  }
+  itemsNext() {}
 
   getOtp() {
     if (!this.recaptchaVerifier) {

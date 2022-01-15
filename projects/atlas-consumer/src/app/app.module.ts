@@ -22,6 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { LandingComponent } from './landing/landing.component';
 import { ModalPage } from './oms/modal/modal.page';
 import { OmsComponent } from './oms/oms.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -50,7 +51,7 @@ import { SearchComponent } from './search/search.component';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     IonicModule.forRoot(),
   ],
-  declarations: [AppComponent, ProfileComponent, SearchComponent, OmsComponent, AccountComponent, CheckoutComponent, ModalPage],
+  declarations: [AppComponent, ProfileComponent, SearchComponent, OmsComponent, AccountComponent, CheckoutComponent, ModalPage, LandingComponent],
   providers: [ProfileService, AppService],
   bootstrap: [AppComponent],
   schemas: [

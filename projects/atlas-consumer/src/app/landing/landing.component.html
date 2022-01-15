@@ -1,0 +1,233 @@
+<ion-header>
+  <ion-toolbar class="py-2">
+    <ion-title
+      style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
+    >
+      <b>&nbsp; ATLAS </b> Business</ion-title
+    >
+
+    <ion-buttons class="hidden-md-down" slot="primary" collapse="true">
+      <ion-button (click)="scrollElement('home')">Home</ion-button>
+      <ion-button (click)="scrollElement('about')">About us</ion-button>
+      <ion-button (click)="scrollElement('services')">Services</ion-button>
+      <ion-button (click)="scrollElement('footer')">Contact us</ion-button>
+      <ion-button
+        style="background: #494cf3; color: white"
+        (click)="scrollElement('footer')"
+        >Get Early Access</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section
+    #home
+    class="fwh-slide mt-5"
+    style="
+      background: url(assets/images/landing/landing2.jpg);
+      background-size: cover;
+    "
+  >
+    <ion-row class="ion-text-end">
+      <ion-col offsetMd="1" sizeMd="10">
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <b
+              style="
+                font-family: 'Mulish', sans-serif;
+                color: black;
+                font-size: 50px;
+              "
+            >
+              <div>India's Modern way to Business</div>
+            </b>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </section>
+
+  <section class="my-5">
+    <ion-row>
+      <ion-col offset-md="1">
+        <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
+          <b>How ATLAS will help in growing your Business ? </b>
+        </h1>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col offsetMd="1" sizeMd="10">
+        <ion-row class="my-5">
+          <ion-col size="8">
+            <img
+              src="assets/images/landing/launch.jpg"
+              style="max-height: 500px"
+            />
+          </ion-col>
+          <ion-col sizeMd="4">
+            <h1
+              class="ion-text-start display-2 pt-5"
+              style="font-family: 'Mulish', sans-serif"
+            >
+              <b style="color: #494cf3">#1</b> Setup & Manage your
+              <b style="color: #494cf3">online business store</b>
+            </h1>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="my-5">
+          <ion-col sizeMd="5">
+            <h1
+              class="ion-text-start display-2 pt-5"
+              style="font-family: 'Mulish', sans-serif"
+            >
+              <b style="color: #494cf3">#2</b> Receive /
+              <b style="color: #494cf3">Manage Orders </b> from online customers
+            </h1>
+          </ion-col>
+
+          <ion-col size="7" class="ion-text-end">
+            <img
+              src="assets/images/landing/oms.jpg"
+              style="max-height: 500px"
+            />
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="my-5">
+          <ion-col size="8">
+            <img
+              src="assets/images/landing/invoice.jpg"
+              style="max-height: 500px"
+            />
+          </ion-col>
+          <ion-col sizeMd="4">
+            <h1
+              class="ion-text-start display-2 pt-5"
+              style="font-family: 'Mulish', sans-serif"
+            >
+              <b style="color: #494cf3">#3</b> GST
+              <b style="color: #494cf3">Invoice / Billing</b> support
+            </h1>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="my-5">
+          <ion-col sizeMd="5">
+            <h1
+              class="ion-text-start display-2 pt-5"
+              style="font-family: 'Mulish', sans-serif"
+            >
+              <b style="color: #494cf3">#4</b> Track & Manage your
+              <b style="color: #494cf3">product inventory</b>
+            </h1>
+          </ion-col>
+
+          <ion-col size="7" class="ion-text-end">
+            <img
+              src="assets/images/landing/inventory.jpg"
+              style="max-height: 500px"
+            />
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="my-5">
+          <ion-col size="7">
+            <img
+              src="assets/images/landing/data.jpg"
+              style="max-height: 500px"
+            />
+          </ion-col>
+          <ion-col sizeMd="5">
+            <h1
+              class="ion-text-start display-2 pt-5"
+              style="font-family: 'Mulish', sans-serif"
+            >
+              <b style="color: #494cf3">#5</b> Business
+              <b style="color: #494cf3">symmary / insights </b>
+              dashboard
+            </h1>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="my-5">
+          <ion-col sizeMd="5">
+            <h1
+              class="ion-text-start display-2 pt-5"
+              style="font-family: 'Mulish', sans-serif"
+            >
+              <b style="color: #494cf3">#6</b> Customer Management /
+              <b style="color: #494cf3">outreach</b>
+              support
+            </h1>
+          </ion-col>
+
+          <ion-col size="7" class="ion-text-end">
+            <img
+              src="assets/images/landing/client.jpg"
+              style="max-height: 500px"
+            />
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </section>
+
+  <section #footer style="background: #0b0162">
+    <ion-row class="py-5">
+      <ion-col size="12" offset-md="1" size-md="3" class="text-light">
+        <div class="pl-4">
+          <h6 class="text-uppercase font-weight-bold text-light">
+            <strong>Contact Us</strong>
+          </h6>
+          <hr
+            class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto"
+            style="width: 60px"
+          />
+          <p>
+            <i class="fas fa-home mr-1"></i> B-12, 78, Tardeo Road,<br />
+            Bombay A. C. Market,<br />
+            Mumbai-400034, Maharashtra
+          </p>
+          <p>
+            <i class="fa fa-envelope mr-1"></i>&nbsp;
+            <a href="mailto:maharajaarchitects@gmail.com"
+              >maharajaarchitects@gmail.com</a
+            >
+          </p>
+          <p><i class="fa fa-phone mr-1"></i> &nbsp;022 2352 6522</p>
+          <p><i class="fa fa-phone mr-1"></i> + 91 - 9833152271</p>
+        </div>
+      </ion-col>
+
+      <ion-col size="12" size-md="4">
+        <h6 class="text-uppercase font-weight-bold text-light">
+          <strong>Write a query to us</strong>
+        </h6>
+        <hr
+          class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto"
+          style="width: 180px"
+        />
+        <ion-item>
+          <ion-label position="floating">Your Email Id / Mobile No.</ion-label>
+          <ion-input></ion-input>
+        </ion-item>
+
+        <!-- Textarea in an item with a floating label -->
+        <ion-item class="mt-3">
+          <ion-label position="floating">Description</ion-label>
+          <ion-textarea></ion-textarea>
+        </ion-item>
+
+        <ion-button class="mt-3">Submit</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="py-4">
+      <ion-col style="color: white" class="ion-text-center">
+        Atlas Business
+      </ion-col>
+    </ion-row>
+  </section>
+</ion-content>

@@ -12,26 +12,26 @@ const routes: Routes = [
     path: '',
     component: LandingComponent,
   },
-  {
-    path: 'search',
-    component: SearchComponent,
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-  },
-  {
-    path: 'order',
-    component: OmsComponent,
-  },
-  {
-    path: 'account',
-    component: AccountComponent,
-  },
-  {
-    path: 'checkout',
-    component: CheckoutComponent,
-  },
+  // {
+  //   path: 'search',
+  //   component: SearchComponent,
+  // },
+  // {
+  //   path: 'profile',
+  //   component: ProfileComponent,
+  // },
+  // {
+  //   path: 'order',
+  //   component: OmsComponent,
+  // },
+  // {
+  //   path: 'account',
+  //   component: AccountComponent,
+  // },
+  // {
+  //   path: 'checkout',
+  //   component: CheckoutComponent,
+  // },
   {
     // Always keep this in the END
     path: '**',

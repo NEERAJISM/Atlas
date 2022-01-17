@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonContent } from '@ionic/angular';
+import { IonContent, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-landing',
@@ -14,10 +14,31 @@ export class LandingComponent {
   isDesktop = false;
   clicked = false;
 
-  constructor() {
+  name = '';
+  mobile = '';
+  email = '';
+  description = '';
+
+  mailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  inProgress = false;
+
+  scriptURL =
+    'https://script.google.com/macros/s/AKfycbwn7cSa_r7WwN9vF1vfD-vibUrTeCnldP6ge1sizKi6zFTm9PdX09lO-Fm0jLBIf5ZK/exec';
+
+  constructor(public toastController: ToastController) {
     if (window.innerWidth > 1000) {
       this.isDesktop = true;
     }
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      position: this.isDesktop ? 'top' : 'bottom',
+      message: message,
+      duration: 3000,
+    });
+    toast.present();
   }
 
   public scrollElement(element: string) {
@@ -36,5 +57,64 @@ export class LandingComponent {
         break;
     }
     this.content.scrollToPoint(0, target.nativeElement.offsetTop, 1000);
+  }
+
+  submit() {
+    if (!this.name) {
+      this.presentToast('Please enter your full name!');
+      return;
+    }
+
+    if (!this.mobile || this.mobile.length < 10) {
+      this.presentToast('Please enter a valid 10-digit mobile number!');
+      return;
+    }
+
+    if (this.email) {
+      if (!this.mailRegEx.test(this.email)) {
+        this.presentToast('Please enter a valid email address!');
+        return;
+      }
+    }
+
+    var input = {
+      Detail$:
+        this.name +
+        '~' +
+        this.mobile +
+        '~' +
+        this.email +
+        '~' +
+        this.description +
+        '^^',
+    };
+
+    this.inProgress = true;
+    fetch(this.scriptURL, {
+      method: 'POST',
+      mode: 'no-cors',
+      cache: 'no-cache',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      body: JSON.stringify(input),
+    })
+      .then((response) =>
+        this.presentToast(
+          'Thanks ' +
+            this.name +
+            " for showing your interest. We'll get back you!"
+        )
+      )
+      .catch((error) =>
+        this.presentToast(
+          'Error occurred, Please check your internet connection!'
+        )
+      )
+      .finally(() => {
+        this.inProgress = false;
+        setTimeout(() => window.location.reload(), 3000);
+      });
   }
 }

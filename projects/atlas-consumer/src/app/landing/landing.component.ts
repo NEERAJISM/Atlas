@@ -72,16 +72,19 @@ export class LandingComponent {
   }
 
   submit() {
+
     if (!this.name) {
       this.presentToast('Please enter your full name!');
       return;
     }
 
+    this.mobile = this.mobile.trim();
     if (!this.mobile || this.mobile.length < 10) {
       this.presentToast('Please enter a valid 10-digit mobile number!');
       return;
     }
 
+    this.email = this.email.trim();
     if (this.email) {
       if (!this.mailRegEx.test(this.email)) {
         this.presentToast('Please enter a valid email address!');

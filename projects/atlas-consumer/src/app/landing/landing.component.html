@@ -3,12 +3,14 @@
     <ion-title
       style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
     >
+      <img style="height: 30px" src="assets/images/atlas-small.png" />
       <b>&nbsp; ATLAS </b> Business</ion-title
     >
 
     <ion-buttons class="hidden-md-down" slot="primary" collapse="true">
       <ion-button (click)="scrollElement('home')">Home</ion-button>
       <ion-button (click)="scrollElement('features')">Features</ion-button>
+      <ion-button (click)="scrollElement('demo')">Demo</ion-button>
       <ion-button (click)="scrollElement('footer')">Contact us</ion-button>
       <ion-button
         style="background: #494cf3; color: white"
@@ -39,7 +41,7 @@
                 font-size: 50px;
               "
             >
-              <div>India's Modern way to manage Business</div>
+              <div>India's Modern way to manage Business online</div>
             </b>
           </ion-col>
         </ion-row>
@@ -49,7 +51,7 @@
 
   <section #features class="my-5">
     <ion-row>
-      <ion-col offset-md="1">
+      <ion-col>
         <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
           <b>How ATLAS will help in growing your Business ? </b>
         </h1>
@@ -201,7 +203,7 @@
           </ion-col>
         </ion-row>
 
-        <ion-row class="my-5">
+        <!-- <ion-row class="my-5">
           <ion-col *ngIf="isDesktop" sizeMd="5">
             <h1
               class="ion-text-start display-2 pt-5"
@@ -230,7 +232,96 @@
               support
             </h1>
           </ion-col>
-        </ion-row>
+        </ion-row> -->
+      </ion-col>
+    </ion-row>
+  </section>
+
+  <section #demo class="my-5">
+    <ion-row>
+      <ion-col>
+        <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
+          <b>Demo </b>
+        </h1>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-slides [options]="sliderConfig">
+          <ion-slide style="width: 800px">
+            <ion-card>
+              <ion-card-header style="background: #e3ebff">
+                <ion-card-title
+                  style="font-family: 'Mulish', sans-serif; color: #494cf3"
+                  ><b>Create your Business Website / Online store through Atlas</b></ion-card-title
+                >
+              </ion-card-header>
+              <img
+                style="max-height: 600px"
+                src="assets/images/landing/demo/stack.png"
+              />
+            </ion-card>
+          </ion-slide>
+          <ion-slide style="width: 800px">
+            <ion-card>
+              <ion-card-header style="background: #e3ebff">
+                <ion-card-title
+                  style="font-family: 'Mulish', sans-serif; color: #494cf3"
+                  ><b
+                    >Display your product catalogue / services online</b
+                  ></ion-card-title
+                >
+              </ion-card-header>
+              <img
+                style="max-height: 600px"
+                src="assets/images/landing/demo/cart.png"
+              />
+            </ion-card>
+          </ion-slide>
+          <ion-slide style="width: 800px">
+            <ion-card>
+              <ion-card-header style="background: #e3ebff">
+                <ion-card-title
+                  style="font-family: 'Mulish', sans-serif; color: #494cf3"
+                  ><b>Receive instant orders / requests from clients through your website</b></ion-card-title
+                >
+              </ion-card-header>
+              <img
+                style="max-height: 600px"
+                src="assets/images/landing/demo/checkout.png"
+              />
+            </ion-card>
+          </ion-slide>
+          <ion-slide style="width: 800px">
+            <ion-card>
+              <ion-card-header style="background: #e3ebff">
+                <ion-card-title
+                  style="font-family: 'Mulish', sans-serif; color: #494cf3"
+                  ><b>Atlas Business Console -  Dashboard / Summary</b></ion-card-title
+                >
+              </ion-card-header>
+              <img
+                style="max-height: 600px"
+                src="assets/images/landing/demo/dashboard.png"
+              />
+            </ion-card>
+          </ion-slide>
+          <ion-slide style="width: 800px">
+            <ion-card>
+              <ion-card-header style="background: #e3ebff">
+                <ion-card-title
+                  style="font-family: 'Mulish', sans-serif; color: #494cf3"
+                  ><b>Atlas Business Console - Create/Edit GST Invoices</b></ion-card-title
+                >
+              </ion-card-header>
+              <img
+                style="max-height: 600px"
+                src="assets/images/landing/demo/invoice.png"
+              />
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
       </ion-col>
     </ion-row>
   </section>
@@ -305,11 +396,13 @@
 
         <ion-row>
           <ion-col>
-            <ion-button [disabled]="inProgress" style="--background: #fd6f61" (click)="submit()"
+            <ion-button
+              [disabled]="inProgress"
+              style="--background: #fd6f61"
+              (click)="submit()"
               >Request Early Access
               <ion-spinner *ngIf="inProgress" name="crescent"></ion-spinner>
-              </ion-button
-            >
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-col>

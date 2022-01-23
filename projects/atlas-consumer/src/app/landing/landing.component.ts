@@ -9,6 +9,7 @@ export class LandingComponent {
   @ViewChild(IonContent) content: IonContent;
   @ViewChild('home') home: any;
   @ViewChild('features') features: any;
+  @ViewChild('demo') demo: any;
   @ViewChild('footer') footer: any;
 
   isDesktop = false;
@@ -24,7 +25,15 @@ export class LandingComponent {
   inProgress = false;
 
   scriptURL =
-    'https://script.google.com/macros/s/AKfycbwn7cSa_r7WwN9vF1vfD-vibUrTeCnldP6ge1sizKi6zFTm9PdX09lO-Fm0jLBIf5ZK/exec';
+    'https://script.google.com/macros/s/AKfycbx-nA2vJpog6KNnPCYse4v6fxuaod-2m59PM9Lh0gG5rvIQTiHgEO3iOSQBK4UEKriK/exec';
+
+  sliderConfig = {
+    spaceBetween: 10,
+    centeredSlides: true,
+    slidesPerView: 1.25,
+    autoplay: true,
+    loop: true,
+  };
 
   constructor(public toastController: ToastController) {
     if (window.innerWidth > 1000) {
@@ -50,6 +59,9 @@ export class LandingComponent {
         break;
       case 'features':
         target = this.features;
+        break;
+      case 'demo':
+        target = this.demo;
         break;
       case 'footer':
         target = this.footer;

@@ -72,7 +72,6 @@ export class LandingComponent {
   }
 
   submit() {
-
     if (!this.name) {
       this.presentToast('Please enter your full name!');
       return;
@@ -85,11 +84,9 @@ export class LandingComponent {
     }
 
     this.email = this.email.trim();
-    if (this.email) {
-      if (!this.mailRegEx.test(this.email)) {
-        this.presentToast('Please enter a valid email address!');
-        return;
-      }
+    if (!this.email || !this.mailRegEx.test(this.email)) {
+      this.presentToast('Please enter a valid email address!');
+      return;
     }
 
     var input = {

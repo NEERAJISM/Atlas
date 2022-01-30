@@ -134,10 +134,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.isDesktop = true;
     }
 
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      console.log('Back called');
-      appService.go('');
-    });
+    // this.platform.backButton.subscribeWithPriority(10, () => {
+    //   console.log('Back called');
+    //   appService.go('');
+    // });
 
     this.init();
     this.profile = this.service.getProfile();

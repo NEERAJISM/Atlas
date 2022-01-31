@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { SplashComponent } from 'atlas-core';
 import { AuthGuard } from './auth.guard';
-import { LoginComponent } from './login/login.component';
+import { LandingComponent } from './landing/landing.component';
+import { RegisterComponent } from './register/register.component';
 
 
 const routes: Routes = [
   // TODO default goto page + secure all links
   {
     path: '',
-    component: LoginComponent,
+    component: LandingComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
     pathMatch: 'full'
   },
   {

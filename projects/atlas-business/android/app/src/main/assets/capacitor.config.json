@@ -1,0 +1,6 @@
+{
+	"appId": "com.atlas.business",
+	"appName": "atlas-business",
+	"webDir": "../../dist/atlas-business",
+	"bundledWebRuntime": false
+}

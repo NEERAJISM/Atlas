@@ -9,6 +9,7 @@
 
 # dependencies
 /node_modules
+/projects/atlas-business/node_modules
 /projects/atlas-consumer/node_modules
 
 # profiling files

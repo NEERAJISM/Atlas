@@ -8,23 +8,27 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { LoginModule } from './login/login.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { IonicModule } from '@ionic/angular';
+import { LandingComponent } from './landing/landing.component';
+import { AppService } from './app.service';
+import { ModalPage } from './landing/modal/modal.page';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
-  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AtlasCoreModule,
     FormsModule,
     BrowserAnimationsModule,
-    LoginModule,
     DashboardModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     NgbModule,
+    IonicModule.forRoot(),
   ],
-  providers: [],
+  declarations: [LandingComponent, AppComponent, ModalPage, RegisterComponent],
+  providers: [AppService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

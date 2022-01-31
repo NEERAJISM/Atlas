@@ -1,0 +1,169 @@
+import { Component, ViewChild } from '@angular/core';
+import { IonContent, ToastController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { Constants } from 'atlas-core';
+import { Subscription } from 'rxjs';
+import { AppService } from '../app.service';
+import { ModalPage } from './modal/modal.page';
+
+@Component({
+  selector: 'app-landing',
+  templateUrl: './landing.component.html',
+})
+export class LandingComponent {
+  @ViewChild(IonContent) content: IonContent;
+  @ViewChild('home') home: any;
+  @ViewChild('features') features: any;
+  @ViewChild('demo') demo: any;
+  @ViewChild('footer') footer: any;
+
+  isDesktop = false;
+  clicked = false;
+
+  name = '';
+  mobile = '';
+  email = '';
+  description = '';
+
+  inProgress = false;
+
+  scriptURL =
+    'https://script.google.com/macros/s/AKfycbx-nA2vJpog6KNnPCYse4v6fxuaod-2m59PM9Lh0gG5rvIQTiHgEO3iOSQBK4UEKriK/exec';
+
+  sliderConfig = {
+    spaceBetween: 10,
+    centeredSlides: true,
+    slidesPerView: 1.25,
+    autoplay: true,
+    loop: true,
+  };
+
+  // subscriptions
+  subscriptions: Subscription[] = [];
+
+  constructor(
+    public toastController: ToastController,
+    public modalController: ModalController,
+    private service: AppService
+  ) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
+  }
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.service.modalCloseEvent.subscribe((s) => {
+        if (s === 'success') {
+          this.modalController.dismiss();
+          this.service.go('/dashboard');
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.modalController.dismiss();
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: ModalPage,
+      cssClass: 'login-modal',
+    });
+    return await modal.present();
+  }
+
+  public scrollElement(element: string) {
+    let target;
+
+    switch (element) {
+      case 'home':
+        target = this.home;
+        break;
+      case 'features':
+        target = this.features;
+        break;
+      case 'demo':
+        target = this.demo;
+        break;
+      case 'footer':
+        target = this.footer;
+        this.clicked = true;
+        break;
+    }
+    this.content.scrollToPoint(0, target.nativeElement.offsetTop, 1000);
+  }
+
+  submit() {
+    if (!this.name) {
+      this.service.presentToast('Please enter your full name!', this.isDesktop);
+      return;
+    }
+
+    this.mobile = this.mobile.trim();
+    if (!this.mobile || this.mobile.length < 10) {
+      this.service.presentToast(
+        'Please enter a valid 10-digit mobile number!',
+        this.isDesktop
+      );
+      return;
+    }
+
+    this.email = this.email.trim();
+    if (!this.email || !Constants.mailRegEx.test(this.email)) {
+      this.service.presentToast(
+        'Please enter a valid email address!',
+        this.isDesktop
+      );
+      return;
+    }
+
+    var input = {
+      Detail$:
+        this.name +
+        '~' +
+        this.mobile +
+        '~' +
+        this.email +
+        '~' +
+        this.description +
+        '^^',
+    };
+
+    this.inProgress = true;
+    fetch(this.scriptURL, {
+      method: 'POST',
+      mode: 'no-cors',
+      cache: 'no-cache',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      body: JSON.stringify(input),
+    })
+      .then((response) =>
+        this.service.presentToast(
+          'Thanks ' +
+            this.name +
+            " for showing your interest. We'll get back you!",
+          this.isDesktop
+        )
+      )
+      .catch((error) =>
+        this.service.presentToast(
+          'Error occurred, Please check your internet connection!',
+          this.isDesktop
+        )
+      )
+      .finally(() => {
+        this.inProgress = false;
+        setTimeout(() => window.location.reload(), 3000);
+      });
+  }
+
+  go() {
+    this.service.go('/register');
+  }
+}

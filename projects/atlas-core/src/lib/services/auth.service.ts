@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
-  AngularFirestoreDocument
+  AngularFirestoreDocument,
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import firebase from 'firebase/app';
@@ -40,9 +40,7 @@ export class AuthService {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.accessDashboard();
         return Constants.SUCCESS;
-        // this.setUserData(result.user);
       })
       .catch((error) => {
         return error.code;
@@ -54,7 +52,6 @@ export class AuthService {
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
-        this.accessDashboard();
         this.verifyEmail(result.user);
         return Constants.SUCCESS;
         // this.setUserData(result.user);
@@ -62,12 +59,6 @@ export class AuthService {
       .catch((error) => {
         return error.code;
       });
-  }
-
-  accessDashboard() {
-    this.ngZone.run(() => {
-      this.router.navigateByUrl('/dashboard');
-    });
   }
 
   verifyEmail(user?: firebase.User) {
@@ -88,20 +79,7 @@ export class AuthService {
   }
 
   forgotPassword(passwordResetEmail: string) {
-    return this.afAuth
-      .sendPasswordResetEmail(passwordResetEmail)
-      .then(() =>
-        this.util.showSnackBar(
-          'Password reset email sent, check your inbox.',
-          5000
-        )
-      )
-      .catch((error) =>
-        this.util.showSnackBar(
-          'Error while sending password reset email - ' + error.message,
-          5000
-        )
-      );
+    return this.afAuth.sendPasswordResetEmail(passwordResetEmail);
   }
 
   get isLoggedIn(): boolean {

@@ -26,11 +26,20 @@
             "aot": true,
             "assets": [
               "projects/atlas-business/src/favicon.ico",
-              "projects/atlas-business/src/assets"
+              "projects/atlas-business/src/assets",
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
             ],
             "styles": [
-              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "projects/atlas-business/src/styles.scss"
+              {
+                "input": "projects/atlas-business/src/theme/variables.scss"
+              },
+              {
+                "input": "projects/atlas-business/src/global.scss"
+              }
             ],
             "scripts": []
           },
@@ -92,9 +101,7 @@
               "projects/atlas-business/src/favicon.ico",
               "projects/atlas-business/src/assets"
             ],
-            "styles": [
-              "projects/atlas-business/src/styles.scss"
-            ],
+            "styles": ["projects/atlas-business/src/styles.scss"],
             "scripts": []
           }
         },
@@ -106,9 +113,7 @@
               "projects/atlas-business/tsconfig.spec.json",
               "projects/atlas-business/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -231,9 +236,7 @@
                 "output": "./svg"
               }
             ],
-            "styles": [
-              "projects/atlas-consumer/src/styles.scss"
-            ],
+            "styles": ["projects/atlas-consumer/src/styles.scss"],
             "scripts": []
           }
         },
@@ -245,9 +248,7 @@
               "projects/atlas-consumer/tsconfig.spec.json",
               "projects/atlas-consumer/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -297,9 +298,7 @@
               "projects/atlas-core/tsconfig.lib.json",
               "projects/atlas-core/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

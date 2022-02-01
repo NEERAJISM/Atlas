@@ -2,9 +2,8 @@ import { Injectable, NgZone } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
-  AngularFirestoreDocument,
+  AngularFirestoreDocument
 } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
 import firebase from 'firebase/app';
 import { Constants } from '../constants';
 import { CommonUtil } from './common.util';
@@ -16,7 +15,6 @@ export class AuthService {
   constructor(
     public afs: AngularFirestore,
     public afAuth: AngularFireAuth,
-    public router: Router,
     public ngZone: NgZone,
     public util: CommonUtil
   ) {
@@ -30,9 +28,6 @@ export class AuthService {
   authSubscription() {
     this.afAuth.authState.subscribe((user) => {
       this.userData = user;
-      if (!this.userData) {
-        this.router.navigateByUrl('');
-      }
     });
   }
 
@@ -104,7 +99,8 @@ export class AuthService {
 
   signOut() {
     this.storeUser(null);
-    return this.afAuth.signOut().finally(() => this.router.navigateByUrl(''));
+    this.userData = undefined;
+    return this.afAuth.signOut();
   }
 
   storeUser(user: firebase.User) {

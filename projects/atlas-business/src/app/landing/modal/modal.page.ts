@@ -22,6 +22,10 @@ export class ModalPage {
     }
   }
 
+  forgot() {
+    this.forgotPassword = !this.forgotPassword;
+  }
+
   submit() {
     if (!this.email || !Constants.mailRegEx.test(this.email)) {
       this.service.presentToast(
@@ -73,7 +77,5 @@ export class ModalPage {
     }
   }
 
-  forgot() {
-    this.forgotPassword = !this.forgotPassword;
-  }
+  
 }

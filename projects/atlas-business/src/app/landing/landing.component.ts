@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonContent, ToastController } from '@ionic/angular';
+import { AlertController, IonContent, ToastController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
-import { Constants } from 'atlas-core';
+import { AuthService, Constants } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
 import { ModalPage } from './modal/modal.page';
@@ -44,7 +44,9 @@ export class LandingComponent {
   constructor(
     public toastController: ToastController,
     public modalController: ModalController,
-    private service: AppService
+    public alertController: AlertController,
+    private service: AppService,
+    private auth: AuthService
   ) {
     if (window.innerWidth > 1000) {
       this.isDesktop = true;
@@ -68,6 +70,11 @@ export class LandingComponent {
   }
 
   async presentModal() {
+    if (this.auth.userData) {
+      this.service.go('/dashboard');
+      return;
+    }
+
     const modal = await this.modalController.create({
       component: ModalPage,
       cssClass: 'login-modal',
@@ -164,6 +171,30 @@ export class LandingComponent {
   }
 
   go() {
-    this.service.go('/register');
+    if (!this.auth.userData) {
+      this.service.go('/register');
+      return;
+    }
+    this.presentAlert();
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Confirmation',
+      message: 'Signout required before you can continue',
+      buttons: [
+        {
+          text: 'Signout',
+          handler: () => {
+            this.auth.signOut().then(() => this.service.go('/register'));
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await alert.present();
   }
 }

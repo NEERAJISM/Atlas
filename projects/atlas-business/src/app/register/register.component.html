@@ -20,7 +20,7 @@
               >First Name</ion-label
             >
             <ion-input
-              style="font-size: 40px"
+              [style]="isDesktop ? 'font-size: 40px' : 'font-size: 20px'"
               [disabled]="step > 1"
               [(ngModel)]="first"
             ></ion-input>
@@ -32,7 +32,7 @@
               >Last Name</ion-label
             >
             <ion-input
-              style="font-size: 40px"
+              [style]="isDesktop ? 'font-size: 40px' : 'font-size: 20px'"
               [disabled]="step > 1"
               [(ngModel)]="last"
             ></ion-input>
@@ -44,10 +44,10 @@
         <ion-col>
           <ion-item>
             <ion-label position="floating" style="font-size: 20px"
-              >Your Business / Company Name</ion-label
+              >Business / Company Name</ion-label
             >
             <ion-input
-              style="font-size: 40px"
+              [style]="isDesktop ? 'font-size: 40px' : 'font-size: 20px'"
               placeholder="ABC Company Pvt. Ltd."
               [disabled]="step > 2"
               [(ngModel)]="name"
@@ -63,7 +63,7 @@
               >Business Email Address</ion-label
             >
             <ion-input
-              style="font-size: 30px"
+              [style]="isDesktop ? 'font-size: 30px' : 'font-size: 20px'"
               placeholder="youremail@abc.com"
               [disabled]="step > 3"
               [(ngModel)]="email"
@@ -88,7 +88,7 @@
 
             <ion-input
               type="{{ showPassword ? 'text' : 'password' }}"
-              style="font-size: 30px"
+              [style]="isDesktop ? 'font-size: 30px' : 'font-size: 20px'"
               placeholder="********"
               [disabled]="step > 4"
               [(ngModel)]="pass"
@@ -110,7 +110,7 @@
             ></ion-icon>
             <ion-input
               type="{{ showPassword ? 'text' : 'password' }}"
-              style="font-size: 30px"
+              [style]="isDesktop ? 'font-size: 30px' : 'font-size: 20px'"
               placeholder="********"
               [disabled]="step > 4"
               [(ngModel)]="pass2"
@@ -122,7 +122,7 @@
       <ion-row class="mt-5">
         <ion-col>
           <ion-button [disabled]="step == 1 || step == 5" (click)="back()"
-            >Back</ion-button
+            >Previous</ion-button
           >
         </ion-col>
         <ion-col class="ion-text-end">
@@ -135,7 +135,7 @@
               (step == 4 && checkPassword())
             "
             (click)="next()"
-            >{{ step > 3 ? "Create Account" : "Next" }} &nbsp; <ion-spinner *ngIf="inProgress" name="crescent"></ion-spinner></ion-button
+            >{{ step > 3 ? "Create Account" : "Next" }}<ion-spinner *ngIf="inProgress" name="crescent"></ion-spinner></ion-button
           >
         </ion-col>
       </ion-row>

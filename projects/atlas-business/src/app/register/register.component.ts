@@ -7,20 +7,23 @@ import { AppService } from '../app.service';
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
+  isDesktop = true;
   step = 1;
   inProgress = false;
 
-  first = 'Neeraj';
-  last = 'Patidar';
+  first = '';
+  last = '';
 
-  name = 'ABC';
-  email = '8patidarneeraj@gmail.com';
+  name = '';
+  email = '';
   pass = '';
   pass2 = '';
 
   showPassword = false;
 
-  constructor(private auth: AuthService, private app: AppService) {}
+  constructor(private auth: AuthService, private app: AppService) {
+    this.isDesktop = app.isDesktop;
+  }
 
   next() {
     if (this.step == 3) {

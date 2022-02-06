@@ -37,7 +37,7 @@
       <ion-row>
         <ion-col>
           <ion-button expand="block" (click)="submit()" [disabled]="verifying"
-            >Login
+            >{{forgotPassword ? 'Reset Password' : 'Login'}}
             <ion-spinner *ngIf="verifying" name="crescent"></ion-spinner>
           </ion-button>
         </ion-col>

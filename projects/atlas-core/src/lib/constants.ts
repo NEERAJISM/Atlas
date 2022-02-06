@@ -85,4 +85,5 @@ export class Constants {
   static readonly optionsTaxValue: number[] = [0, 0.05, 0.12, 0.18, 0.28];
 
   static readonly mailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  static readonly passRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 }

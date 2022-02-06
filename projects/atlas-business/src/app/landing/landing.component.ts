@@ -105,25 +105,19 @@ export class LandingComponent {
 
   submit() {
     if (!this.name) {
-      this.service.presentToast('Please enter your full name!', this.isDesktop);
+      this.service.presentToast('Please enter your full name!');
       return;
     }
 
     this.mobile = this.mobile.trim();
     if (!this.mobile || this.mobile.length < 10) {
-      this.service.presentToast(
-        'Please enter a valid 10-digit mobile number!',
-        this.isDesktop
-      );
+      this.service.presentToast('Please enter a valid 10-digit mobile number!');
       return;
     }
 
     this.email = this.email.trim();
     if (!this.email || !Constants.mailRegEx.test(this.email)) {
-      this.service.presentToast(
-        'Please enter a valid email address!',
-        this.isDesktop
-      );
+      this.service.presentToast('Please enter a valid email address!');
       return;
     }
 
@@ -154,14 +148,12 @@ export class LandingComponent {
         this.service.presentToast(
           'Thanks ' +
             this.name +
-            " for showing your interest. We'll get back you!",
-          this.isDesktop
+            " for showing your interest. We'll get back you!"
         )
       )
       .catch((error) =>
         this.service.presentToast(
-          'Error occurred, Please check your internet connection!',
-          this.isDesktop
+          'Error occurred, Please check your internet connection!'
         )
       )
       .finally(() => {

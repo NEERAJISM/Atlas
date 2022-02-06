@@ -28,18 +28,12 @@ export class ModalPage {
 
   submit() {
     if (!this.email || !Constants.mailRegEx.test(this.email)) {
-      this.service.presentToast(
-        'Please enter a valid email address!',
-        this.isDesktop
-      );
+      this.service.presentToast('Please enter a valid email address!');
       return;
     }
 
     if (!this.forgotPassword && this.pass.length < 6) {
-      this.service.presentToast(
-        'Please enter a valid password!',
-        this.isDesktop
-      );
+      this.service.presentToast('Please enter a valid password!');
       return;
     }
 
@@ -50,8 +44,7 @@ export class ModalPage {
           this.service.closeModal('success');
         } else {
           this.service.presentToast(
-            'Error occurred  - ' + FirebaseUtil.errorCodeToMessageMapper(x),
-            this.isDesktop
+            'Error occurred  - ' + FirebaseUtil.errorCodeToMessageMapper(x)
           );
         }
         this.verifying = false;
@@ -61,14 +54,12 @@ export class ModalPage {
         .forgotPassword(this.email)
         .then(() =>
           this.service.presentToast(
-            'Password reset email sent, check your inbox.',
-            this.isDesktop
+            'Password reset email sent, check your inbox.'
           )
         )
         .catch((error) =>
           this.service.presentToast(
-            'Error while sending password reset email - ' + error.message,
-            this.isDesktop
+            'Error while sending password reset email - ' + error.message
           )
         )
         .finally(() => {
@@ -76,6 +67,4 @@ export class ModalPage {
         });
     }
   }
-
-  
 }

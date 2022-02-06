@@ -8,6 +8,8 @@ import { IonContent, ToastController } from '@ionic/angular';
 
 @Injectable()
 export class AppService {
+  isDesktop = false;
+  
   items: Product[] = [];
   private profile: Profile = new Profile();
   private pages: Pages = new Pages();
@@ -27,12 +29,15 @@ export class AppService {
   }
 
   constructor(private router: Router, private location: Location, public toastController: ToastController) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
     this.init();
   }
 
-  async presentToast(message: string, isDesktop: boolean) {
+  async presentToast(message: string) {
     const toast = await this.toastController.create({
-      position: isDesktop ? 'top' : 'bottom',
+      position: this.isDesktop ? 'top' : 'bottom',
       message: message,
       duration: 3000,
     });

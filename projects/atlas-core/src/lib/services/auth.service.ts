@@ -31,6 +31,17 @@ export class AuthService {
     });
   }
 
+  checkIfAlreadyRegistered(email: string) {
+    return this.afAuth
+      .fetchSignInMethodsForEmail(email)
+      .then((x) => {
+        return x.length == 0 ? Constants.SUCCESS : Constants.FAILURE;
+      })
+      .catch((error) => {
+        return error.code;
+      });
+  }
+
   signIn(email, password) {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)

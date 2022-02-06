@@ -1,1 +1,144 @@
-<h2>Register Here</h2>
+<ion-content class="ion-padding">
+  <ion-row>
+    <ion-col offsetMd="3" sizeMd="6">
+      <ion-row>
+        <ion-col>
+          <h1>Step {{ step }} / 4</h1>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-progress-bar value="{{ step / 4 }}"></ion-progress-bar>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-5">
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating" style="font-size: 20px"
+              >First Name</ion-label
+            >
+            <ion-input
+              style="font-size: 40px"
+              [disabled]="step > 1"
+              [(ngModel)]="first"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating" style="font-size: 20px"
+              >Last Name</ion-label
+            >
+            <ion-input
+              style="font-size: 40px"
+              [disabled]="step > 1"
+              [(ngModel)]="last"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-4" *ngIf="step > 1">
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating" style="font-size: 20px"
+              >Your Business / Company Name</ion-label
+            >
+            <ion-input
+              style="font-size: 40px"
+              placeholder="ABC Company Pvt. Ltd."
+              [disabled]="step > 2"
+              [(ngModel)]="name"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-4" *ngIf="step > 2">
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating" style="font-size: 20px"
+              >Business Email Address</ion-label
+            >
+            <ion-input
+              style="font-size: 30px"
+              placeholder="youremail@abc.com"
+              [disabled]="step > 3"
+              [(ngModel)]="email"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-4" *ngIf="step > 3">
+        <ion-col sizeMd="6">
+          <ion-item>
+            <ion-label position="floating" style="font-size: 20px"
+              >Password (Min Length 8)</ion-label
+            >
+            <ion-icon
+              class="pt-5"
+              slot="end"
+              color="primary"
+              name="{{ showPassword ? 'eye' : 'eye-off' }}"
+              (click)="togglePasswordText()"
+            ></ion-icon>
+
+            <ion-input
+              type="{{ showPassword ? 'text' : 'password' }}"
+              style="font-size: 30px"
+              placeholder="********"
+              [disabled]="step > 4"
+              [(ngModel)]="pass"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating" style="font-size: 20px"
+              >Confirm Password</ion-label
+            >
+            <ion-icon
+              class="pt-5"
+              slot="end"
+              color="primary"
+              name="{{ showPassword ? 'eye' : 'eye-off' }}"
+              (click)="togglePasswordText()"
+            ></ion-icon>
+            <ion-input
+              type="{{ showPassword ? 'text' : 'password' }}"
+              style="font-size: 30px"
+              placeholder="********"
+              [disabled]="step > 4"
+              [(ngModel)]="pass2"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-5">
+        <ion-col>
+          <ion-button [disabled]="step == 1 || step == 5" (click)="back()"
+            >Back</ion-button
+          >
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <ion-button
+            [disabled]="
+              inProgress || step == 5 ||
+              (step == 1 && (first.length == 0 || last.length == 0)) ||
+              (step == 2 && name.length == 0) ||
+              (step == 3 && checkEmail()) ||
+              (step == 4 && checkPassword())
+            "
+            (click)="next()"
+            >{{ step > 3 ? "Create Account" : "Next" }} &nbsp; <ion-spinner *ngIf="inProgress" name="crescent"></ion-spinner></ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

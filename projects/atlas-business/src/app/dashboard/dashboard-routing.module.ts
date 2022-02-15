@@ -5,7 +5,7 @@ import { MainDashboardComponent } from './components/maindashboard/maindashboard
 import { InvoiceDashboardComponent } from './components/invoice/invoice.component';
 import { InventoryDashboardComponent } from './components/inventory/inventory.component';
 import { CustomersDashboardComponent } from './components/customers/customers.component';
-import { TaxDashboardComponent } from './components/tax/tax.component';
+import { SettingsDashboardComponent } from './components/settings/settings.component';
 import { SupportDashboardComponent } from './components/support/support.component';
 import { EditInvoiceComponent } from './components/invoice/edit/editinvoice.component';
 import { OrdersDashboardComponent } from './components/orders/orders.component';
@@ -46,8 +46,8 @@ const aboutRoutes: Routes = [
             component: CustomersDashboardComponent,
         },
         {
-            path: 'tax',
-            component: TaxDashboardComponent,
+            path: 'settings',
+            component: SettingsDashboardComponent,
         },
         {
             path: 'profile',

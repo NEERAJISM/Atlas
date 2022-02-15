@@ -79,12 +79,13 @@ export class RegisterComponent {
       .then((x) => {
         if (Constants.SUCCESS === x) {
           this.app.presentToast('User Registered Successfully');
+          this.app.go('/dashboard');
         } else {
           this.app.presentToast(
             'Error occurred  - ' + FirebaseUtil.errorCodeToMessageMapper(x)
           );
         }
       })
-      .finally(() => (this.inProgress = false));
+      .finally(() => this.inProgress = false);
   }
 }

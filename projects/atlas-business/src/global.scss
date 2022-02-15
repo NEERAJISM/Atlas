@@ -18,7 +18,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -28,80 +28,81 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 invisible {
-    visibility: hidden !important;
-  }
-  
-  .hidden-xs-up {
+  visibility: hidden !important;
+}
+
+.hidden-xs-up {
+  display: none !important;
+}
+
+@media (max-width: 575px) {
+  .hidden-xs-down {
     display: none !important;
   }
-  
-  @media (max-width: 575px) {
-    .hidden-xs-down {
-      display: none !important;
-    }
-  }
-  
-  @media (min-width: 576px) {
-    .hidden-sm-up {
-      display: none !important;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .hidden-sm-down {
-      display: none !important;
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .hidden-md-up {
-      display: none !important;
-    }
-  }
-  
-  @media (max-width: 991px) {
-    .hidden-md-down {
-      display: none !important;
-    }
-  }
-  
-  @media (min-width: 992px) {
-    .hidden-lg-up {
-      display: none !important;
-    }
-  }
-  
-  @media (max-width: 1199px) {
-    .hidden-lg-down {
-      display: none !important;
-    }
-  }
-  
-  @media (min-width: 1200px) {
-    .hidden-xl-up {
-      display: none !important;
-    }
-  }
-  
-  .hidden-xl-down {
+}
+
+@media (min-width: 576px) {
+  .hidden-sm-up {
     display: none !important;
   }
+}
 
-  .no-click {
-    pointer-events:none;
+@media (max-width: 767px) {
+  .hidden-sm-down {
+    display: none !important;
   }
+}
 
-  .fwh-slide {
-    height: 100vh;
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+@media (min-width: 768px) {
+  .hidden-md-up {
+    display: none !important;
   }
+}
 
-  .login-modal {
-    .modal-wrapper{
-      height: 450px;
-      width: 500px;
-      border-radius: 15px;
-    }}
+@media (max-width: 991px) {
+  .hidden-md-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .hidden-lg-up {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .hidden-lg-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hidden-xl-up {
+    display: none !important;
+  }
+}
+
+.hidden-xl-down {
+  display: none !important;
+}
+
+.no-click {
+  pointer-events: none;
+}
+
+.fwh-slide {
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-modal {
+  .modal-wrapper {
+    height: 450px;
+    width: 500px;
+    border-radius: 15px;
+  }
+}

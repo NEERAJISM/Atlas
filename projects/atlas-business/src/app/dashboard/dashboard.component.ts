@@ -1,12 +1,5 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { AppService } from '../app.service';
 
 export interface MenuItem {
   name: string;
@@ -18,18 +11,10 @@ export interface MenuItem {
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-
-  animations: [
-    trigger('openClose', [
-      state('open', style({})),
-      state('closed', style({})),
-      transition('open => closed', [animate('1s')]),
-      transition('closed => open', [animate('0.5s')]),
-    ]),
-  ],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   title = 'atlas-dashboard';
+  isDesktop = false;
 
   showFiller = false;
   showMenuName = false;
@@ -37,49 +22,53 @@ export class DashboardComponent implements OnInit {
   menu: MenuItem[] = [
     {
       name: 'Dashboard',
-      icon: 'fas fa-chart-pie mr-2',
+      icon: 'fas fa-chart-pie',
       link: '/dashboard/main',
     },
     {
+      name: 'Business Profile',
+      icon: 'fas fa-globe-americas',
+      link: '/dashboard/profile',
+    },
+    {
       name: 'Orders',
-      icon: 'fas fa-dolly mr-2',
+      icon: 'fas fa-dolly',
       link: '/dashboard/orders',
     },
     {
       name: 'Biiling / Invoice',
-      icon: 'fas fa-receipt pl-1 mr-2',
+      icon: 'fas fa-receipt ps-1',
       link: '/dashboard/invoice',
     },
     {
       name: 'Inventory',
-      icon: 'fab fa-buffer pl-1 mr-2',
+      icon: 'fab fa-buffer ps-1',
       link: '/dashboard/inventory',
     },
     {
       name: 'Customer',
-      icon: 'fas fa-users mr-2',
+      icon: 'fas fa-users',
       link: '/dashboard/customers',
     },
     {
       name: '  Tax / GST',
-      icon: 'fas fa-rupee-sign mr-2 ml-1',
-      link: '/dashboard/tax',
-    },
-    {
-      name: 'Business Profile',
-      icon: 'fas fa-globe-americas mr-2 ml-1',
-      link: '/dashboard/profile',
+      icon: 'fas fa-cog ps-1',
+      link: '/dashboard/settings',
     },
     {
       name: 'Help / Support',
-      icon: 'fas fa-headset mr-2',
+      icon: 'fas fa-headset',
       link: '/dashboard/support',
-    }
+    },
   ];
 
-  constructor(private router: Router) {}
+  constructor(private service: AppService) {
+    this.isDesktop = service.isDesktop;
+  }
 
-  ngOnInit(): void {}
+  go(url: string) {
+    this.service.go(url);
+  }
 
   toggleMenu() {
     this.showMenuName = !this.showMenuName;

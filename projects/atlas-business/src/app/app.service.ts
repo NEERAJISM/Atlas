@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { About, Pages, Product, Profile, Unit } from 'atlas-core';
 import { BehaviorSubject } from 'rxjs';
-import { IonContent, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 
 
 @Injectable()
@@ -28,7 +28,7 @@ export class AppService {
     this.cart.next(s);
   }
 
-  constructor(private router: Router, private location: Location, public toastController: ToastController) {
+  constructor(private router: Router, private location: Location, public toastController: ToastController, public loadingController: LoadingController) {
     if (window.innerWidth > 1000) {
       this.isDesktop = true;
     }
@@ -42,6 +42,14 @@ export class AppService {
       duration: 3000,
     });
     toast.present();
+  }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Please wait...',
+      duration: 2000
+    });
+    await loading.present();
   }
 
   go(url: string) {

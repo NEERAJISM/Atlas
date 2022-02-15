@@ -53,35 +53,16 @@ export class AuthService {
       });
   }
 
-  // Sign up with email/password
   signUp(email: string, password: string) {
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
-        this.verifyEmail(result.user);
+        result.user.sendEmailVerification();
         return Constants.SUCCESS;
-        // this.setUserData(result.user);
       })
       .catch((error) => {
         return error.code;
       });
-  }
-
-  verifyEmail(user?: firebase.User) {
-    user
-      .sendEmailVerification()
-      .then(() =>
-        this.util.showSnackBar(
-          'Verification email sent to the registerd email-id',
-          5000
-        )
-      )
-      .catch(() =>
-        this.util.showSnackBar(
-          'Error while sending verification email, Please retry from Settings',
-          5000
-        )
-      );
   }
 
   forgotPassword(passwordResetEmail: string) {

@@ -4,20 +4,18 @@ import { Address } from "./address";
 export class Business {
   id: string;
 
-  profileName: string; //TODO like insta / twitter handle
+  paid: boolean;
+  expiry: string;
 
+  profileName: string;
   name: string;
-  web: string;
+  year: number;
 
   mobile: string;
   phone: string;
   email: string;
-  // TODO Array of images of business
-
-  paid: boolean;
-  expiry: string;
+  web: string;
+  addresses: Address[] = [];
 
   users: string[] = [];
-
-  addresses: Address[] = [];
 }

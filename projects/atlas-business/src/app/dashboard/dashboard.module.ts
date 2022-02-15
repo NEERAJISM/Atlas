@@ -42,7 +42,7 @@ import { EditInvoiceComponent } from './components/invoice/edit/editinvoice.comp
 import { InvoicePreviewComponent } from './components/invoice/edit/preview/invoice.preview.component';
 import { InventoryDashboardComponent } from './components/inventory/inventory.component';
 import { CustomersDashboardComponent } from './components/customers/customers.component';
-import { TaxDashboardComponent } from './components/tax/tax.component';
+import { SettingsDashboardComponent } from './components/settings/settings.component';
 import { SupportDashboardComponent } from './components/support/support.component';
 import { NewClientComponent } from './components/customers/new/new.client.component';
 import { RemoveClientComponent } from './components/customers/remove/remove.client.component';
@@ -52,6 +52,8 @@ import { InvoiceService } from './components/invoice/invoice.service';
 import { OrdersDashboardComponent } from './components/orders/orders.component';
 import { AtlasCoreModule } from 'atlas-core';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { IonicModule } from '@ionic/angular';
+import { AppService } from '../app.service';
 
 @NgModule({
   imports: [
@@ -85,7 +87,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTabsModule,
-    PdfViewerModule
+    PdfViewerModule,
+    IonicModule.forRoot()
   ],
   declarations: [
     DashboardComponent,
@@ -96,7 +99,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     EditInvoiceComponent,
     InventoryDashboardComponent,
     CustomersDashboardComponent,
-    TaxDashboardComponent,
+    SettingsDashboardComponent,
     OrdersDashboardComponent,
     SupportDashboardComponent,
     InvoicePreviewComponent,
@@ -114,11 +117,11 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     EditInvoiceComponent,
     InventoryDashboardComponent,
     CustomersDashboardComponent,
-    TaxDashboardComponent,
+    SettingsDashboardComponent,
     SupportDashboardComponent,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    InvoiceService  ]
+    InvoiceService, AppService  ]
 })
 export class DashboardModule { }

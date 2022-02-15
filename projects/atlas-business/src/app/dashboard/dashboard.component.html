@@ -1,64 +1,41 @@
-<mat-drawer-container class="dashboard-container" autosize>
-  <!-- Sidenav -->
+<ion-split-pane contentId="main">
+  <!--  the side menu  -->
+  <ion-menu side="start" content-id="main" class="my-custom-menu">
+    <ion-header>
+      <ion-toolbar translucent>
+        <ion-row class="ion-text-center">
+          <ion-col>
+            <img style="height: 30px" src="assets/images/atlas-small.png" />
+          </ion-col>
+        </ion-row>
+      </ion-toolbar>
+    </ion-header>
 
-  <mat-drawer
-    #drawer
-    class="dashboard-drawer"
-    mode="side"
-    opened
-    [@openClose]="showMenuName ? 'open' : 'closed'"
-  >
-    <mat-toolbar class="drawer-toolbar">
-      <img
-        src="assets/icons/atlas-small.png"
-        alt="Atlas"
-        class="atlas-icon ml-0 mr-2"
-        (click)="toggleMenu()"
-      />
-      <h3 *ngIf="showMenuName" class="font-weight-light mr-5 text-white" style="font-size: 30px;">
-        Atlas
-      </h3>
-    </mat-toolbar>
+    <ion-content>
+      <ion-list class="pt-0">
+        <ion-row *ngFor="let menuItem of menu" class="ion-text-center">
+          <ion-col class="px-0">
+            <ion-item lines="none" button (click)="go(menuItem.link)">
+              <i class="{{menuItem.icon}}" style="font-size: x-large"></i>
+            </ion-item>
+          </ion-col>
+        </ion-row>
 
-    <mat-nav-list class="mat-selection-list">
-      <mat-list-item
-        style="cursor: pointer;"
-        routerLinkActive
-        #rla="routerLinkActive"
-        *ngFor="let item of menu"
-        routerLink="{{ item.link }}"
-      >
-        <i
-          class="{{ item.icon }}"
-          matTooltip="{{ item.name }}"
-          [matTooltipPosition]="'after'"
-          [ngClass]="rla.isActive ? 'text-white' : 'text-white-50'"
-        ></i>
-        <p
-          style="font-size: 14px;"
-          class="mb-0"
-          [ngClass]="rla.isActive ? 'text-white' : 'text-white-50'"
-          *ngIf="showMenuName"
-        >
-          {{ item.name }}
-        </p>
-      </mat-list-item>
-    </mat-nav-list>
+       
+      </ion-list>
+    </ion-content>
+  </ion-menu>
 
-    <mat-divider></mat-divider>
+  <!-- the main content -->
 
-    <button class="mr-3 float-right" mat-icon-button (click)="toggleMenu()">
-      <i
-        class="fas text-white-50"
-        [ngClass]="showMenuName ? 'fa-chevron-left' : 'fa-chevron-right'"
-      ></i>
-    </button>
-  </mat-drawer>
-
-  <!--  Content  -->
-
-  <mat-drawer-content class="drawer-content">
-    <app-dashboard-header></app-dashboard-header>
-    <router-outlet></router-outlet>
-  </mat-drawer-content>
-</mat-drawer-container>
+  <div class="ion-page" id="main">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Business Name</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-router-outlet [animated]="false" id="main"></ion-router-outlet>
+    </ion-content>
+  </div>
+</ion-split-pane>

@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AlertController,
   ModalController,
-  ToastController,
 } from '@ionic/angular';
 import {
   Address,
@@ -52,16 +51,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   constructor(
     public modalController: ModalController,
     public alertController: AlertController,
-    public toastController: ToastController,
     private service: AppService,
     private authService: AuthService,
     private location: Location,
     private fbUtil: FirebaseUtil,
     private commonUtil: CommonUtil
   ) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
+    this.isDesktop = service.isDesktop;
     this.getClient();
     this.profile = this.service.getProfile();
     this.mapItems(this.service.getItems());
@@ -77,12 +73,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async presentToast() {
-    const toast = await this.toastController.create({
-      position: this.isDesktop ? 'top' : 'bottom',
-      message: 'Your order has been placed succesfully.',
-      duration: 3000,
-    });
-    toast.present();
+    this.service.presentToast('Your order has been placed succesfully.');
   }
 
   async presentAlert() {
@@ -309,7 +300,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.service.go('/account');
       })
       .catch(() =>
-        this.commonUtil.showSnackBar(
+        this.service.presentToast(
           'Error occurred, Please check Internet connectivity'
         )
       )

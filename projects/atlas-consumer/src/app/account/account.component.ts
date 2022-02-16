@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonUtil, Constants, FirebaseUtil, Order } from 'atlas-core';
 import { Subscription } from 'rxjs';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-account',
@@ -13,10 +14,8 @@ export class AccountComponent {
   orders: Order[] = [];
   orderSubscription: Subscription;
 
-  constructor(public fbUtil: FirebaseUtil, private commonUtil : CommonUtil) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
+  constructor(public fbUtil: FirebaseUtil, private commonUtil : CommonUtil, private app: AppService) {
+    this.isDesktop = app.isDesktop;
     this.loadOrders();
   }
 

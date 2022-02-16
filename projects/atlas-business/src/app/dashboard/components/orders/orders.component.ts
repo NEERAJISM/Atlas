@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CommonUtil, Constants, FirebaseUtil, Order, OrderStatus, Status } from 'atlas-core';
 import { Subscription } from 'rxjs';
+import { AppService } from '../../../app.service';
 
 @Component({
   selector: 'app-orders',
@@ -26,7 +27,7 @@ export class OrdersDashboardComponent implements OnDestroy {
 
   url = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
 
-  constructor(private fbUtil: FirebaseUtil, private util: CommonUtil) {
+  constructor(private fbUtil: FirebaseUtil, private util: CommonUtil, private app: AppService) {
     this.orderSubscription = this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + 'bizId' + '/' + Constants.ORDERS)
@@ -163,7 +164,7 @@ export class OrdersDashboardComponent implements OnDestroy {
       .doc(order.id)
       .set(doc)
       .catch(() =>
-        this.util.showSnackBar(
+        this.app.presentToast(
           'Error occurred, Please check Internet connectivity'
         )
       )

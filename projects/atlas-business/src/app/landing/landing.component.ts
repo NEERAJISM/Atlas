@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, IonContent, ToastController } from '@ionic/angular';
-import { ModalController } from '@ionic/angular';
+import { AlertController, IonContent, ModalController } from '@ionic/angular';
 import { AuthService, Constants } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
@@ -42,15 +41,12 @@ export class LandingComponent {
   subscriptions: Subscription[] = [];
 
   constructor(
-    public toastController: ToastController,
     public modalController: ModalController,
     public alertController: AlertController,
     private service: AppService,
     private auth: AuthService
   ) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
+    this.isDesktop = service.isDesktop;
   }
 
   ngOnInit(): void {

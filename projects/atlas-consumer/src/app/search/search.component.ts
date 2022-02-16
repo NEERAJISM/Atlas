@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonUtil } from 'atlas-core';
 import { Observable } from 'rxjs';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-search',
@@ -30,10 +31,8 @@ export class SearchComponent {
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
-  constructor(private util: CommonUtil, public router: Router) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
+  constructor(private util: CommonUtil, public router: Router, private app: AppService) {
+    this.isDesktop = app.isDesktop;
   }
 
   pinCheck(pin) {

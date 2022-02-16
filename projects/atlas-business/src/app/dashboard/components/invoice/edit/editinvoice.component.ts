@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Address, Business, Client, CommonUtil, Constants, FirebaseUtil, Invoice, InvoicePreview, InvoiceVersion, Item, Product, Unit } from 'atlas-core';
 import 'jspdf-autotable';
+import { AppService } from 'projects/atlas-business/src/app/app.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { InvoiceService } from '../invoice.service';
@@ -85,7 +86,8 @@ export class EditInvoiceComponent {
     private fbutil: FirebaseUtil,
     private util: CommonUtil,
     private elRef: ElementRef,
-    private invoiceService: InvoiceService
+    private invoiceService: InvoiceService,
+    private app: AppService
   ) {
     this.getBusinessInfo();
     this.fetchClients();
@@ -111,7 +113,7 @@ export class EditInvoiceComponent {
         }
       }).catch(e => {
         this.addItem();
-        this.util.showSnackBar('Error while loading invoice data!');
+        this.app.presentToast('Error while loading invoice data!');
         this.showSpinner = false;
       });
   }
@@ -272,7 +274,7 @@ export class EditInvoiceComponent {
       this.isItemSummaryValid = false;
       setTimeout(() => { this.elRef.nativeElement.parentElement.scrollTop = this.elRef.nativeElement.parentElement.scrollHeight; }, 100);
     } else {
-      this.util.showSnackBar('Please enter valid values');
+      this.app.presentToast('Please enter valid values');
     }
   }
 
@@ -418,7 +420,7 @@ export class EditInvoiceComponent {
 
   openPreviewDialog() {
     if (!this.isValidInvoice()) {
-      this.util.showSnackBar('Missing fields required to generate invoice!');
+      this.app.presentToast('Missing fields required to generate invoice!');
       return;
     }
 
@@ -505,8 +507,7 @@ export class EditInvoiceComponent {
       .set(this.fbutil.toJson(this.invoice))
       .then(() => this.goBackToInvoiceComponent())
       .catch((e) => {
-        console.log(e);
-        this.util.showSnackBar('Error while saving data');
+        this.app.presentToast('Error while saving data');
       });
   }
 

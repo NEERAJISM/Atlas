@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonContent, ToastController } from '@ionic/angular';
+import { IonContent } from '@ionic/angular';
+import { ThemeService } from 'ng2-charts';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-landing',
@@ -35,19 +37,8 @@ export class LandingComponent {
     loop: true,
   };
 
-  constructor(public toastController: ToastController) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
-  }
-
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      position: this.isDesktop ? 'top' : 'bottom',
-      message: message,
-      duration: 3000,
-    });
-    toast.present();
+  constructor(public app: AppService) {
+    this.isDesktop = app.isDesktop;
   }
 
   public scrollElement(element: string) {
@@ -73,19 +64,19 @@ export class LandingComponent {
 
   submit() {
     if (!this.name) {
-      this.presentToast('Please enter your full name!');
+      this.app.presentToast('Please enter your full name!');
       return;
     }
 
     this.mobile = this.mobile.trim();
     if (!this.mobile || this.mobile.length < 10) {
-      this.presentToast('Please enter a valid 10-digit mobile number!');
+      this.app.presentToast('Please enter a valid 10-digit mobile number!');
       return;
     }
 
     this.email = this.email.trim();
     if (!this.email || !this.mailRegEx.test(this.email)) {
-      this.presentToast('Please enter a valid email address!');
+      this.app.presentToast('Please enter a valid email address!');
       return;
     }
 
@@ -113,14 +104,14 @@ export class LandingComponent {
       body: JSON.stringify(input),
     })
       .then((response) =>
-        this.presentToast(
+        this.app.presentToast(
           'Thanks ' +
             this.name +
             " for showing your interest. We'll get back you!"
         )
       )
       .catch((error) =>
-        this.presentToast(
+        this.app.presentToast(
           'Error occurred, Please check your internet connection!'
         )
       )

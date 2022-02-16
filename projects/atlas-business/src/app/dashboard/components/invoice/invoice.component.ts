@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CommonUtil, FirebaseUtil, Invoice, InvoicePreview } from 'atlas-core';
 import { Subscription } from 'rxjs';
+import { AppService } from '../../../app.service';
 import { InvoicePreviewComponent } from './edit/preview/invoice.preview.component';
 import { InvoiceService } from './invoice.service';
 
@@ -36,6 +37,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private fbutil: FirebaseUtil,
+    private app : AppService,
     private router: Router,
     private invoiceService: InvoiceService,
     private dialog: MatDialog,
@@ -118,8 +120,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
         this.openPreviewDialog(i);
       }
     }).catch(e => {
-      this.util.showSnackBar('Error while loading invoice data!');
-      console.log(e);
+      this.app.presentToast('Error while loading invoice data!');
     });
   }
 
@@ -144,8 +145,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
         this.invoiceService.generatePDF(i).save('atlas.pdf');
       }
     }).catch(e => {
-      this.util.showSnackBar('Error while loading invoice data!');
-      console.log(e);
+      this.app.presentToast('Error while loading invoice data!');
     });
   }
 
@@ -157,8 +157,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
         this.invoiceService.generatePDF(i).output('dataurlnewwindow').open();
       }
     }).catch(e => {
-      this.util.showSnackBar('Error while loading invoice data!');
-      console.log(e);
+      this.app.presentToast('Error while loading invoice data!');
     });
   }
 }

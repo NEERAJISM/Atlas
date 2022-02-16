@@ -17,9 +17,7 @@ export class ModalPage {
   pass = '';
 
   constructor(private auth: AuthService, private service: AppService) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
+    this.isDesktop = service.isDesktop;
   }
 
   forgot() {

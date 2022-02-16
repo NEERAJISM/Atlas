@@ -47,9 +47,7 @@ export class OmsComponent implements OnInit, OnDestroy {
     private fbUtil: FirebaseUtil,
     private authService: AuthService
   ) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
+    this.isDesktop = service.isDesktop;
 
     this.init();
     this.profile = this.service.getProfile();

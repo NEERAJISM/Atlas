@@ -6,14 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CommonUtil {
   constructor(private snackBar: MatSnackBar, private httpClient: HttpClient) {}
 
-  // showSnackBar(message: string, dur?: number) {
-  //   this.snackBar.open(message, 'Close', {
-  //     duration: dur ? dur : 2000,
-  //     horizontalPosition: 'center',
-  //     verticalPosition: 'top',
-  //   });
-  // }
-
   getTax(price: number, tax: number): number {
     return Math.round((price * tax + Number.EPSILON) * 100) / 100;
   }

@@ -2,20 +2,18 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, Platform, ToastController } from '@ionic/angular';
+import { IonContent } from '@ionic/angular';
 import {
   Address,
   AuthService,
   Business,
-  Client,
-  CommonUtil,
-  Constants,
+  Client, Constants,
   FirebaseUtil,
   Order,
   Pages,
   Product,
   Profile,
-  Unit,
+  Unit
 } from 'atlas-core';
 import firebase from 'firebase/app';
 import { Subscription } from 'rxjs';
@@ -121,11 +119,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private router: Router,
     private _formBuilder: FormBuilder,
     private auth: AuthService,
-    private commonUtil: CommonUtil,
     private fbUtil: FirebaseUtil,
-    public toastController: ToastController,
     private service: ProfileService,
-    private platform: Platform,
     private appService: AppService
   ) {
     if (window.innerWidth > 1000) {
@@ -176,12 +171,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async presentToast() {
-    const toast = await this.toastController.create({
-      message: "Thanks. Your query has been registerd. we'll reachout to you.",
-      duration: 2000,
-      position: this.isDesktop ? 'top' : 'bottom',
-    });
-    toast.present();
+    this.appService.presentToast("Thanks. Your query has been registerd. we'll reachout to you.");
   }
 
   ngOnInit() {
@@ -383,11 +373,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .then((confirmationResult) => {
         this.otpSuccess = true;
         this.confirmationResult = confirmationResult;
-        this.commonUtil.showSnackBar('Verification OTP sent successfully.');
+        this.appService.presentToast('Verification OTP sent successfully.');
       })
       .catch((error) => {
         this.otpRequested = false;
-        this.commonUtil.showSnackBar(
+        this.appService.presentToast(
           'Unable to send verification OTP. Please check you Internet.'
         );
       });

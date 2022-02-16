@@ -1,11 +1,14 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { About, Pages, Product, Profile, Unit } from 'atlas-core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AppService {
+  isDesktop = false;
+  
   items: Product[] = [];
   private profile: Profile = new Profile();
   private pages: Pages = new Pages();
@@ -16,16 +19,28 @@ export class AppService {
   private cart = new BehaviorSubject<string>('');
   cartUpdatedEvent = this.cart.asObservable();
 
+  constructor(private router: Router, private location: Location, public toastController: ToastController) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
+    this.init();
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      position: this.isDesktop ? 'top' : 'bottom',
+      message: message,
+      duration: 3000,
+    });
+    toast.present();
+  }
+
   closeModal(s: string) {
     this.modal.next(s);
   }
 
   cartUpdated(s: string) {
     this.cart.next(s);
-  }
-
-  constructor(private router: Router, private location: Location) {
-    this.init();
   }
 
   go(url: string) {

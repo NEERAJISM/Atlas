@@ -555,8 +555,8 @@ export class EditInvoiceComponent {
 
   getBusinessInfo() {
     this.business = this.invoiceService.getBusinessInfo();
-    this.supplyPlace = this.business.addresses[0].district;
-    this.supplyState = this.business.addresses[0].state;
+    this.supplyPlace = this.business.address.district;
+    this.supplyState = this.business.address.state;
 
     this.isInvoiceDetailValid = (this.supplyPlace && this.supplyState) ? true : false;
   }

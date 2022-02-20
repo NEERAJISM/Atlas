@@ -9,6 +9,7 @@ import { LoadingController, ToastController } from '@ionic/angular';
 @Injectable()
 export class AppService {
   isDesktop = false;
+  loading;
   
   items: Product[] = [];
   private profile: Profile = new Profile();
@@ -45,11 +46,15 @@ export class AppService {
   }
 
   async presentLoading() {
-    const loading = await this.loadingController.create({
+    this.loading = await this.loadingController.create({
       message: 'Please wait...',
       duration: 2000
     });
-    await loading.present();
+    await this.loading.present();
+  }
+
+  async dismissLoading(){
+    this.loading.dismiss();
   }
 
   go(url: string) {

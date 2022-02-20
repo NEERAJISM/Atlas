@@ -46,10 +46,10 @@ export class AuthService {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
-        return Constants.SUCCESS;
+        return [Constants.SUCCESS, result.user.uid];
       })
       .catch((error) => {
-        return error.code;
+        return [error.code, error];
       });
   }
 
@@ -58,10 +58,10 @@ export class AuthService {
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
         result.user.sendEmailVerification();
-        return Constants.SUCCESS;
+        return [Constants.SUCCESS, result.user.uid];
       })
       .catch((error) => {
-        return error.code;
+        return [error.code, error];
       });
   }
 

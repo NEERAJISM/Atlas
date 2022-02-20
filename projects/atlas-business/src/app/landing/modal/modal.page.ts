@@ -38,11 +38,11 @@ export class ModalPage {
     this.verifying = true;
     if (!this.forgotPassword) {
       this.auth.signIn(this.email, this.pass).then((x) => {
-        if (Constants.SUCCESS === x) {
+        if (Constants.SUCCESS === x[0]) {
           this.service.closeModal('success');
         } else {
           this.service.presentToast(
-            'Error occurred  - ' + FirebaseUtil.errorCodeToMessageMapper(x)
+            'Error occurred  - ' + FirebaseUtil.errorCodeToMessageMapper(x[0])
           );
         }
         this.verifying = false;

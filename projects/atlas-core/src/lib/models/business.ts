@@ -4,18 +4,18 @@ import { Address } from "./address";
 export class Business {
   id: string;
 
-  paid: boolean;
-  expiry: string;
-
-  profileName: string;
+  profile: string;
   name: string;
   year: number;
+
+  gst: string;
 
   mobile: string;
   phone: string;
   email: string;
-  web: string;
-  addresses: Address[] = [];
+  website: string;
+  address: Address = new Address();
 
-  users: string[] = [];
+  paid: boolean = false;
+  expiry: string;
 }

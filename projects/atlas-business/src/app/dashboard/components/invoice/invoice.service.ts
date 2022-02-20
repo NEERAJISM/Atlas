@@ -58,7 +58,7 @@ export class InvoiceService {
     a.district = 'Dungarpur';
     a.state = 'Rajasthan';
     a.pin = 314025;
-    b.addresses[0] = a;
+    b.address = a;
 
     return b;
   }
@@ -84,8 +84,8 @@ export class InvoiceService {
     const b: Business = this.getBusinessInfo();
     this.headOwnerAddress[0][0] = b.name;
 
-    this.dataOwnerAddress[0][0] = b.addresses[0].line1 + ', ' + b.addresses[0].line2;
-    this.dataOwnerAddress[1][0] = b.addresses[0].district + ' (' + b.addresses[0].state + ') - ' + b.addresses[0].pin;
+    this.dataOwnerAddress[0][0] = b.address.line1 + ', ' + b.address.line2;
+    this.dataOwnerAddress[1][0] = b.address.district + ' (' + b.address.state + ') - ' + b.address.pin;
     this.dataOwnerAddress[2][0] = 'Email : ' + b.email;
     this.dataOwnerAddress[3][0] = 'Tel : ' + b.phone + ', Mob : ' + b.mobile;
 

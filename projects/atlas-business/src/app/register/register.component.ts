@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService, Constants, FirebaseUtil } from 'atlas-core';
+import { AuthService, Business, Constants, FirebaseUtil } from 'atlas-core';
 import { AppService } from '../app.service';
 
 @Component({
@@ -16,12 +16,17 @@ export class RegisterComponent {
 
   name = '';
   email = '';
+  profile = '';
   pass = '';
   pass2 = '';
 
   showPassword = false;
 
-  constructor(private auth: AuthService, private app: AppService) {
+  constructor(
+    private auth: AuthService,
+    private app: AppService,
+    private fbUtil: FirebaseUtil
+  ) {
     this.isDesktop = app.isDesktop;
   }
 
@@ -77,15 +82,38 @@ export class RegisterComponent {
     this.auth
       .signUp(this.email, this.pass)
       .then((x) => {
-        if (Constants.SUCCESS === x) {
-          this.app.presentToast('User Registered Successfully');
-          this.app.go('/dashboard');
+        if (Constants.SUCCESS === x[0]) {
+          this.setupBusiness(x[1]);
         } else {
           this.app.presentToast(
-            'Error occurred  - ' + FirebaseUtil.errorCodeToMessageMapper(x)
+            'Error occurred  - ' + FirebaseUtil.errorCodeToMessageMapper(x[0])
           );
         }
       })
-      .finally(() => this.inProgress = false);
+      .finally(() => (this.inProgress = false));
+  }
+
+  setupBusiness(id: string) {
+    const business = new Business();
+    business.id = id;
+    business.paid = false;
+    business.profile = this.profile;
+    business.name = this.name;
+    business.email = this.email;
+
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + business.id + '/' + Constants.INFO)
+      .doc(business.id)
+      .set(this.fbUtil.toJson(business))
+      .then(() => {
+          this.app.presentToast('Business Registered Successfully');
+          this.app.go('/dashboard');
+      })
+      .catch(() =>
+        this.app.presentToast(
+          'Error occurred, Please check Internet connectivity'
+        )
+      );
   }
 }

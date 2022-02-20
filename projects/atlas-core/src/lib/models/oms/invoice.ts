@@ -1,7 +1,7 @@
 /////////// REMEMBER TO SAVE EVERY BYTE OF STORAGE + keep simple + primitive ///////////
 
-import { Address } from './address';
-import { Client } from './client';
+import { Address } from '../address';
+import { Client } from '../client';
 import { Item } from './order';
 
 export class Invoice {

@@ -8,10 +8,10 @@ export class Constants {
   static readonly AUTH_NETWORK_ISSUE = 'auth/network-request-failed';
 
   // Firebase
-  static readonly INFO = 'INFO';
-  static readonly ORDERS = 'ORDERS';
-
   static readonly BUSINESS = 'BUSINESS';
+  static readonly INFO = 'INFO';
+  
+  static readonly ORDERS = 'ORDERS';
 
   static readonly USER = 'USER';
   static readonly CART = 'CART';
@@ -86,4 +86,5 @@ export class Constants {
 
   static readonly mailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   static readonly passRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  static readonly usernameRegEx = /^[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?$/;
 }

@@ -1,39 +1,218 @@
-
 <ion-content class="ion-padding">
-    <ion-backdrop>
-        <ion-spinner name="crescent"></ion-spinner>
-    </ion-backdrop>
   <ion-row>
     <ion-col offsetMd="2" sizeMd="8">
-      <ion-row>
-        <ion-col>
-          <h5>Settings</h5>
-        </ion-col>
-      </ion-row>
+      <div>
+        <ion-row>
+          <ion-col>
+            <h5>Account Details</h5>
+          </ion-col>
+        </ion-row>
 
-      <ion-row class="mt-4 ion-align-items-center">
-        <ion-col size="3">
-          <span><b>Email Address</b></span>
-        </ion-col>
-        <ion-col size="6">
-          <span>{{email }}</span>
-        </ion-col>
-        <ion-col size="3">
-          <ion-button [disabled]="emailVerified" (click)="verifyEmail()">Verify</ion-button>
-        </ion-col>
-      </ion-row>
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>Email Address</b></span>
+          </ion-col>
+          <ion-col size="5">
+            <span>{{ business.email }}</span>
+          </ion-col>
+          <ion-col offsetMd="1" size="3">
+            <ion-button *ngIf="!emailVerified" (click)="verifyEmail()"
+              >Verify</ion-button
+            >
+          </ion-col>
+        </ion-row>
 
-      <ion-row class="mt-4 ion-align-items-center">
-        <ion-col size="3">
-          <span><b>Mobile Number</b></span>
-        </ion-col>
-        <ion-col size="6">
-          <span>{{mobile }}</span>
-        </ion-col>
-        <ion-col size="3">
-          <ion-button [disabled]="emailVerified" (click)="verifyEmail()">Verify</ion-button>
-        </ion-col>
-      </ion-row>
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>Mobile Number</b></span>
+          </ion-col>
+
+          <ion-col size="5">
+            <span *ngIf="!editMobile">{{initialized ? '+91 -' : ''}} {{ business.mobile }} </span>
+
+            <ion-item
+              *ngIf="editMobile"
+              style="
+                border: solid 0.5px;
+                border-radius: 20px;
+                --highlight-color-focused: none;
+              "
+            >
+              <ion-label>+91</ion-label>
+              <ion-input
+                maxlength="10"
+                placeholder="10-digit number"
+                [(ngModel)]="business.mobile"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col offsetMd="1" size="3">
+            <i class="fa fa-pen" *ngIf="!editMobile" (click)="editMob()"></i>
+            <ion-button *ngIf="editMobile" (click)="editMob()">Save</ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>Profile Name</b></span>
+          </ion-col>
+
+          <ion-col size="5">
+            <span *ngIf="!editProfile"> {{ initialized ? '@' : ''}}{{ business.profile }} </span>
+
+            <ion-item
+              *ngIf="editProfile"
+              style="
+                border: solid 0.5px;
+                border-radius: 20px;
+                --highlight-color-focused: none;
+              "
+            >
+            <ion-label>@</ion-label>
+              <ion-input
+                maxlength="30"
+                placeholder=""
+                [(ngModel)]="business.profile"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col offsetMd="1" size="3">
+            <i class="fa fa-pen" *ngIf="!editProfile" (click)="edit_Profile()"></i>
+            <ion-button *ngIf="editProfile" (click)="edit_Profile()">Save</ion-button>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- Business Details -->
+      <div>
+        <ion-row class="mt-5">
+          <ion-col>
+            <h5>Business Details</h5>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>Business Name</b></span>
+          </ion-col>
+
+          <ion-col size="5">
+            <span *ngIf="!editBName"> {{ business.name }} </span>
+
+            <ion-item
+              *ngIf="editBName"
+              style="
+                border: solid 0.5px;
+                border-radius: 20px;
+                --highlight-color-focused: none;
+              "
+            >
+              <ion-input
+                placeholder="Ex - ABC Company Pvt. Ltd."
+                [(ngModel)]="business.name"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col offsetMd="1" size="3">
+            <i class="fa fa-pen" *ngIf="!editBName" (click)="edit_BName()"></i>
+            <ion-button *ngIf="editBName" (click)="edit_BName()">Save</ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>Year of Establishment</b></span>
+          </ion-col>
+
+          <ion-col size="5">
+            <span *ngIf="!editBYear"> {{ business.year }} </span>
+
+            <ion-item
+              *ngIf="editBYear"
+              style="
+                border: solid 0.5px;
+                border-radius: 20px;
+                --highlight-color-focused: none;
+              "
+            >
+              <ion-input
+                maxlength="4"
+                placeholder="Ex - 1994"
+                [(ngModel)]="business.year"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col offsetMd="1" size="3">
+            <i class="fa fa-pen" *ngIf="!editBYear" (click)="edit_BYear()"></i>
+            <ion-button *ngIf="editBYear" (click)="edit_BYear()">Save</ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>Pincode</b></span>
+          </ion-col>
+
+          <ion-col size="5">
+            <span *ngIf="!editBPIN">{{ business.address.pin }} </span>
+
+            <ion-item
+              *ngIf="editBPIN"
+              style="
+                border: solid 0.5px;
+                border-radius: 20px;
+                --highlight-color-focused: none;
+              "
+            >
+              <ion-input
+                maxlength="6"
+                placeholder="6-digit area code"
+                [(ngModel)]="business.address.pin"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col offsetMd="1" size="3">
+            <i class="fa fa-pen" *ngIf="!editBPIN" (click)="edit_BPIN()"></i>
+            <ion-button *ngIf="editBPIN" (click)="edit_BPIN()">Save</ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>GST IN</b></span>
+          </ion-col>
+
+          <ion-col size="5">
+            <span *ngIf="!editBGST"> {{ business.gst }} </span>
+
+            <ion-item
+              *ngIf="editBGST"
+              style="
+                border: solid 0.5px;
+                border-radius: 20px;
+                --highlight-color-focused: none;
+              "
+            >
+              <ion-input
+                maxlength="15"
+                placeholder="15-digit GST number"
+                [(ngModel)]="business.gst"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col offsetMd="1" size="3">
+            <i class="fa fa-pen" *ngIf="!editBGST" (click)="edit_BGST()"></i>
+            <ion-button *ngIf="editBGST" (click)="edit_BGST()">Save</ion-button>
+          </ion-col>
+        </ion-row>
+        
+      </div>
     </ion-col>
   </ion-row>
 </ion-content>

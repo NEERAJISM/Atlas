@@ -1,5 +1,5 @@
-import { Address } from "./address";
-import { Client } from "./client";
+import { Address } from "../address";
+import { Client } from "../client";
 
 export class Order {
   id: string;

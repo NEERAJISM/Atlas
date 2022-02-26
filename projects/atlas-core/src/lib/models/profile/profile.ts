@@ -1,12 +1,17 @@
+// Segergate Main Page & others so that itloads early
+
+import { Full } from './pages/full';
+
 export class Profile {
-    id: string;
+  id: string;
 
-    title: string;
-    caption: string;
+  title: string;
+  icon: string;
 
-    icon: string;
-    background: string;
-    color:string;
+  //remove
+  caption: string;
+  background: string;
+  color:string;
 
-    pages: string[] = [];
+  home: Full = new Full();
 }

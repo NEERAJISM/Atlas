@@ -1,1 +1,123 @@
-<h1>Profile Page</h1>
+<ion-content class="ion-padding" style="height: 100%">
+  <ion-row style="height: 100%" class="ion-text-center">
+    <ion-col class="ion-padding" size="9" style="background: #f2f3f4">
+      <h5>Preview</h5>
+      <iframe
+        #profile
+        [src]="controllerSrc"
+        width="100%"
+        height="100%"
+        allowfullscreen=""
+        loading="lazy"
+      ></iframe>
+    </ion-col>
+    <ion-col size="3">
+      <ion-row class="m-3 ion-text-start">
+        <ion-button (click)="reload()">Reload</ion-button>
+      </ion-row>
+      <ion-row class="m-3 ion-text-start">
+        <b>Header</b>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-item>
+              <ion-label>Theme</ion-label>
+              <ion-select interface="popover" [value]="'m'">
+                <ion-select-option value="s">Small</ion-select-option>
+                <ion-select-option value="m">Medium</ion-select-option>
+                <ion-select-option value="l">Large</ion-select-option>
+                <ion-select-option value="xl">X-Large</ion-select-option>
+                <ion-select-option value="xxl">XX-Large</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-item>
+              <ion-label>Company Logo</ion-label>
+              <ion-avatar slot="end">
+                <img
+                  src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+                />
+              </ion-avatar>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-row class="ion-align-items-center">
+              <ion-col sizeMd="10">
+                <ion-item>
+                  <ion-label position="floating">Title</ion-label>
+                  <ion-input
+                    [disabled]="!editTitle"
+                    [(ngModel)]="title"
+                  ></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col sizeMd="2">
+                <span>
+                  <i
+                    class="fa"
+                    style="font-size: large"
+                    [ngClass]="{
+                      'fa-pen': !editTitle,
+                      'fa-check': editTitle
+                    }"
+                    (click)="edit_Title()"
+                  ></i>
+                </span>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="m-3 ion-text-start">
+        <b>Content</b>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <!-- The reorder gesture is disabled by default, enable it to drag and drop items -->
+            <ion-reorder-group
+              (ionItemReorder)="onItemReorder($event)"
+              disabled="false"
+            >
+              <!-- Default reorder icon, end aligned items -->
+              <ion-item button (click)="presentModal()">
+                <ion-label> Page 1 </ion-label>
+                <ion-reorder slot="end"></ion-reorder>
+              </ion-item>
+
+              <ion-item button (click)="presentModal()">
+                <ion-label> Page 2 </ion-label>
+                <ion-reorder slot="end"></ion-reorder>
+              </ion-item>
+
+              <ion-item button (click)="presentModal()">
+                <ion-label> Page 3 </ion-label>
+                <ion-reorder slot="end"></ion-reorder>
+              </ion-item>
+
+              <ion-item button (click)="presentModal()">
+                <ion-label> Page 4 </ion-label>
+                <ion-reorder slot="end"></ion-reorder>
+              </ion-item>
+            </ion-reorder-group>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

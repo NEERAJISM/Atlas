@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
-  AngularFirestoreCollection
+  AngularFirestoreCollection,
 } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Constants } from '../constants';
@@ -72,15 +72,21 @@ export class FirebaseUtil {
     return JSON.parse(JSON.stringify(obj));
   }
 
-  uploadInventoryImage(productId: string, file: any, name: string) {
+  uploadImage(
+    file: any,
+    type: string,
+    bizId: string,
+    id?: string,
+    name?: string
+  ) {
     return this.storage
-      .ref(Constants.PRODUCTS + '/' + 'bizId' + '/' + productId + '/' + name)
+      .ref(type + '/' + bizId + (id ? '/' + id : '') + (name ? '/' + name : ''))
       .put(file);
   }
 
-  downloadInventoryImage(productId: string, name: string) {
+  downloadImage(type: string, bizId: string, id?: string, name?: string) {
     return this.storage
-      .ref(Constants.PRODUCTS + '/' + 'bizId' + '/' + productId + '/' + name)
+      .ref(type + '/' + bizId + (id ? '/' + id : '') + (name ? '/' + name : ''))
       .getDownloadURL();
   }
 }

@@ -1,0 +1,231 @@
+<ion-content class="ion-padding">
+  <ion-row>
+    <ion-col>
+      <h5>New Section</h5>
+    </ion-col>
+    <ion-col>
+      <ion-item
+        style="
+          border: solid 0.5px;
+          border-radius: 20px;
+          --highlight-color-focused: none;
+        "
+      >
+        <ion-label><b>Title</b></ion-label>
+        <ion-input maxlength="10" [(ngModel)]="pageTitle"></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-button class="float-end" (click)="publish()">Publish</ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="mt-2">
+    <ion-col>
+      <ion-segment mode="md" scrollable value="Full">
+        <ion-segment-button value="Full" layout="icon-start">
+          <i class="fas fa-image" style="font-size: larger"></i>
+          <ion-label>Full</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Info" layout="icon-start">
+          <i class="far fa-address-card" style="font-size: larger"></i>
+          <ion-label>Info</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Text" layout="icon-start">
+          <i class="fas fa-font" style="font-size: larger"></i>
+          <ion-label>Text</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Slides" layout="icon-start">
+          <i class="fas fa-images" style="font-size: larger"></i>
+          <ion-label>Slides</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Video" layout="icon-start">
+          <i class="fab fa-youtube" style="font-size: larger"></i>
+          <ion-label>Video</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Video" layout="icon-start">
+          <i class="fas fa-users" style="font-size: larger"></i>
+          <ion-label>Team</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Video" layout="icon-start">
+          <i class="fas fa-info" style="font-size: larger"></i>
+          <ion-label>Contact</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-col>
+  </ion-row>
+
+  <!-- Full -->
+
+  <ion-row style="height: 75%">
+    <ion-col sizeMd="8">
+      <!-- <img style="width: 100px; height: 100px;" [src]="url"> -->
+
+      <section
+        style="
+            background: url({{url}}) no-repeat center center / cover;
+            height: 100%;
+            border: solid;
+            border-color: lightgrey;
+          "
+      >
+        <ion-row
+          class="mt-2 pb-3 h-100"
+          [ngClass]="{
+          'ion-text-start': full.fullTitleX == 'Left',
+          'ion-text-center': full.fullTitleX == 'Mid',
+          'ion-text-end': full.fullTitleX == 'Right',
+          'ion-align-items-start': full.fullTitleY == 'Top',
+          'ion-align-items-center': full.fullTitleY == 'Mid',
+          'ion-align-items-end': full.fullTitleY == 'Bottom'
+        }"
+        >
+          <ion-col>
+            <ion-row>
+              <ion-col
+                sizeMd="{{full.fullTitleW == 'NA' ? '12' : '4'}}"
+                offsetMd="{{full.fullTitleW == 'E' ? '8' : '0'}}"
+              >
+                <span>
+                  <p
+                    style="font-family: 'Mulish', sans-serif"
+                    [style.color]="full.fullTitleColor"
+                    [ngClass]="{
+                      'h3': full.fullTitleF == 's',
+                      'h2': full.fullTitleF == 'm',
+                      'h1': full.fullTitleF == 'l'
+                    }"
+                  >
+                    {{full.fullTitle}}
+                  </p>
+                </span>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </section>
+    </ion-col>
+
+    <ion-col sizeMd="4">
+      <ion-row>
+        <ion-col>
+          <input
+            style="display: none"
+            type="file"
+            accept="image/*"
+            #file
+            (change)="onFileChanged($event)"
+            [(ngModel)]="imgFile"
+          />
+          <ion-button
+            expand="block"
+            mode="ios"
+            mat-icon-button
+            class="img-btn"
+            (click)="file.click()"
+          >
+            Change Background Image
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-textarea
+              style="--highlight-color-focused: none"
+              placeholder="Description"
+              maxlength="50"
+              [(ngModel)]="full.fullTitle"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item lines="none">
+            <input type="color" [(ngModel)]="full.fullTitleColor" />
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-select interface="popover" [(ngModel)]="full.fullTitleF">
+            <ion-select-option value="s">Small</ion-select-option>
+            <ion-select-option value="m">Medium</ion-select-option>
+            <ion-select-option value="l">Large</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-segment mode="md" scrollable value="NA" [(ngModel)]="full.fullTitleW">
+            <ion-segment-button value="S" layout="icon-start">
+              <i class="fas fa-arrow-left" style="font-size: larger"></i>
+              <ion-label>Left</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="NA" layout="icon-start">
+              <i class="fas fa-arrows-alt-h" style="font-size: larger"></i>
+              <ion-label>Full</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="E" layout="icon-start">
+              <i class="fas fa-arrow-right" style="font-size: larger"></i>
+              <ion-label>Right</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-segment
+            mode="md"
+            scrollable
+            value="Mid"
+            [(ngModel)]="full.fullTitleX"
+          >
+            <ion-segment-button value="Left" layout="icon-start">
+              <i class="fas fa-align-left" style="font-size: larger"></i>
+            </ion-segment-button>
+            <ion-segment-button value="Mid" layout="icon-start">
+              <i class="fas fa-align-center" style="font-size: larger"></i>
+            </ion-segment-button>
+            <ion-segment-button value="Right" layout="icon-start">
+              <i class="fas fa-align-right" style="font-size: larger"></i>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-segment
+            mode="md"
+            scrollable
+            value="Top"
+            [(ngModel)]="full.fullTitleY"
+          >
+            <ion-segment-button value="Top" layout="icon-start">
+              <i class="fas fa-arrow-up" style="font-size: larger"></i>
+              <ion-label>Top</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Mid" layout="icon-start">
+              <i class="fas fa-arrows-alt-v" style="font-size: larger"></i>
+              <ion-label>Mid</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Bottom" layout="icon-start">
+              <i class="fas fa-arrow-down" style="font-size: larger"></i>
+              <ion-label>Bottom</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

@@ -19,6 +19,51 @@
 </ion-header>
 
 <ion-content>
+
+
+  <section
+        style="
+            background: url({{url}}) no-repeat center center / cover;
+            height: 100%;
+          "
+    class="fwh-slide"
+
+      >
+        <ion-row
+          class="mt-2 pb-3 h-100"
+          [ngClass]="{
+          'ion-text-start': fullTitleX == 'Left',
+          'ion-text-center': fullTitleX == 'Mid',
+          'ion-text-end': fullTitleX == 'Right',
+          'ion-align-items-start': fullTitleY == 'Top',
+          'ion-align-items-center': fullTitleY == 'Mid',
+          'ion-align-items-end': fullTitleY == 'Bottom'
+        }"
+        >
+          <ion-col>
+            <ion-row>
+              <ion-col
+                sizeMd="{{fullTitleW == 'NA' ? '12' : '4'}}"
+                offsetMd="{{fullTitleW == 'E' ? '8' : '0'}}"
+              >
+                <span>
+                  <p
+                    style="font-family: 'Mulish', sans-serif"
+                    [style.color]="fullTitleColor"
+                    [ngClass]="{
+                      'display-4': fullTitleF == 's',
+                      'display-3': fullTitleF == 'm',
+                      'display-1': fullTitleF == 'l'
+                    }"
+                  >
+                    {{fullTitle}}
+                  </p>
+                </span>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </section>
   
   <section
     #home

@@ -7,13 +7,14 @@ import {
   Address,
   AuthService,
   Business,
-  Client, Constants,
+  Client,
+  Constants,
   FirebaseUtil,
   Order,
   Pages,
   Product,
   Profile,
-  Unit
+  Unit,
 } from 'atlas-core';
 import firebase from 'firebase/app';
 import { Subscription } from 'rxjs';
@@ -80,7 +81,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   orders: Order[] = [];
   orderSubscription: Subscription;
   limit = 3;
-  url = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
+  url = 'assets/images/profile/white.jpg';
 
   // slider config
 
@@ -114,6 +115,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profile: Profile;
   pages: Pages;
 
+  profile2: Profile = new Profile();
+
+  // full
+  fullTitle = '';
+  fullTitleColor = '#000000';
+  fullTitleX = 'Mid';
+  fullTitleY = 'Mid';
+  fullTitleW = 'NA';
+  fullTitleF = 'm';
+
+  bizId = 'bA3Y7HgRrbNGfgisuXCKTtSeYLk2';
+
   constructor(
     private location: Location,
     private router: Router,
@@ -137,6 +150,39 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.init();
     this.profile = this.service.getProfile();
     this.pages = this.service.getPages();
+    this.getProfile();
+  }
+
+  getProfile() {
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
+      )
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.profile2, doc.data());
+          this.updateProfile();
+        }
+      });
+  }
+
+  updateProfile() {
+    this.fullTitle = this.profile2.home.fullTitle;
+    this.fullTitleColor = this.profile2.home.fullTitleColor;
+    this.fullTitleX = this.profile2.home.fullTitleX;
+    this.fullTitleY = this.profile2.home.fullTitleY;
+    this.fullTitleW = this.profile2.home.fullTitleW;
+    this.fullTitleF = this.profile2.home.fullTitleF;
+
+    
+
+    this.fbUtil.downloadImage(Constants.PROFILE, this.bizId)
+    .subscribe( (url) => {
+      this.url = url;
+    });
   }
 
   routeToOrder() {
@@ -171,7 +217,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async presentToast() {
-    this.appService.presentToast("Thanks. Your query has been registerd. we'll reachout to you.");
+    this.appService.presentToast(
+      "Thanks. Your query has been registerd. we'll reachout to you."
+    );
   }
 
   ngOnInit() {

@@ -54,6 +54,8 @@ import { AtlasCoreModule } from 'atlas-core';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { IonicModule } from '@ionic/angular';
 import { AppService } from '../app.service';
+import { ProfileDashboardComponent } from './components/profile/profile.component';
+import { PageEditModal } from './components/profile/modal/modal.page-edit';
 
 @NgModule({
   imports: [
@@ -106,7 +108,9 @@ import { AppService } from '../app.service';
     NewClientComponent,
     RemoveClientComponent,
     NewProductComponent,
-    RemoveProductComponent
+    RemoveProductComponent,
+    ProfileDashboardComponent,
+    PageEditModal
   ],
   exports: [
     DashboardComponent,

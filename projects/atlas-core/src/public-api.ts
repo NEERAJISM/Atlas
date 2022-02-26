@@ -11,6 +11,8 @@ export * from './lib/models/product';
 export * from './lib/models/profile/profile';
 export * from './lib/models/profile/pages';
 export * from './lib/models/profile/pages/about';
+export * from './lib/models/profile/pages/full';
+export * from './lib/models/profile/pages/page';
 export * from './lib/services/auth.service';
 export * from './lib/services/common.util';
 export * from './lib/services/firebase.util';

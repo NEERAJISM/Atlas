@@ -10,6 +10,8 @@ export class Constants {
   // Firebase
   static readonly BUSINESS = 'BUSINESS';
   static readonly INFO = 'INFO';
+  static readonly PROFILE = 'PROFILE';
+  static readonly PAGES = 'PAGES';
   
   static readonly ORDERS = 'ORDERS';
 

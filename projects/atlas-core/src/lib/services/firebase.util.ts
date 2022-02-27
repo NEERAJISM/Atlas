@@ -74,19 +74,16 @@ export class FirebaseUtil {
 
   uploadImage(
     file: any,
-    type: string,
-    bizId: string,
-    id?: string,
-    name?: string
+    url: string
   ) {
     return this.storage
-      .ref(type + '/' + bizId + (id ? '/' + id : '') + (name ? '/' + name : ''))
+      .ref(url)
       .put(file);
   }
 
-  downloadImage(type: string, bizId: string, id?: string, name?: string) {
+  downloadImage(url: string) {
     return this.storage
-      .ref(type + '/' + bizId + (id ? '/' + id : '') + (name ? '/' + name : ''))
+      .ref(url)
       .getDownloadURL();
   }
 }

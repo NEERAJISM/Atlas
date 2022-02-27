@@ -39,7 +39,7 @@ export class NewProductComponent {
   }
 
   loadImage(){
-    this.url = this.fbutil.downloadImage(Constants.PRODUCTS, 'bizId', this.product.id, '1.png');
+    this.url = this.fbutil.downloadImage(Constants.PRODUCTS + '/bizId/' + this.product.id + '/1.png');
     this.placeholder = false;
   }
 
@@ -65,7 +65,7 @@ export class NewProductComponent {
       name = '1.png';
     }
 
-    this.fbutil.uploadImage(this.blob1, Constants.PRODUCTS, 'bizId', this.product.id, name).catch((error) => console.log(error));
+    this.fbutil.uploadImage(this.blob1, Constants.PRODUCTS + '/bizId/' + this.product.id + '/1.png').catch((error) => console.log(error));
   }
 
   addNewUnit() {

@@ -50,10 +50,9 @@ export class PageEditModal implements OnInit {
 
   getProfile() {
     this.fbUtil
-      .downloadImage(Constants.PROFILE, this.bizId)
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/home')
       .subscribe((url) => {
         this.url = url;
-        this.appService.dismissLoading();
       });
 
     this.fbUtil
@@ -67,6 +66,7 @@ export class PageEditModal implements OnInit {
         if (doc.data()) {
           Object.assign(this.profile2, doc.data());
           this.full = this.profile2.home;
+          this.appService.dismissLoading();
         }
       });
   }
@@ -117,7 +117,7 @@ export class PageEditModal implements OnInit {
       .then(() => {
         // upload back ground
         if (this.blob) {
-          this.fbUtil.uploadImage(this.blob, Constants.PROFILE, this.bizId);
+          this.fbUtil.uploadImage(this.blob, Constants.PROFILE + '/' + this.bizId + '/home');
         }
       })
       .catch(() =>

@@ -11,6 +11,7 @@ import { PageEditModal } from './modal/modal.page-edit';
 })
 export class ProfileDashboardComponent implements OnInit {
   @ViewChild('profile') iframe: ElementRef;
+  @ViewChild('file') file: ElementRef;
 
   //TODO Remove
   url = 'http://localhost:49332';
@@ -21,10 +22,17 @@ export class ProfileDashboardComponent implements OnInit {
   bizProfile = new Profile();
 
   editTitle = false;
+  editIcon = false;
   editColor = false;
   editFontColor = false;
 
-  home = "true";
+  home = 'true';
+
+  icon;
+  placeholder =
+    'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+  imgFile;
+  blob;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -40,7 +48,7 @@ export class ProfileDashboardComponent implements OnInit {
 
   init() {
     this.auth.afAuth.authState.subscribe((user) => {
-      if(user) {
+      if (user) {
         this.bizId = user.uid;
         this.getProfile();
       }
@@ -62,6 +70,12 @@ export class ProfileDashboardComponent implements OnInit {
 
   getProfile() {
     this.fbUtil
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
+
+    this.fbUtil
       .getInstance()
       .collection(
         Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
@@ -72,7 +86,7 @@ export class ProfileDashboardComponent implements OnInit {
         if (doc.data()) {
           Object.assign(this.bizProfile, doc.data());
           Object.assign(this.backupProfile, doc.data());
-        }    
+        }
         this.service.dismissLoading();
       });
   }
@@ -82,40 +96,67 @@ export class ProfileDashboardComponent implements OnInit {
       component: PageEditModal,
       cssClass: 'page-edit-modal',
       componentProps: {
-        'mode': 'Home'
-      }
+        mode: 'Home',
+      },
     });
     return await modal.present();
   }
 
   reload(order?: boolean) {
-    this.iframe.nativeElement.src = this.url + ( order ? '/order': '');
+    setTimeout(
+      () =>
+        (this.iframe.nativeElement.src = this.url + (order ? '/order' : '')),
+      2000
+    );
   }
 
   edit_Title() {
-    if(this.editTitle) {
-      if(!this.bizProfile.title) {
+    if (this.editTitle) {
+      if (!this.bizProfile.title) {
         this.service.presentToast('Please enter a valid Company Name!');
         return;
       }
-  
-      if(this.bizProfile.title !== this.backupProfile.title) {
+
+      if (this.bizProfile.title !== this.backupProfile.title) {
         this.updateProfile();
       }
     }
     this.editTitle = !this.editTitle;
   }
 
+  edit_Icon() {
+    if (this.editIcon) {
+      if (this.blob) {
+        this.service.presentLoading();
+        this.fbUtil
+          .uploadImage(
+            this.blob,
+            Constants.PROFILE + '/' + this.bizId + '/icon'
+          )
+          .then(() => {
+            this.service.dismissLoading();
+            this.reload();
+          });
+      }
+    } else {
+      this.file.nativeElement.click();
+    }
+    this.editIcon = !this.editIcon;
+  }
+
   edit_Color() {
-    if(this.editColor && this.bizProfile.color !== this.backupProfile.color) {
-        this.updateProfile();
+    if (this.editColor && this.bizProfile.color !== this.backupProfile.color) {
+      this.updateProfile();
     }
     this.editColor = !this.editColor;
   }
 
   edit_FontColor() {
-    if(this.editFontColor && this.bizProfile.fontColor !== this.backupProfile.fontColor) {
-        this.updateProfile();
+    if (
+      this.editFontColor &&
+      this.bizProfile.fontColor !== this.backupProfile.fontColor
+    ) {
+      this.updateProfile();
     }
     this.editFontColor = !this.editFontColor;
   }
@@ -145,5 +186,34 @@ export class ProfileDashboardComponent implements OnInit {
         this.reload();
         this.service.dismissLoading();
       });
+  }
+
+  onFileChanged(event) {
+    const files = event.target.files;
+    if (files.length === 0) {
+      return;
+    }
+
+    if (files[0].size > 200000) {
+      this.imgFile = '';
+      this.service.presentToast('Please select a file less than 200KB');
+      return;
+    }
+
+    const mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.imgFile = '';
+      this.service.presentToast(
+        'Image format not supported, use either jpg/jpeg/png'
+      );
+      return;
+    }
+
+    this.blob = files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(files[0]);
+    reader.onload = (e) => {
+      this.icon = reader.result;
+    };
   }
 }

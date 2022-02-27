@@ -39,7 +39,7 @@
                     style="font-size: large"
                     [ngClass]="{
                       'fa-pen': !editTitle,
-                      'fa-check': editTitle
+                      'fa-check text-success': editTitle
                     }"
                     (click)="edit_Title()"
                   ></i>
@@ -53,14 +53,37 @@
       <ion-row>
         <ion-col>
           <ion-card>
-            <ion-item>
-              <ion-label>Company Logo</ion-label>
-              <ion-avatar slot="end">
-                <img
-                  src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-                />
-              </ion-avatar>
-            </ion-item>
+            <ion-row class="ion-align-items-center">
+              <ion-col sizeMd="10">
+                <ion-item lines="none">
+                  <ion-label>Company Logo</ion-label>
+                  <ion-avatar slot="end">
+                    <img [src]="icon ? icon : placeholder" />
+                  </ion-avatar>
+                </ion-item>
+              </ion-col>
+              <ion-col sizeMd="2">
+                <span>
+                  <input
+                    style="display: none"
+                    type="file"
+                    accept="image/*"
+                    #file
+                    (change)="onFileChanged($event)"
+                    [(ngModel)]="imgFile"
+                  />
+                  <i
+                    class="fa"
+                    style="font-size: large"
+                    [ngClass]="{
+                      'fa-pen': !editIcon,
+                      'fa-check text-success': editIcon
+                    }"
+                    (click)="edit_Icon()"
+                  ></i>
+                </span>
+              </ion-col>
+            </ion-row>
           </ion-card>
         </ion-col>
       </ion-row>
@@ -86,7 +109,7 @@
                     style="font-size: large"
                     [ngClass]="{
                       'fa-pen': !editColor,
-                      'fa-check': editColor
+                      'fa-check text-success': editColor
                     }"
                     (click)="edit_Color()"
                   ></i>
@@ -118,7 +141,7 @@
                     style="font-size: large"
                     [ngClass]="{
                       'fa-pen': !editFontColor,
-                      'fa-check': editFontColor
+                      'fa-check text-success': editFontColor
                     }"
                     (click)="edit_FontColor()"
                   ></i>

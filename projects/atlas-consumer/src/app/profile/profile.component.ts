@@ -82,6 +82,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   orderSubscription: Subscription;
   limit = 3;
   url = 'assets/images/profile/white.jpg';
+  icon = '';
 
   // slider config
 
@@ -142,18 +143,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.isDesktop = true;
     }
 
-    // this.platform.backButton.subscribeWithPriority(10, () => {
-    //   console.log('Back called');
-    //   appService.go('');
-    // });
-
-    this.init();
+    this.init2();
     this.profile = this.service.getProfile();
     this.pages = this.service.getPages();
     this.getProfile();
   }
 
   getProfile() {
+    this.fbUtil
+    .downloadImage(Constants.PROFILE + '/' + this.bizId + '/home')
+    .subscribe((url) => {
+      this.url = url;
+    });
+
+    this.fbUtil
+    .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
+    .subscribe((url) => {
+      this.icon = url;
+    });
+
     this.fbUtil
       .getInstance()
       .collection(
@@ -176,13 +184,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.fullTitleY = this.profile2.home.fullTitleY;
     this.fullTitleW = this.profile2.home.fullTitleW;
     this.fullTitleF = this.profile2.home.fullTitleF;
-
-    
-
-    this.fbUtil.downloadImage(Constants.PROFILE, this.bizId)
-    .subscribe( (url) => {
-      this.url = url;
-    });
   }
 
   routeToOrder() {
@@ -235,7 +236,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.orderSubscription.unsubscribe();
   }
 
-  init() {
+  init2() {
     const unit1 = new Unit();
     unit1.unit = '500 gm';
     unit1.price = 500;

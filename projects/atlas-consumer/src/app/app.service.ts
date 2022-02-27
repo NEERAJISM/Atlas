@@ -1,13 +1,14 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { About, Pages, Product, Profile, Unit } from 'atlas-core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AppService {
   isDesktop = false;
+  private loading;
   
   items: Product[] = [];
   private profile: Profile = new Profile();
@@ -19,11 +20,22 @@ export class AppService {
   private cart = new BehaviorSubject<string>('');
   cartUpdatedEvent = this.cart.asObservable();
 
-  constructor(private router: Router, private location: Location, public toastController: ToastController) {
+  constructor(private router: Router, private location: Location, public toastController: ToastController, private loadingController: LoadingController) {
     if (window.innerWidth > 1000) {
       this.isDesktop = true;
     }
     this.init();
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      message: 'Please wait...',
+    });
+    await this.loading.present();
+  }
+
+  async dismissLoading(){
+    this.loading.dismiss();
   }
 
   async presentToast(message: string) {

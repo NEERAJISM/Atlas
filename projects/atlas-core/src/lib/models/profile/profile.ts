@@ -5,13 +5,15 @@ import { Full } from './pages/full';
 export class Profile {
   id: string;
 
+  // toolbar
   title: string;
   icon: string;
+  color: string;
+  fontColor: string;
 
   //remove
   caption: string;
   background: string;
-  color:string;
 
   home: Full = new Full();
 }

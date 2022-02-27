@@ -1,9 +1,9 @@
 <ion-content class="ion-padding">
   <ion-row>
     <ion-col>
-      <h5>New Section</h5>
+      <h5>{{ isHome ? 'Home' : (isContact ? 'Contact' : 'New')}} Section</h5>
     </ion-col>
-    <ion-col>
+    <ion-col *ngIf="isOther" >
       <ion-item
         style="
           border: solid 0.5px;
@@ -22,7 +22,7 @@
 
   <ion-row class="mt-2">
     <ion-col>
-      <ion-segment mode="md" scrollable value="Full">
+      <ion-segment mode="md" scrollable value="Full" [disabled]="!isOther">
         <ion-segment-button value="Full" layout="icon-start">
           <i class="fas fa-image" style="font-size: larger"></i>
           <ion-label>Full</ion-label>

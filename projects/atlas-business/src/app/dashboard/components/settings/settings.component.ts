@@ -29,9 +29,11 @@ export class SettingsDashboardComponent {
 
   init() {
     this.auth.afAuth.authState.subscribe((user) => {
-      this.user = user;
-      this.emailVerified = user.emailVerified;
-      this.getBusinessInfo();
+      if(user) {
+        this.user = user;
+        this.emailVerified = user.emailVerified;
+        this.getBusinessInfo();
+      }
     });
   }
 

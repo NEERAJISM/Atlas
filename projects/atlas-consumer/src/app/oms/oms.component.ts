@@ -32,7 +32,7 @@ export class OmsComponent implements OnInit, OnDestroy {
   cartSize = 0;
   cartMap: Map<string, Map<string, number>> = new Map();
 
-  uid: string;
+  uid: string = '';
 
   // subscriptions
   subscriptions: Subscription[] = [];
@@ -48,15 +48,15 @@ export class OmsComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {
     this.isDesktop = service.isDesktop;
+    this.service.presentLoading();
 
     this.init();
     this.profile = this.service.getProfile();
 
     this.subscriptions.push(
       this.authService.getUserId().subscribe((user) => {
-        if (!user) {
-          setTimeout(() => this.presentModal(), 700);
-        } else {
+        this.service.dismissLoading();
+        if (user) {
           this.uid = user.uid;
           this.initForUser();
         }
@@ -129,6 +129,11 @@ export class OmsComponent implements OnInit, OnDestroy {
   }
 
   addToCart(i: number) {
+    if(!this.uid) {
+      this.presentModal();
+      return;
+    }
+
     var id = this.items[i].id;
     var u = this.items[i].units[this.unitDisplayMap.get(i)];
 

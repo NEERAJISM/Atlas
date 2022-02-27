@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-toolbar [style.color]="profile.color">
+  <ion-toolbar style="--background: {{profile2.color}}; --color: {{profile2.fontColor}}">
     <ion-title
-      style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
+      style="font-family: 'Mulish', sans-serif;"
     >
       <img style="height: 35px" src="{{ profile.icon }}" />
-      <b>&nbsp; {{profile.title}} </b></ion-title
+      <b>&nbsp; {{profile2.title}} </b></ion-title
     >
 
     <ion-buttons class="hidden-md-down" slot="primary" collapse="true">

@@ -1,12 +1,19 @@
-import { Component } from '@angular/core';
-import { Constants, FirebaseUtil, Full, Profile } from 'atlas-core';
+import { Component, Input, OnInit } from '@angular/core';
+import { AuthService, Constants, FirebaseUtil, Full, Profile } from 'atlas-core';
 import { AppService } from 'projects/atlas-business/src/app/app.service';
 
 @Component({
   selector: 'page-edit-modal',
   templateUrl: './modal.page-edit.html',
 })
-export class PageEditModal {
+export class PageEditModal implements OnInit {
+  @Input() mode: string = '';
+
+  isHome = false;
+  isContact = false;
+  isOther = false;
+  
+  bizId = '';
   pageTitle = 'Home';
 
   full: Full = new Full();
@@ -17,11 +24,28 @@ export class PageEditModal {
 
   profile2: Profile = new Profile();
 
-  //TODO remove tis & search copy
-  bizId = 'bA3Y7HgRrbNGfgisuXCKTtSeYLk2';
+  constructor(private appService: AppService, private fbUtil: FirebaseUtil, private auth: AuthService) {
+    this.appService.presentLoading();
+    this.init();
+  }
 
-  constructor(private appService: AppService, private fbUtil: FirebaseUtil) {
-    this.getProfile();
+  ngOnInit(): void {
+    if(this.mode === 'Home') {
+      this.isHome = true;
+    } else if (this.mode === 'Contact') {
+      this.isContact = true;
+    } else {
+      this.isOther = true;
+    }
+  }
+
+  init() {
+    this.auth.afAuth.authState.subscribe((user) => {
+      if(user) {
+        this.bizId = user.uid;
+        this.getProfile();
+      }
+    });
   }
 
   getProfile() {
@@ -29,6 +53,7 @@ export class PageEditModal {
       .downloadImage(Constants.PROFILE, this.bizId)
       .subscribe((url) => {
         this.url = url;
+        this.appService.dismissLoading();
       });
 
     this.fbUtil
@@ -78,6 +103,8 @@ export class PageEditModal {
       return;
     }
 
+    this.appService.presentLoading();
+
     // create
     this.profile2.home = this.full;
     this.fbUtil
@@ -98,6 +125,9 @@ export class PageEditModal {
           'Error occurred, Please check Internet connectivity'
         )
       )
-      .finally(() => this.appService.closeModalProfile('success'));
+      .finally(() => {
+        this.appService.dismissLoading();
+        this.appService.closeModalProfile('success');
+      });
   }
 }

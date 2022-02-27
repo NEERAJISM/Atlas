@@ -1,7 +1,13 @@
 <ion-content class="ion-padding" style="height: 100%">
   <ion-row style="height: 100%" class="ion-text-center">
     <ion-col class="ion-padding" size="9" style="background: #f2f3f4">
-      <h5>Preview</h5>
+      <h5>
+        Your Website Preview
+
+        <a [href]="url" target="_blank">
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+      </h5>
       <iframe
         #profile
         [src]="controllerSrc"
@@ -9,29 +15,37 @@
         height="100%"
         allowfullscreen=""
         loading="lazy"
+        style="pointer-events: none"
       ></iframe>
     </ion-col>
     <ion-col size="3">
-      <ion-row class="m-3 ion-text-start">
-        <ion-button (click)="reload()">Reload</ion-button>
-      </ion-row>
-      <ion-row class="m-3 ion-text-start">
-        <b>Header</b>
-      </ion-row>
-
       <ion-row>
         <ion-col>
           <ion-card>
-            <ion-item>
-              <ion-label>Theme</ion-label>
-              <ion-select interface="popover" [value]="'m'">
-                <ion-select-option value="s">Small</ion-select-option>
-                <ion-select-option value="m">Medium</ion-select-option>
-                <ion-select-option value="l">Large</ion-select-option>
-                <ion-select-option value="xl">X-Large</ion-select-option>
-                <ion-select-option value="xxl">XX-Large</ion-select-option>
-              </ion-select>
-            </ion-item>
+            <ion-row class="ion-align-items-center">
+              <ion-col sizeMd="10">
+                <ion-item lines="none">
+                  <!-- <ion-label position="floating">Title</ion-label> -->
+                  <ion-input
+                    [disabled]="!editTitle"
+                    [(ngModel)]="bizProfile.title"
+                  ></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col sizeMd="2">
+                <span>
+                  <i
+                    class="fa"
+                    style="font-size: large"
+                    [ngClass]="{
+                      'fa-pen': !editTitle,
+                      'fa-check': editTitle
+                    }"
+                    (click)="edit_Title()"
+                  ></i>
+                </span>
+              </ion-col>
+            </ion-row>
           </ion-card>
         </ion-col>
       </ion-row>
@@ -56,12 +70,13 @@
           <ion-card>
             <ion-row class="ion-align-items-center">
               <ion-col sizeMd="10">
-                <ion-item>
-                  <ion-label position="floating">Title</ion-label>
-                  <ion-input
-                    [disabled]="!editTitle"
-                    [(ngModel)]="title"
-                  ></ion-input>
+                <ion-item lines="none">
+                  <ion-label>Toolbar Color</ion-label>
+                  <input
+                    [disabled]="!editColor"
+                    type="color"
+                    [(ngModel)]="bizProfile.color"
+                  />
                 </ion-item>
               </ion-col>
               <ion-col sizeMd="2">
@@ -70,10 +85,10 @@
                     class="fa"
                     style="font-size: large"
                     [ngClass]="{
-                      'fa-pen': !editTitle,
-                      'fa-check': editTitle
+                      'fa-pen': !editColor,
+                      'fa-check': editColor
                     }"
-                    (click)="edit_Title()"
+                    (click)="edit_Color()"
                   ></i>
                 </span>
               </ion-col>
@@ -82,42 +97,104 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="m-3 ion-text-start">
-        <b>Content</b>
-      </ion-row>
-
       <ion-row>
         <ion-col>
           <ion-card>
-            <!-- The reorder gesture is disabled by default, enable it to drag and drop items -->
-            <ion-reorder-group
-              (ionItemReorder)="onItemReorder($event)"
-              disabled="false"
-            >
-              <!-- Default reorder icon, end aligned items -->
-              <ion-item button (click)="presentModal()">
-                <ion-label> Page 1 </ion-label>
-                <ion-reorder slot="end"></ion-reorder>
-              </ion-item>
-
-              <ion-item button (click)="presentModal()">
-                <ion-label> Page 2 </ion-label>
-                <ion-reorder slot="end"></ion-reorder>
-              </ion-item>
-
-              <ion-item button (click)="presentModal()">
-                <ion-label> Page 3 </ion-label>
-                <ion-reorder slot="end"></ion-reorder>
-              </ion-item>
-
-              <ion-item button (click)="presentModal()">
-                <ion-label> Page 4 </ion-label>
-                <ion-reorder slot="end"></ion-reorder>
-              </ion-item>
-            </ion-reorder-group>
+            <ion-row class="ion-align-items-center">
+              <ion-col sizeMd="10">
+                <ion-item lines="none">
+                  <ion-label>Font Color</ion-label>
+                  <input
+                    [disabled]="!editFontColor"
+                    type="color"
+                    [(ngModel)]="bizProfile.fontColor"
+                  />
+                </ion-item>
+              </ion-col>
+              <ion-col sizeMd="2">
+                <span>
+                  <i
+                    class="fa"
+                    style="font-size: large"
+                    [ngClass]="{
+                      'fa-pen': !editFontColor,
+                      'fa-check': editFontColor
+                    }"
+                    (click)="edit_FontColor()"
+                  ></i>
+                </span>
+              </ion-col>
+            </ion-row>
           </ion-card>
         </ion-col>
       </ion-row>
+
+      <ion-row class="ion-text-start">
+        <ion-col>
+          <ion-segment mode="md" scrollable value="true" [(ngModel)]="home">
+            <ion-segment-button
+              value="true"
+              layout="icon-start"
+              (click)="reload(false)"
+            >
+              <i class="fas fa-home" style="font-size: larger"></i>
+              <ion-label>Home</ion-label>
+            </ion-segment-button>
+            <ion-segment-button
+              value="false"
+              layout="icon-start"
+              (click)="reload(true)"
+            >
+              <i class="fas fa-shopping-cart" style="font-size: larger"></i>
+              <ion-label>Product Gallery</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="home === 'true'">
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <!-- The reorder gesture is disabled by default, enable it to drag and drop items -->
+              <!-- Default reorder icon, end aligned items -->
+              <ion-item button (click)="presentModal()">
+                <ion-label> Home </ion-label>
+                <!-- <ion-reorder slot="end"></ion-reorder> -->
+              </ion-item>
+
+              <ion-reorder-group
+                (ionItemReorder)="onItemReorder($event)"
+                disabled="false"
+              >
+                <ion-item button (click)="presentModal()">
+                  <ion-label> Page 1 </ion-label>
+                  <ion-reorder slot="end"></ion-reorder>
+                </ion-item>
+
+                <ion-item button (click)="presentModal()">
+                  <ion-label> Page 2 </ion-label>
+                  <ion-reorder slot="end"></ion-reorder>
+                </ion-item>
+
+                <ion-item button (click)="presentModal()">
+                  <ion-label> Page 3 </ion-label>
+                  <ion-reorder slot="end"></ion-reorder>
+                </ion-item>
+
+                <ion-item button (click)="presentModal()">
+                  <ion-label> Page 4 </ion-label>
+                  <ion-reorder slot="end"></ion-reorder>
+                </ion-item>
+              </ion-reorder-group>
+              <ion-item button (click)="presentModal()">
+                <ion-label> Contact / Address Info </ion-label>
+                <!-- <ion-reorder slot="end"></ion-reorder> -->
+              </ion-item>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </div>
     </ion-col>
   </ion-row>
 </ion-content>

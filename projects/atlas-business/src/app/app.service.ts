@@ -9,7 +9,7 @@ import { LoadingController, ToastController } from '@ionic/angular';
 @Injectable()
 export class AppService {
   isDesktop = false;
-  loading;
+  private loading;
   
   items: Product[] = [];
   private profile: Profile = new Profile();
@@ -23,6 +23,13 @@ export class AppService {
   private cart = new BehaviorSubject<string>('');
   cartUpdatedEvent = this.cart.asObservable();
 
+  constructor(private router: Router, private location: Location, private toastController: ToastController, private loadingController: LoadingController) {
+    if (window.innerWidth > 1000) {
+      this.isDesktop = true;
+    }
+    this.init();
+  }
+
   closeModal(s: string) {
     this.modal.next(s);
   }
@@ -33,13 +40,6 @@ export class AppService {
 
   cartUpdated(s: string) {
     this.cart.next(s);
-  }
-
-  constructor(private router: Router, private location: Location, public toastController: ToastController, public loadingController: LoadingController) {
-    if (window.innerWidth > 1000) {
-      this.isDesktop = true;
-    }
-    this.init();
   }
 
   async presentToast(message: string) {
@@ -54,13 +54,14 @@ export class AppService {
   async presentLoading() {
     this.loading = await this.loadingController.create({
       message: 'Please wait...',
-      duration: 2000
     });
     await this.loading.present();
   }
 
   async dismissLoading(){
-    this.loading.dismiss();
+    if(this.loading) {
+      this.loading.dismiss();
+    }
   }
 
   go(url: string) {

@@ -58,7 +58,7 @@
                 <ion-item lines="none">
                   <ion-label>Company Logo</ion-label>
                   <ion-avatar slot="end">
-                    <img [src]="icon ? icon : placeholder" />
+                    <img [src]="icon ? icon : placeholder" (click)="editIcon = true; file.click();" />
                   </ion-avatar>
                 </ion-item>
               </ion-col>
@@ -96,9 +96,10 @@
                 <ion-item lines="none">
                   <ion-label>Toolbar Color</ion-label>
                   <input
-                    [disabled]="!editColor"
+                    #tColor
                     type="color"
                     [(ngModel)]="bizProfile.color"
+                    (click)="editColor = true"
                   />
                 </ion-item>
               </ion-col>
@@ -128,9 +129,10 @@
                 <ion-item lines="none">
                   <ion-label>Font Color</ion-label>
                   <input
-                    [disabled]="!editFontColor"
+                    #fColor
                     type="color"
                     [(ngModel)]="bizProfile.fontColor"
+                    (click)="editFontColor = true"
                   />
                 </ion-item>
               </ion-col>

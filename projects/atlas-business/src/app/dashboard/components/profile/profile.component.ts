@@ -12,9 +12,11 @@ import { PageEditModal } from './modal/modal.page-edit';
 export class ProfileDashboardComponent implements OnInit {
   @ViewChild('profile') iframe: ElementRef;
   @ViewChild('file') file: ElementRef;
+  @ViewChild('tColor') tColor: ElementRef;
+  @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49332';
+  url = 'http://localhost:49253';
   controllerSrc: any;
 
   bizId = '';
@@ -148,7 +150,12 @@ export class ProfileDashboardComponent implements OnInit {
     if (this.editColor && this.bizProfile.color !== this.backupProfile.color) {
       this.updateProfile();
     }
+
     this.editColor = !this.editColor;
+
+    if (this.editColor) {
+      this.tColor.nativeElement.click();
+    }
   }
 
   edit_FontColor() {
@@ -159,6 +166,10 @@ export class ProfileDashboardComponent implements OnInit {
       this.updateProfile();
     }
     this.editFontColor = !this.editFontColor;
+
+    if (this.editFontColor) {
+      this.fColor.nativeElement.click();
+    }
   }
 
   onItemReorder(ev) {
@@ -191,12 +202,14 @@ export class ProfileDashboardComponent implements OnInit {
   onFileChanged(event) {
     const files = event.target.files;
     if (files.length === 0) {
+      this.editIcon = false;
       return;
     }
 
     if (files[0].size > 200000) {
       this.imgFile = '';
       this.service.presentToast('Please select a file less than 200KB');
+      this.editIcon = false;
       return;
     }
 
@@ -206,6 +219,7 @@ export class ProfileDashboardComponent implements OnInit {
       this.service.presentToast(
         'Image format not supported, use either jpg/jpeg/png'
       );
+      this.editIcon = false;
       return;
     }
 

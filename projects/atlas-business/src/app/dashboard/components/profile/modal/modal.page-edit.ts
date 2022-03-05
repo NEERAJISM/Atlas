@@ -1,5 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AuthService, Constants, FirebaseUtil, Full, Profile } from 'atlas-core';
+import {
+  Constants,
+  Contact,
+  FirebaseUtil,
+  Full,
+  Info,
+  Profile,
+  Slides,
+  Team,
+  Type,
+  Text,
+  Video,
+} from 'atlas-core';
 import { AppService } from 'projects/atlas-business/src/app/app.service';
 
 @Component({
@@ -7,67 +19,58 @@ import { AppService } from 'projects/atlas-business/src/app/app.service';
   templateUrl: './modal.page-edit.html',
 })
 export class PageEditModal implements OnInit {
-  @Input() mode: string = '';
+  @Input() mode: string;
+  @Input() profile: Profile;
+  @Input() iType: string;
+  @Input() iText: Text;
 
   isHome = false;
   isContact = false;
   isOther = false;
-  
-  bizId = '';
-  pageTitle = 'Home';
+  isEdit = false;
 
-  full: Full = new Full();
+  pageTitle = '';
+  pageType = '';
+  contact = new Contact();
+  full = new Full();
+  info = new Info();
+  slides = new Slides();
+  team = new Team();
+  text = new Text();
+  video = new Video();
 
+  //form
   url = 'assets/images/profile/white.jpg';
   imgFile;
   blob;
 
-  profile2: Profile = new Profile();
-
-  constructor(private appService: AppService, private fbUtil: FirebaseUtil, private auth: AuthService) {
+  constructor(private appService: AppService, private fbUtil: FirebaseUtil) {
     this.appService.presentLoading();
-    this.init();
   }
 
   ngOnInit(): void {
-    if(this.mode === 'Home') {
+    if (this.mode === 'Home') {
       this.isHome = true;
     } else if (this.mode === 'Contact') {
       this.isContact = true;
     } else {
       this.isOther = true;
     }
-  }
 
-  init() {
-    this.auth.afAuth.authState.subscribe((user) => {
-      if(user) {
-        this.bizId = user.uid;
-        this.getProfile();
-      }
-    });
+    this.iType
+      ? (this.pageType = this.iType)
+      : (this.pageType = Type.Text.toString());
+
+    this.full = this.profile.home;
+    this.isHome ? this.getProfile() : this.appService.dismissLoading();
   }
 
   getProfile() {
     this.fbUtil
-      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/home')
+      .downloadImage(Constants.PROFILE + '/' + this.profile.id + '/home')
       .subscribe((url) => {
         this.url = url;
-      });
-
-    this.fbUtil
-      .getInstance()
-      .collection(
-        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
-      )
-      .doc(this.bizId)
-      .get()
-      .subscribe((doc) => {
-        if (doc.data()) {
-          Object.assign(this.profile2, doc.data());
-          this.full = this.profile2.home;
-          this.appService.dismissLoading();
-        }
+        this.appService.dismissLoading();
       });
   }
 
@@ -98,26 +101,102 @@ export class PageEditModal implements OnInit {
 
   publish() {
     // TODO for Edit only if there's any change from exiting
-    if (!this.pageTitle || this.pageTitle.trim().length == 0) {
+    if (
+      this.isOther &&
+      (!this.pageTitle || this.pageTitle.trim().length == 0)
+    ) {
       this.appService.presentToast('Please enter the page title');
       return;
     }
 
+    // check if no change
+    if(this.isEdit) {
+
+    switch (this.pageType) {
+      case 'Full':
+        if (this.equalFull(this.full, this.profile.home)) {
+          this.appService.closeModalProfile('success');
+          return;
+        }
+        break;
+      case 'Text':
+        if (this.equalText(this.text, this.iText)) {
+          this.appService.closeModalProfile('success');
+          return;
+        }
+        break;
+    }
+  }
+
     this.appService.presentLoading();
 
-    // create
-    this.profile2.home = this.full;
+    if (this.isHome || this.isContact) {
+      this.updateProfile();
+      return;
+    }
+
+    if (this.isOther) {
+      var page;
+      switch (this.pageType) {
+        case 'Full':
+          break;
+        case 'Text':
+          page = this.text;
+          break;
+      }
+
+      page.id = this.fbUtil.getId();
+      page.title = this.pageTitle;
+      this.fbUtil
+        .getInstance()
+        .collection(
+          Constants.BUSINESS + '/' + this.profile.id + '/' + Constants.PAGES
+        )
+        .doc(page.id)
+        .set(this.fbUtil.toJson(page))
+        .then(() => {
+          // update profile index
+          this.profile.pages.push(page.id);
+          this.fbUtil
+            .getInstance()
+            .collection(
+              Constants.BUSINESS +
+                '/' +
+                this.profile.id +
+                '/' +
+                Constants.PROFILE
+            )
+            .doc(this.profile.id)
+            .update({ pages: this.profile.pages});
+        })
+        .catch(() =>
+          this.appService.presentToast(
+            'Error occurred, Please check Internet connectivity'
+          )
+        )
+        .finally(() => {
+          this.appService.dismissLoading();
+          this.appService.closeModalProfile('success');
+        });
+    }
+  }
+
+  updateProfile() {
+    this.profile.home = this.full;
     this.fbUtil
       .getInstance()
       .collection(
-        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
+        Constants.BUSINESS + '/' + this.profile.id + '/' + Constants.PROFILE
       )
-      .doc(this.bizId)
-      .set(this.fbUtil.toJson(this.profile2))
+      .doc(this.profile.id)
+      .set(this.fbUtil.toJson(this.profile))
       .then(() => {
         // upload back ground
         if (this.blob) {
-          this.fbUtil.uploadImage(this.blob, Constants.PROFILE + '/' + this.bizId + '/home');
+          this.fbUtil.uploadImage(
+            this.blob,
+            Constants.PROFILE + '/' + this.profile.id + '/home'
+          );
         }
       })
       .catch(() =>
@@ -129,5 +208,29 @@ export class PageEditModal implements OnInit {
         this.appService.dismissLoading();
         this.appService.closeModalProfile('success');
       });
+  }
+
+  equalFull(object1: Full, object2: Full): boolean {
+    return (
+      object1.title === object2.title &&
+      object1.fullTitle === object2.fullTitle &&
+      object1.fullTitleColor === object2.fullTitleColor &&
+      object1.fullTitleX === object2.fullTitleX &&
+      object1.fullTitleY === object2.fullTitleY &&
+      object1.fullTitleW === object2.fullTitleW &&
+      object1.fullTitleFont === object2.fullTitleFont
+    );
+  }
+
+  equalText(object1: Text, object2: Text): boolean {
+    return (
+      object1.title === object2.title &&
+      object1.heading === object2.heading &&
+      object1.headingColor === object2.headingColor &&
+      object1.headingFont === object2.headingFont &&
+      object1.paragraph === object2.paragraph &&
+      object1.paragraphColor === object2.paragraphColor &&
+      object1.paragraphStyle === object2.paragraphStyle
+    );
   }
 }

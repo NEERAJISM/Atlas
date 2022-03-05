@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { About, Pages, Product, Profile, Unit } from 'atlas-core';
-import { BehaviorSubject } from 'rxjs';
 import { LoadingController, ToastController } from '@ionic/angular';
+import { Page, Product, Profile, Unit } from 'atlas-core';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Injectable()
@@ -13,7 +13,7 @@ export class AppService {
   
   items: Product[] = [];
   private profile: Profile = new Profile();
-  private pages: Pages = new Pages();
+  private pages: Page[] = [];
 
   // custom events
   private modal = new BehaviorSubject<string>('');
@@ -59,8 +59,12 @@ export class AppService {
   }
 
   async dismissLoading(){
+    var dismissed = false;
     if(this.loading) {
-      this.loading.dismiss();
+      dismissed = await this.loading.dismiss();
+    }
+    if(!dismissed) {
+      setTimeout(()=> this.dismissLoading(), 500)
     }
   }
 

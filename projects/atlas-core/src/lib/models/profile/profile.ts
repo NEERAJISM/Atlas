@@ -1,5 +1,6 @@
 // Segergate Main Page & others so that itloads early
 
+import { Contact } from './pages/contact';
 import { Full } from './pages/full';
 
 export class Profile {
@@ -11,9 +12,8 @@ export class Profile {
   color: string;
   fontColor: string;
 
-  //remove
-  caption: string;
-  background: string;
-
   home: Full = new Full();
+  contact: Contact = new Contact();
+
+  pages: string[] = [];
 }

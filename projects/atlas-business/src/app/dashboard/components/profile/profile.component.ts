@@ -1,7 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalController } from '@ionic/angular';
-import { AuthService, Constants, FirebaseUtil, Profile } from 'atlas-core';
+import {
+  AuthService,
+  CommonUtil,
+  Constants,
+  FirebaseUtil,
+  Page,
+  Profile
+} from 'atlas-core';
 import { AppService } from '../../../app.service';
 import { PageEditModal } from './modal/modal.page-edit';
 
@@ -16,7 +23,7 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49253';
+  url = 'http://localhost:49303';
   controllerSrc: any;
 
   bizId = '';
@@ -36,16 +43,27 @@ export class ProfileDashboardComponent implements OnInit {
   imgFile;
   blob;
 
+  // pages
+  backup = [];
+  pages: Page[] = [];
+
   constructor(
     private sanitizer: DomSanitizer,
     private modalController: ModalController,
     private service: AppService,
     private fbUtil: FirebaseUtil,
-    private auth: AuthService
+    private auth: AuthService,
+    private util: CommonUtil
   ) {
     this.service.presentLoading();
-    //this.presentModal();
+    // this.presentModal();
     this.init();
+  }
+
+  ngOnInit(): void {
+    this.controllerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(
+      this.url
+    );
   }
 
   init() {
@@ -58,16 +76,10 @@ export class ProfileDashboardComponent implements OnInit {
 
     this.service.modalProfileCloseEvent.subscribe((s) => {
       if (s === 'success') {
-        this.reload();
+        this.reload(false, true);
         this.modalController.dismiss();
       }
     });
-  }
-
-  ngOnInit(): void {
-    this.controllerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.url
-    );
   }
 
   getProfile() {
@@ -89,22 +101,45 @@ export class ProfileDashboardComponent implements OnInit {
           Object.assign(this.bizProfile, doc.data());
           Object.assign(this.backupProfile, doc.data());
         }
+        // get pages
+        this.getPages();
+      });
+  }
+
+  getPages() {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PAGES)
+      .get()
+      .forEach((doc) => {
+        doc.docs.forEach((i) => {
+          if (i.data()) {
+            var page = this.util.getPage((i.data() as Page).type);
+            this.pages.push(Object.assign(page, i.data()));
+          }
+        });
         this.service.dismissLoading();
       });
   }
 
-  async presentModal() {
+  async presentModal(mode?: string) {
     const modal = await this.modalController.create({
       component: PageEditModal,
       cssClass: 'page-edit-modal',
       componentProps: {
-        mode: 'Home',
+        mode: mode,
+        profile: this.bizProfile,
       },
     });
     return await modal.present();
   }
 
-  reload(order?: boolean) {
+  reload(order?: boolean, delay?: boolean) {
+    if (!delay) {
+      this.iframe.nativeElement.src = this.url + (order ? '/order' : '');
+      return;
+    }
+
     setTimeout(
       () =>
         (this.iframe.nativeElement.src = this.url + (order ? '/order' : '')),
@@ -137,7 +172,7 @@ export class ProfileDashboardComponent implements OnInit {
           )
           .then(() => {
             this.service.dismissLoading();
-            this.reload();
+            this.reload(false, true);
           });
       }
     } else {
@@ -194,7 +229,7 @@ export class ProfileDashboardComponent implements OnInit {
         )
       )
       .finally(() => {
-        this.reload();
+        this.reload(false, true);
         this.service.dismissLoading();
       });
   }

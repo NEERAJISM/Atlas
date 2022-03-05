@@ -3,7 +3,7 @@
     <ion-col>
       <h5>{{ isHome ? 'Home' : (isContact ? 'Contact' : 'New')}} Section</h5>
     </ion-col>
-    <ion-col *ngIf="isOther" >
+    <ion-col *ngIf="isOther">
       <ion-item
         style="
           border: solid 0.5px;
@@ -22,7 +22,13 @@
 
   <ion-row class="mt-2">
     <ion-col>
-      <ion-segment mode="md" scrollable value="Full" [disabled]="!isOther">
+      <ion-segment
+        mode="md"
+        scrollable
+        value="Full"
+        [(ngModel)]="pageType"
+        [disabled]="!isOther"
+      >
         <ion-segment-button value="Full" layout="icon-start">
           <i class="fas fa-image" style="font-size: larger"></i>
           <ion-label>Full</ion-label>
@@ -43,11 +49,15 @@
           <i class="fab fa-youtube" style="font-size: larger"></i>
           <ion-label>Video</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="Video" layout="icon-start">
+        <ion-segment-button value="Team" layout="icon-start">
           <i class="fas fa-users" style="font-size: larger"></i>
           <ion-label>Team</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="Video" layout="icon-start">
+        <ion-segment-button
+          *ngIf="isContact"
+          value="Contact"
+          layout="icon-start"
+        >
           <i class="fas fa-info" style="font-size: larger"></i>
           <ion-label>Contact</ion-label>
         </ion-segment-button>
@@ -55,13 +65,11 @@
     </ion-col>
   </ion-row>
 
-  <!-- Full -->
-
   <ion-row style="height: 75%">
     <ion-col sizeMd="8">
-      <!-- <img style="width: 100px; height: 100px;" [src]="url"> -->
-
+      <!-- Full -->
       <section
+        *ngIf="pageType == 'Full'"
         style="
             background: url({{url}}) no-repeat center center / cover;
             height: 100%;
@@ -86,27 +94,72 @@
                 sizeMd="{{full.fullTitleW == 'NA' ? '12' : '4'}}"
                 offsetMd="{{full.fullTitleW == 'E' ? '8' : '0'}}"
               >
-                <span>
-                  <p
-                    style="font-family: 'Mulish', sans-serif"
-                    [style.color]="full.fullTitleColor"
-                    [ngClass]="{
-                      'h3': full.fullTitleF == 's',
-                      'h2': full.fullTitleF == 'm',
-                      'h1': full.fullTitleF == 'l'
+                <span
+                  style="font-family: 'Mulish', sans-serif"
+                  [style.color]="full.fullTitleColor"
+                  [ngClass]="{
+                      'h3': full.fullTitleFont == 's',
+                      'h2': full.fullTitleFont == 'm',
+                      'h1': full.fullTitleFont == 'l'
                     }"
-                  >
-                    {{full.fullTitle}}
-                  </p>
+                >
+                  {{full.fullTitle}}
                 </span>
               </ion-col>
             </ion-row>
           </ion-col>
         </ion-row>
       </section>
+
+      <!-- Text -->
+      <section
+        style="height: 100%; border: solid; border-color: lightgrey"
+        *ngIf="pageType == 'Text'"
+        #about
+      >
+        <div class="ion-padding my-4">
+          <ion-row class="ion-text-center">
+            <ion-col offset-md="2" size-md="8">
+              <span
+                [style.color]="text.headingColor"
+                style="font-family: 'Mulish', sans-serif"
+                [ngClass]="{
+              'h3': text.headingFont == 's',
+              'h2': text.headingFont == 'm',
+              'h1': text.headingFont == 'l'
+            }"
+              >
+                {{text.heading}}
+              </span>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col
+              offset-md="2"
+              size-md="8"
+              style="
+                font-family: 'Mulish', sans-serif;
+                text-align: justify;
+                text-justify: inter-word;
+              "
+            >
+              <span
+                class="ion-text-center"
+                style="white-space: pre-wrap"
+                [style.font-style]="text.paragraphStyle"
+                [style.color]="text.paragraphColor"
+              >
+                {{ text.paragraph }}
+              </span>
+            </ion-col>
+          </ion-row>
+        </div>
+      </section>
     </ion-col>
 
-    <ion-col sizeMd="4">
+    <!-- Full -->
+    <ion-col *ngIf="pageType == 'Full'" sizeMd="4">
       <ion-row>
         <ion-col>
           <input
@@ -155,7 +208,7 @@
           </ion-item>
         </ion-col>
         <ion-col>
-          <ion-select interface="popover" [(ngModel)]="full.fullTitleF">
+          <ion-select interface="popover" [(ngModel)]="full.fullTitleFont">
             <ion-select-option value="s">Small</ion-select-option>
             <ion-select-option value="m">Medium</ion-select-option>
             <ion-select-option value="l">Large</ion-select-option>
@@ -165,7 +218,12 @@
 
       <ion-row class="mt-2">
         <ion-col>
-          <ion-segment mode="md" scrollable value="NA" [(ngModel)]="full.fullTitleW">
+          <ion-segment
+            mode="md"
+            scrollable
+            value="NA"
+            [(ngModel)]="full.fullTitleW"
+          >
             <ion-segment-button value="S" layout="icon-start">
               <i class="fas fa-arrow-left" style="font-size: larger"></i>
               <ion-label>Left</ion-label>
@@ -227,5 +285,85 @@
         </ion-col>
       </ion-row>
     </ion-col>
+
+    <!-- Text -->
+    <ion-col *ngIf="pageType === 'Text'" sizeMd="4">
+      <ion-row>
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-label><b>Heading</b></ion-label>
+            <ion-input maxlength="30" [(ngModel)]="text.heading"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item lines="none">
+            <input type="color" [(ngModel)]="text.headingColor" />
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-select interface="popover" [(ngModel)]="text.headingFont">
+            <ion-select-option value="s">Small</ion-select-option>
+            <ion-select-option value="m">Medium</ion-select-option>
+            <ion-select-option value="l">Large</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-textarea
+              rows="7"
+              style="--highlight-color-focused: none"
+              placeholder="Description"
+              [(ngModel)]="text.paragraph"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item lines="none">
+            <input type="color" [(ngModel)]="text.paragraphColor" />
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-segment
+            mode="md"
+            scrollable
+            value="normal"
+            [(ngModel)]="text.paragraphStyle"
+          >
+            <ion-segment-button value="normal" layout="icon-start">
+              <i class="fas fa-font" style="font-size: larger"></i>
+            </ion-segment-button>
+            <ion-segment-button value="italic" layout="icon-start">
+              <i class="fas fa-italic" style="font-size: larger"></i>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+
+    <ion-col *ngIf="pageType === 'Info'" sizeMd="4"> Info </ion-col>
+    <ion-col *ngIf="pageType === 'Slides'" sizeMd="4"> Slides </ion-col>
+    <ion-col *ngIf="pageType === 'Video'" sizeMd="4"> Video </ion-col>
+    <ion-col *ngIf="pageType === 'Team'" sizeMd="4"> Team </ion-col>
   </ion-row>
 </ion-content>

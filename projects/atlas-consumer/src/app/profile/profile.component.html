@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-toolbar style="--background: {{profile2.color}}; --color: {{profile2.fontColor}}">
-    <ion-title
-      style="font-family: 'Mulish', sans-serif;"
-    >
+  <ion-toolbar
+    style="--background: {{ profile.color }}; --color: {{ profile.fontColor }}"
+  >
+    <ion-title style="font-family: 'Mulish', sans-serif">
       <img style="height: 35px" [src]="icon" />
-      <b>&nbsp; {{profile2.title}} </b></ion-title
+      <b>&nbsp; {{ profile.title }} </b></ion-title
     >
 
     <ion-buttons class="hidden-md-down" slot="primary" collapse="true">
@@ -19,107 +19,93 @@
 </ion-header>
 
 <ion-content>
-
-
+  <!-- Full  - ignore error in section css-->
   <section
-        style="
-            background: url({{url}}) no-repeat center center / cover;
+    style="
+            background: url({{ url }}) no-repeat center center / cover;
             height: 100%;
           "
     class="fwh-slide"
-
-      >
-        <ion-row
-          class="mt-2 pb-3 h-100"
-          [ngClass]="{
-          'ion-text-start': fullTitleX == 'Left',
-          'ion-text-center': fullTitleX == 'Mid',
-          'ion-text-end': fullTitleX == 'Right',
-          'ion-align-items-start': fullTitleY == 'Top',
-          'ion-align-items-center': fullTitleY == 'Mid',
-          'ion-align-items-end': fullTitleY == 'Bottom'
-        }"
-        >
-          <ion-col>
-            <ion-row>
-              <ion-col
-                sizeMd="{{fullTitleW == 'NA' ? '12' : '4'}}"
-                offsetMd="{{fullTitleW == 'E' ? '8' : '0'}}"
+  >
+    <ion-row
+      class="mt-2 pb-3 h-100"
+      [ngClass]="{
+        'ion-text-start': profile.home.fullTitleX == 'Left',
+        'ion-text-center': profile.home.fullTitleX == 'Mid',
+        'ion-text-end': profile.home.fullTitleX == 'Right',
+        'ion-align-items-start': profile.home.fullTitleY == 'Top',
+        'ion-align-items-center': profile.home.fullTitleY == 'Mid',
+        'ion-align-items-end': profile.home.fullTitleY == 'Bottom'
+      }"
+    >
+      <ion-col>
+        <ion-row>
+          <ion-col
+            sizeMd="{{ profile.home.fullTitleW == 'NA' ? '12' : '4' }}"
+            offsetMd="{{ profile.home.fullTitleW == 'E' ? '8' : '0' }}"
+          >
+            <span>
+              <p
+                style="font-family: 'Mulish', sans-serif"
+                [style.color]="profile.home.fullTitleColor"
+                [ngClass]="{
+                  'display-4': profile.home.fullTitleFont == 's',
+                  'display-3': profile.home.fullTitleFont == 'm',
+                  'display-1': profile.home.fullTitleFont == 'l'
+                }"
               >
-                <span>
-                  <p
-                    style="font-family: 'Mulish', sans-serif"
-                    [style.color]="fullTitleColor"
-                    [ngClass]="{
-                      'display-4': fullTitleF == 's',
-                      'display-3': fullTitleF == 'm',
-                      'display-1': fullTitleF == 'l'
-                    }"
-                  >
-                    {{fullTitle}}
-                  </p>
-                </span>
-              </ion-col>
-            </ion-row>
+                {{ profile.home.fullTitle }}
+              </p>
+            </span>
           </ion-col>
         </ion-row>
-      </section>
-  
-  <section
-    #home
-    style="
-      background: url('{{ profile.background }}');
-      background-size: cover;
-    "
-    class="fwh-slide"
-  >
-    <ion-row class="ion-text-end">
-      <ion-col size="11" class="ion-text-end">
-        <b
-          [style.font-size]="landingFont"
-          style="
-            font-family: 'Mulish', sans-serif;
-            color: white;
-          "
+      </ion-col>
+    </ion-row>
+  </section>
+
+  <!-- Text -->
+  <div *ngFor="let page of pages">
+    <section #about *ngIf="page.type === 'Text'">
+      <div class="ion-padding my-5">
+        <ion-row class="ion-text-center">
+          <ion-col offset-md="2" size-md="8">
+            <span
+              [style.color]="page.headingColor"
+              style="font-family: 'Mulish', sans-serif"
+              [ngClass]="{
+                h3: page.headingFont == 's',
+                h2: page.headingFont == 'm',
+                h1: page.headingFont == 'l'
+              }"
+            >
+              {{ page.heading }}
+            </span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col
+            offset-md="2"
+            size-md="8"
+            style="
+              font-family: 'Mulish', sans-serif;
+              text-align: justify;
+              text-justify: inter-word;
+            "
           >
-            <div *ngFor='let caption of profile.caption.split(" ")'>{{caption}}</div>
-          </b
-        >
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="11" class="ion-text-end">
-        <ion-button (click)="routeToOrder()">Contact us</ion-button>
-      </ion-col>
-    </ion-row>
-  </section>
-
-  <section #about class="ion-padding my-5">
-    <ion-row>
-      <ion-col offset-md="3" size-md="6">
-        <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
-          About us
-        </h1>
-      </ion-col>
-    </ion-row>
-
-    <ion-row *ngFor="let paragraph of pages.about[0].paragraph">
-      <ion-col
-        offset-md="2"
-        size-md="8"
-        style="
-          font-family: 'Mulish', sans-serif;
-          text-align: justify;
-          text-justify: inter-word;
-        "
-      >
-        <i class="ion-text-center">
-          {{paragraph}}
-        </i>
-      </ion-col>
-    </ion-row>
-
-  </section>
+            <span
+              class="ion-text-center"
+              style="white-space: pre-wrap"
+              [style.font-style]="page.paragraphStyle"
+              [style.color]="page.paragraphColor"
+            >
+              {{ page.paragraph }}
+            </span>
+          </ion-col>
+        </ion-row>
+      </div>
+    </section>
+  </div>
 
   <section #services class="ion-padding my-5">
     <ion-row class="mb-5">
@@ -350,4 +336,13 @@
       </ion-col>
     </ion-row>
   </section>
+
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-button
+      style="text-transform: none"
+      class="m-5"
+      (click)="routeToOrder()"
+      >Our Products!</ion-button
+    >
+  </ion-fab>
 </ion-content>

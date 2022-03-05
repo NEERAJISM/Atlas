@@ -1,9 +1,15 @@
 export interface Page {
-    title: string;
-    type: Type;
+  id: string;
+  title: string; // for header
+  readonly type: Type;
 }
 
 export enum Type {
-    Full = 'Full',
-    About = 'About',
-  }
+  Text = 'Text',
+  Contact = 'Contact',
+  Full = 'Full',
+  Info = 'Info',
+  Team = 'Team',
+  Video = 'Video',
+  Slides = 'Slides',
+}

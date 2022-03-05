@@ -8,18 +8,19 @@ import {
   AuthService,
   Business,
   Client,
+  CommonUtil,
   Constants,
   FirebaseUtil,
   Order,
-  Pages,
+  Page,
   Product,
   Profile,
+  Text,
   Unit,
 } from 'atlas-core';
 import firebase from 'firebase/app';
 import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
-import { ProfileService } from './profile.service';
 
 class CartItem {
   name = '';
@@ -113,20 +114,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   chirag = 'assets/images/profile/chirag.jpg';
   logo = 'assets/images/profile/logo.jpg';
 
-  profile: Profile;
-  pages: Pages;
-
-  profile2: Profile = new Profile();
-
-  // full
-  fullTitle = '';
-  fullTitleColor = '#000000';
-  fullTitleX = 'Mid';
-  fullTitleY = 'Mid';
-  fullTitleW = 'NA';
-  fullTitleF = 'm';
+  profile: Profile = new Profile();
+  pagesMap: Map<String, Page> = new Map();
+  pages = [];
 
   bizId = 'bA3Y7HgRrbNGfgisuXCKTtSeYLk2';
+
+  // text
+  text = new Text();
 
   constructor(
     private location: Location,
@@ -134,8 +129,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private _formBuilder: FormBuilder,
     private auth: AuthService,
     private fbUtil: FirebaseUtil,
-    private service: ProfileService,
-    private appService: AppService
+    private appService: AppService,
+    private util: CommonUtil
   ) {
     if (window.innerWidth > 1000) {
       this.sliderConfig.slidesPerView = 1.8;
@@ -144,23 +139,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     this.init2();
-    this.profile = this.service.getProfile();
-    this.pages = this.service.getPages();
     this.getProfile();
   }
 
   getProfile() {
     this.fbUtil
-    .downloadImage(Constants.PROFILE + '/' + this.bizId + '/home')
-    .subscribe((url) => {
-      this.url = url;
-    });
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/home')
+      .subscribe((url) => {
+        this.url = url;
+      });
 
     this.fbUtil
-    .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
-    .subscribe((url) => {
-      this.icon = url;
-    });
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
 
     this.fbUtil
       .getInstance()
@@ -171,19 +164,30 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .get()
       .subscribe((doc) => {
         if (doc.data()) {
-          Object.assign(this.profile2, doc.data());
-          this.updateProfile();
+          Object.assign(this.profile, doc.data());
         }
+        this.getPages();
       });
   }
 
-  updateProfile() {
-    this.fullTitle = this.profile2.home.fullTitle;
-    this.fullTitleColor = this.profile2.home.fullTitleColor;
-    this.fullTitleX = this.profile2.home.fullTitleX;
-    this.fullTitleY = this.profile2.home.fullTitleY;
-    this.fullTitleW = this.profile2.home.fullTitleW;
-    this.fullTitleF = this.profile2.home.fullTitleF;
+  getPages() {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PAGES)
+      .get()
+      .forEach((doc) => {
+        doc.docs.forEach((i) => {
+          if (i.data()) {
+            var page = this.util.getPage((i.data() as Page).type);
+            this.pagesMap.set((i.data() as Page).id, Object.assign(page, i.data()));
+          }
+        });
+
+        // sort
+        this.profile.pages.forEach((id) => {
+          this.pages.push(this.pagesMap.get(id));
+        });
+      });
   }
 
   routeToOrder() {

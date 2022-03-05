@@ -26,7 +26,6 @@ import { LandingComponent } from './landing/landing.component';
 import { ModalPage } from './oms/modal/modal.page';
 import { OmsComponent } from './oms/oms.component';
 import { ProfileComponent } from './profile/profile.component';
-import { ProfileService } from './profile/profile.service';
 import { SearchComponent } from './search/search.component';
 
 @NgModule({
@@ -52,7 +51,7 @@ import { SearchComponent } from './search/search.component';
     IonicModule.forRoot(),
   ],
   declarations: [AppComponent, ProfileComponent, SearchComponent, OmsComponent, AccountComponent, CheckoutComponent, ModalPage, LandingComponent],
-  providers: [ProfileService, AppService],
+  providers: [AppService],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

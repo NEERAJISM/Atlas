@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Page } from '../models/profile/pages/page';
+import { Text } from '../models/profile/pages/text';
 
 @Injectable()
 export class CommonUtil {
-  constructor(private snackBar: MatSnackBar, private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
   getTax(price: number, tax: number): number {
     return Math.round((price * tax + Number.EPSILON) * 100) / 100;
@@ -17,7 +18,15 @@ export class CommonUtil {
     return da + ' ' + mo + ' ' + ye;
   }
 
-  httpGet(url: string){
+  httpGet(url: string) {
     return this.httpClient.get(url);
+  }
+
+  getPage(type: string): Page {
+    switch (type) {
+      case 'Text':
+        return new Text();
+    }
+    return null;
   }
 }

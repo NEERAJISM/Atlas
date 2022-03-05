@@ -183,8 +183,8 @@
             <ion-card>
               <!-- The reorder gesture is disabled by default, enable it to drag and drop items -->
               <!-- Default reorder icon, end aligned items -->
-              <ion-item button (click)="presentModal()">
-                <ion-label> Home </ion-label>
+              <ion-item button (click)="presentModal('Home')">
+                <ion-label> Home (<b>Top</b>) </ion-label>
                 <!-- <ion-reorder slot="end"></ion-reorder> -->
               </ion-item>
 
@@ -192,31 +192,22 @@
                 (ionItemReorder)="onItemReorder($event)"
                 disabled="false"
               >
-                <ion-item button (click)="presentModal()">
-                  <ion-label> Page 1 </ion-label>
-                  <ion-reorder slot="end"></ion-reorder>
-                </ion-item>
-
-                <ion-item button (click)="presentModal()">
-                  <ion-label> Page 2 </ion-label>
-                  <ion-reorder slot="end"></ion-reorder>
-                </ion-item>
-
-                <ion-item button (click)="presentModal()">
-                  <ion-label> Page 3 </ion-label>
-                  <ion-reorder slot="end"></ion-reorder>
-                </ion-item>
-
-                <ion-item button (click)="presentModal()">
-                  <ion-label> Page 4 </ion-label>
+                <ion-item *ngFor="let page of pages" button (click)="presentModal()">
+                  <ion-label> <i>{{page.title}}</i> </ion-label>
                   <ion-reorder slot="end"></ion-reorder>
                 </ion-item>
               </ion-reorder-group>
-              <ion-item button (click)="presentModal()">
-                <ion-label> Contact / Address Info </ion-label>
+              <ion-item button (click)="presentModal('Contact')">
+                <ion-label> Contact / Address Info (<b>Bottom</b>) </ion-label>
                 <!-- <ion-reorder slot="end"></ion-reorder> -->
               </ion-item>
             </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-button (click)="presentModal()">Add New Page</ion-button>
           </ion-col>
         </ion-row>
       </div>

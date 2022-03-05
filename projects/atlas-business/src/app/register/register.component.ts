@@ -4,7 +4,6 @@ import {
   Business,
   Constants,
   FirebaseUtil,
-  Pages,
   Profile,
 } from 'atlas-core';
 import { AppService } from '../app.service';
@@ -89,7 +88,6 @@ export class RegisterComponent {
     this.auth.signUp(this.email, this.pass).then((x) => {
       if (Constants.SUCCESS === x[0]) {
         this.setupProfile(x[1]);
-        this.setupPages(x[1]);
         this.setupBusiness(x[1]);
       } else {
         this.inProgress = false;
@@ -135,22 +133,6 @@ export class RegisterComponent {
       .collection(Constants.BUSINESS + '/' + id + '/' + Constants.PROFILE)
       .doc(id)
       .set(this.fbUtil.toJson(profile))
-      .catch(() =>
-        this.app.presentToast(
-          'Error occurred, Please check Internet connectivity'
-        )
-      );
-  }
-
-  setupPages(id: string) {
-    const pages = new Pages();
-    pages.id = id;
-
-    this.fbUtil
-      .getInstance()
-      .collection(Constants.BUSINESS + '/' + id + '/' + Constants.PAGES)
-      .doc(id)
-      .set(this.fbUtil.toJson(pages))
       .catch(() =>
         this.app.presentToast(
           'Error occurred, Please check Internet connectivity'

@@ -27,7 +27,7 @@ export class DashboardComponent {
     },
     {
       name: 'Business Profile',
-      icon: 'fas fa-globe-americas',
+      icon: 'fas fa-store',
       link: '/dashboard/profile',
     },
     {

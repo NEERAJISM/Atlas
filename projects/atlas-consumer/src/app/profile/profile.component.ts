@@ -15,8 +15,8 @@ import {
   Page,
   Product,
   Profile,
-  Text,
-  Unit,
+  Type,
+  Unit
 } from 'atlas-core';
 import firebase from 'firebase/app';
 import { Subscription } from 'rxjs';
@@ -115,13 +115,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   logo = 'assets/images/profile/logo.jpg';
 
   profile: Profile = new Profile();
-  pagesMap: Map<String, Page> = new Map();
+  pagesMap: Map<string, Page> = new Map();
   pages = [];
 
   bizId = 'bA3Y7HgRrbNGfgisuXCKTtSeYLk2';
 
-  // text
-  text = new Text();
+  imgMap: Map<string, string> = new Map();
+  complete = false;
 
   constructor(
     private location: Location,
@@ -179,7 +179,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         doc.docs.forEach((i) => {
           if (i.data()) {
             var page = this.util.getPage((i.data() as Page).type);
-            this.pagesMap.set((i.data() as Page).id, Object.assign(page, i.data()));
+            this.pagesMap.set(
+              (i.data() as Page).id,
+              Object.assign(page, i.data())
+            );
           }
         });
 
@@ -187,7 +190,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.profile.pages.forEach((id) => {
           this.pages.push(this.pagesMap.get(id));
         });
+
+        this.downloadImages();
       });
+  }
+
+  downloadImages() {
+    var counter= 0;
+    this.pagesMap.forEach((v, k) => {
+      if (v.type === Type.Info) {
+        counter++;
+        this.fbUtil.downloadImage(
+          Constants.PAGES + '/' + this.profile.id + '/' + k
+        ).subscribe((url) => {
+          this.imgMap.set(k, url);
+
+          if (this.imgMap.size == counter) {
+            this.complete = true;
+          }
+        });
+      }
+    });
   }
 
   routeToOrder() {

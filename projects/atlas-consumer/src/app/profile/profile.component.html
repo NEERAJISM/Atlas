@@ -46,7 +46,7 @@
           >
             <span>
               <p
-                style="font-family: 'Mulish', sans-serif"
+                style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
                 [style.color]="profile.home.fullTitleColor"
                 [ngClass]="{
                   'display-4': profile.home.fullTitleFont == 's',
@@ -63,8 +63,9 @@
     </ion-row>
   </section>
 
-  <!-- Text -->
   <div *ngFor="let page of pages">
+
+    <!-- Text -->
     <section #about *ngIf="page.type === 'Text'">
       <div class="ion-padding my-5">
         <ion-row class="ion-text-center">
@@ -105,6 +106,49 @@
         </ion-row>
       </div>
     </section>
+
+    <section
+    class="fwh-slide"
+    *ngIf="page.type == 'Info'"
+  >
+    <ion-row
+      *ngIf="complete"
+      style="height: 100%"
+      [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse': 'row'"
+    >
+      <ion-col
+        sizeMd="7"
+        style=" background: url({{imgMap.get(page.id)}}) no-repeat center center / cover"
+      >
+      </ion-col>
+      <ion-col sizeMd="5">
+        <ion-row
+          class="ion-padding"
+          [ngClass]="{
+          'ion-text-start': page.align == 'Left',
+          'ion-text-center': page.align == 'Mid',
+          'ion-text-end': page.align == 'Right'
+        }"
+        >
+          <ion-col>
+            <span
+              style="
+                font-family: 'Mulish', sans-serif;
+                white-space: pre-wrap;
+              "
+              [style.color]="page.color"
+              [ngClass]="{
+                  'display-4': page.font == 's',
+                  'display-3': page.font == 'm',
+                  'display-1': page.font == 'l'
+                }"
+              >{{page.info}}</span
+            >
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </section>
   </div>
 
   <section #services class="ion-padding my-5">

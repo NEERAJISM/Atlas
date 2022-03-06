@@ -86,4 +86,10 @@ export class FirebaseUtil {
       .ref(url)
       .getDownloadURL();
   }
+
+  deleteImage(url: string){
+    return this.storage
+    .ref(url)
+    .delete();
+  }
 }

@@ -192,9 +192,10 @@
                 (ionItemReorder)="onItemReorder($event)"
                 disabled="false"
               >
-                <ion-item *ngFor="let page of pages" button (click)="presentModal()">
-                  <ion-label> <i>{{page.title}}</i> </ion-label>
-                  <ion-reorder slot="end"></ion-reorder>
+                <ion-item *ngFor="let page of pages" button>
+                  <ion-reorder slot="start"></ion-reorder>
+                  <ion-label (click)="presentModal()"> <i>{{page.title}}</i> </ion-label>
+                  <i slot="end" class="far fa-trash-alt" (click)="deletePage(page.id)"></i>
                 </ion-item>
               </ion-reorder-group>
               <ion-item button (click)="presentModal('Contact')">

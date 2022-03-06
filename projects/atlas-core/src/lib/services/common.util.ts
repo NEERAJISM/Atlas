@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Full } from '../models/profile/pages/full';
+import { Info } from '../models/profile/pages/info';
 import { Page } from '../models/profile/pages/page';
+import { Slides } from '../models/profile/pages/slides';
+import { Team } from '../models/profile/pages/team';
 import { Text } from '../models/profile/pages/text';
+import { Video } from '../models/profile/pages/video';
 
 @Injectable()
 export class CommonUtil {
@@ -24,8 +29,18 @@ export class CommonUtil {
 
   getPage(type: string): Page {
     switch (type) {
+      case 'Full':
+        return new Full();
       case 'Text':
         return new Text();
+      case 'Info':
+        return new Info();
+      case 'Slides':
+        return new Slides();
+      case 'Team':
+        return new Team();
+      case 'Video':
+        return new Video();
     }
     return null;
   }

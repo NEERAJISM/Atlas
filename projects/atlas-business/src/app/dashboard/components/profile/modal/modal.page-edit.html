@@ -66,12 +66,14 @@
   </ion-row>
 
   <ion-row style="height: 75%">
+    <!-- ***** Display ***** -->
+
     <ion-col sizeMd="8">
       <!-- Full -->
       <section
         *ngIf="pageType == 'Full'"
         style="
-            background: url({{url}}) no-repeat center center / cover;
+            background: url({{fullUrl}}) no-repeat center center / cover;
             height: 100%;
             border: solid;
             border-color: lightgrey;
@@ -95,16 +97,61 @@
                 offsetMd="{{full.fullTitleW == 'E' ? '8' : '0'}}"
               >
                 <span
-                  style="font-family: 'Mulish', sans-serif"
+                  style="
+                    font-family: 'Mulish', sans-serif;
+                    white-space: pre-wrap;
+                  "
                   [style.color]="full.fullTitleColor"
                   [ngClass]="{
                       'h3': full.fullTitleFont == 's',
                       'h2': full.fullTitleFont == 'm',
                       'h1': full.fullTitleFont == 'l'
                     }"
+                >{{full.fullTitle}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <!-- Info -->
+      <section
+        style="height: 100%; border: solid; border-color: lightgrey"
+        *ngIf="pageType == 'Info'"
+        #about
+      >
+        <ion-row
+          style="height: 100%"
+          [style.flex-direction]="info.reverse === 'Y' ? 'row-reverse': 'row'"
+        >
+          <ion-col
+            sizeMd="7"
+            style=" background: url({{infoUrl}}) no-repeat center center / cover;"
+          >
+          </ion-col>
+          <ion-col sizeMd="5">
+            <ion-row
+              class="ion-padding"
+              [ngClass]="{
+              'ion-text-start': info.align == 'Left',
+              'ion-text-center': info.align == 'Mid',
+              'ion-text-end': info.align == 'Right'
+            }"
+            >
+              <ion-col>
+                <span
+                  style="
+                    font-family: 'Mulish', sans-serif;
+                    white-space: pre-wrap;
+                  "
+                  [style.color]="info.color"
+                  [ngClass]="{
+                      'h3': info.font == 's',
+                      'h2': info.font == 'm',
+                      'h1': info.font == 'l'
+                    }"
+                  >{{info.info}}</span
                 >
-                  {{full.fullTitle}}
-                </span>
               </ion-col>
             </ion-row>
           </ion-col>
@@ -158,6 +205,7 @@
       </section>
     </ion-col>
 
+    <!-- ***** Editor ***** -->
     <!-- Full -->
     <ion-col *ngIf="pageType == 'Full'" sizeMd="4">
       <ion-row>
@@ -167,8 +215,8 @@
             type="file"
             accept="image/*"
             #file
-            (change)="onFileChanged($event)"
-            [(ngModel)]="imgFile"
+            (change)="onFileChangedFull($event)"
+            [(ngModel)]="fullImgFile"
           />
           <ion-button
             expand="block"
@@ -286,6 +334,107 @@
       </ion-row>
     </ion-col>
 
+    <!-- Info -->
+    <ion-col *ngIf="pageType === 'Info'" sizeMd="4">
+      <ion-row>
+        <ion-col>
+          <input
+            style="display: none"
+            type="file"
+            accept="image/*"
+            #file
+            (change)="onFileChangedInfo($event)"
+            [(ngModel)]="infoImgFile"
+          />
+          <ion-button
+            expand="block"
+            mode="ios"
+            mat-icon-button
+            class="img-btn"
+            (click)="file.click()"
+          >
+            Change Background Image
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-segment
+            mode="md"
+            scrollable
+            value="NA"
+            [(ngModel)]="info.reverse"
+          >
+            <ion-segment-button value="N" layout="icon-start">
+              <i class="fas fa-arrow-left" style="font-size: larger"></i>
+              <ion-label>Left</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Y" layout="icon-start">
+              <i class="fas fa-arrow-right" style="font-size: larger"></i>
+              <ion-label>Right</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-textarea
+              rows="5"
+              style="--highlight-color-focused: none"
+              placeholder="Description"
+              maxlength="50"
+              [(ngModel)]="info.info"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item lines="none">
+            <input type="color" [(ngModel)]="info.color" />
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-select interface="popover" [(ngModel)]="info.font">
+            <ion-select-option value="s">Small</ion-select-option>
+            <ion-select-option value="m">Medium</ion-select-option>
+            <ion-select-option value="l">Large</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-segment
+            mode="md"
+            scrollable
+            value="Mid"
+            [(ngModel)]="info.align"
+          >
+            <ion-segment-button value="Left" layout="icon-start">
+              <i class="fas fa-align-left" style="font-size: larger"></i>
+            </ion-segment-button>
+            <ion-segment-button value="Mid" layout="icon-start">
+              <i class="fas fa-align-center" style="font-size: larger"></i>
+            </ion-segment-button>
+            <ion-segment-button value="Right" layout="icon-start">
+              <i class="fas fa-align-right" style="font-size: larger"></i>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+
     <!-- Text -->
     <ion-col *ngIf="pageType === 'Text'" sizeMd="4">
       <ion-row>
@@ -361,7 +510,6 @@
       </ion-row>
     </ion-col>
 
-    <ion-col *ngIf="pageType === 'Info'" sizeMd="4"> Info </ion-col>
     <ion-col *ngIf="pageType === 'Slides'" sizeMd="4"> Slides </ion-col>
     <ion-col *ngIf="pageType === 'Video'" sizeMd="4"> Video </ion-col>
     <ion-col *ngIf="pageType === 'Team'" sizeMd="4"> Team </ion-col>

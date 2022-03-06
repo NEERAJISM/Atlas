@@ -23,6 +23,7 @@ export class PageEditModal implements OnInit {
   @Input() profile: Profile;
   @Input() iType: string;
   @Input() iText: Text;
+  @Input() iInfo: Info;
 
   isHome = false;
   isContact = false;
@@ -40,9 +41,13 @@ export class PageEditModal implements OnInit {
   video = new Video();
 
   //form
-  url = 'assets/images/profile/white.jpg';
-  imgFile;
-  blob;
+  fullUrl = 'assets/images/profile/white.jpg';
+  fullImgFile;
+  fullBlob;
+
+  infoUrl = 'assets/images/profile/white.jpg';
+  infoImgFile;
+  infoBlob;
 
   constructor(private appService: AppService, private fbUtil: FirebaseUtil) {
     this.appService.presentLoading();
@@ -59,7 +64,7 @@ export class PageEditModal implements OnInit {
 
     this.iType
       ? (this.pageType = this.iType)
-      : (this.pageType = Type.Text.toString());
+      : (this.pageType = Type.Full.toString());
 
     this.full = this.profile.home;
     this.isHome ? this.getProfile() : this.appService.dismissLoading();
@@ -69,64 +74,90 @@ export class PageEditModal implements OnInit {
     this.fbUtil
       .downloadImage(Constants.PROFILE + '/' + this.profile.id + '/home')
       .subscribe((url) => {
-        this.url = url;
+        this.fullUrl = url;
         this.appService.dismissLoading();
       });
   }
 
-  onFileChanged(event) {
+  onFileChangedFull(event) {
     const files = event.target.files;
     if (files.length === 0) {
       return;
     }
 
     if (files[0].size > 5000000) {
-      this.imgFile = '';
+      this.fullImgFile = '';
       this.appService.presentToast('Please select a file less than 5MB');
       return;
     }
 
     const mimeType = files[0].type;
     if (mimeType.match(/image\/*/) == null) {
-      this.imgFile = '';
+      this.fullImgFile = '';
       this.appService.presentToast(
         'Image format not supported, use either jpg/jpeg/png'
       );
       return;
     }
 
-    this.url = URL.createObjectURL(files[0]);
-    this.blob = files[0];
+    this.fullUrl = URL.createObjectURL(files[0]);
+    this.fullBlob = files[0];
+  }
+
+  onFileChangedInfo(event) {
+    const files = event.target.files;
+    if (files.length === 0) {
+      return;
+    }
+
+    if (files[0].size > 5000000) {
+      this.infoImgFile = '';
+      this.appService.presentToast('Please select a file less than 5MB');
+      return;
+    }
+
+    const mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.infoImgFile = '';
+      this.appService.presentToast(
+        'Image format not supported, use either jpg/jpeg/png'
+      );
+      return;
+    }
+
+    this.infoUrl = URL.createObjectURL(files[0]);
+    this.infoBlob = files[0];
   }
 
   publish() {
-    // TODO for Edit only if there's any change from exiting
-    if (
-      this.isOther &&
-      (!this.pageTitle || this.pageTitle.trim().length == 0)
-    ) {
+    if (this.isOther && (!this.pageTitle || this.pageTitle.trim().length == 0)) {
       this.appService.presentToast('Please enter the page title');
       return;
     }
 
     // check if no change
-    if(this.isEdit) {
-
-    switch (this.pageType) {
-      case 'Full':
-        if (this.equalFull(this.full, this.profile.home)) {
-          this.appService.closeModalProfile('success');
-          return;
-        }
-        break;
-      case 'Text':
-        if (this.equalText(this.text, this.iText)) {
-          this.appService.closeModalProfile('success');
-          return;
-        }
-        break;
+    if (this.isEdit) {
+      switch (this.pageType) {
+        case 'Full':
+          if (this.equalFull(this.full, this.profile.home)) {
+            this.appService.closeModalProfile('success');
+            return;
+          }
+          break;
+        case 'Info':
+          if (this.equalInfo(this.info, this.iInfo)) {
+            this.appService.closeModalProfile('success');
+            return;
+          }
+          break;
+        case 'Text':
+          if (this.equalText(this.text, this.iText)) {
+            this.appService.closeModalProfile('success');
+            return;
+          }
+          break;
+      }
     }
-  }
 
     this.appService.presentLoading();
 
@@ -137,11 +168,17 @@ export class PageEditModal implements OnInit {
 
     if (this.isOther) {
       var page;
+      var upload;
       switch (this.pageType) {
         case 'Full':
+          page = this.full;
           break;
         case 'Text':
           page = this.text;
+          break;
+        case 'Info':
+          page = this.info;
+          upload = this.infoBlob;
           break;
       }
 
@@ -155,6 +192,14 @@ export class PageEditModal implements OnInit {
         .doc(page.id)
         .set(this.fbUtil.toJson(page))
         .then(() => {
+          // upload image
+          if (upload) {
+            this.fbUtil.uploadImage(
+              upload,
+              Constants.PAGES + '/' + this.profile.id + '/' + page.id
+            );
+          }
+
           // update profile index
           this.profile.pages.push(page.id);
           this.fbUtil
@@ -167,7 +212,7 @@ export class PageEditModal implements OnInit {
                 Constants.PROFILE
             )
             .doc(this.profile.id)
-            .update({ pages: this.profile.pages});
+            .update({ pages: this.profile.pages });
         })
         .catch(() =>
           this.appService.presentToast(
@@ -192,9 +237,9 @@ export class PageEditModal implements OnInit {
       .set(this.fbUtil.toJson(this.profile))
       .then(() => {
         // upload back ground
-        if (this.blob) {
+        if (this.fullBlob) {
           this.fbUtil.uploadImage(
-            this.blob,
+            this.fullBlob,
             Constants.PROFILE + '/' + this.profile.id + '/home'
           );
         }
@@ -219,6 +264,17 @@ export class PageEditModal implements OnInit {
       object1.fullTitleY === object2.fullTitleY &&
       object1.fullTitleW === object2.fullTitleW &&
       object1.fullTitleFont === object2.fullTitleFont
+    );
+  }
+
+  equalInfo(object1: Info, object2: Info): boolean {
+    return (
+      object1.title === object2.title &&
+      object1.reverse === object2.reverse &&
+      object1.info === object2.info &&
+      object1.align === object2.align &&
+      object1.color === object2.color &&
+      object1.font === object2.font
     );
   }
 

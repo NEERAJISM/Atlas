@@ -80,6 +80,7 @@ export class ProfileDashboardComponent implements OnInit {
       if (s === 'success') {
         this.reload(false, true);
         this.modalController.dismiss();
+        this.getPages();
       }
     });
   }
@@ -126,6 +127,7 @@ export class ProfileDashboardComponent implements OnInit {
         });
 
         // sort
+        this.pages = [];
         this.bizProfile.pages.forEach((id) => {
           this.pages.push(this.pagesMap.get(id));
         });
@@ -225,21 +227,7 @@ export class ProfileDashboardComponent implements OnInit {
 
     // update order in profile
     this.service.presentLoading();
-    this.fbUtil
-      .getInstance()
-      .collection(
-        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
-      )
-      .doc(this.bizId)
-      .update({ pages: this.pageIds })
-      .catch(() =>
-        this.service.presentToast(
-          'Error occurred, Please check Internet connectivity'
-        )
-      )
-      .finally(() => {
-        this.service.dismissLoading();
-      });
+    this.updatePageOrder();
 
     // refresh
     this.reload(false, true);
@@ -298,5 +286,48 @@ export class ProfileDashboardComponent implements OnInit {
     reader.onload = (e) => {
       this.icon = reader.result;
     };
+  }
+
+  deletePage(id) {
+    this.service.presentLoading();
+
+    // update profile
+    var index = this.pageIds.indexOf(id);
+    this.pageIds.splice(index, 1);
+    this.updatePageOrder();
+
+    // delete page
+    this.pages.splice(index, 1);
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PAGES
+      )
+      .doc(id)
+      .delete();
+
+    // delete images
+    this.fbUtil.deleteImage(Constants.PAGES + '/' + this.bizId + '/' + id);
+
+    // reload + init
+    this.reload(false, true);
+  }
+
+  updatePageOrder() {
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
+      )
+      .doc(this.bizId)
+      .update({ pages: this.pageIds })
+      .catch(() =>
+        this.service.presentToast(
+          'Error occurred, Please check Internet connectivity'
+        )
+      )
+      .finally(() => {
+        this.service.dismissLoading();
+      });
   }
 }

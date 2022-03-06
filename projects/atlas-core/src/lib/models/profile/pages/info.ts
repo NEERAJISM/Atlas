@@ -4,6 +4,10 @@ export class Info implements Page {
   id: string = '';
   title: string = '';
   readonly type: Type = Type.Info;
-  
-  paragraph: string[] = ['This is a para', 'another para'];
+
+  reverse: string = 'N';
+  info: string = '\n\n\nAdd\nDescription\nHere!!';
+  align: string = 'Left';
+  color: string = '#000000';
+  font: string = 'm';
 }

@@ -7,7 +7,7 @@ import {
   Constants,
   FirebaseUtil,
   Page,
-  Profile
+  Profile,
 } from 'atlas-core';
 import { AppService } from '../../../app.service';
 import { PageEditModal } from './modal/modal.page-edit';
@@ -23,7 +23,7 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49303';
+  url = 'http://localhost:49267';
   controllerSrc: any;
 
   bizId = '';
@@ -45,7 +45,9 @@ export class ProfileDashboardComponent implements OnInit {
 
   // pages
   backup = [];
+  pagesMap: Map<String, Page> = new Map();
   pages: Page[] = [];
+  pageIds: string[] = [];
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -100,6 +102,7 @@ export class ProfileDashboardComponent implements OnInit {
         if (doc.data()) {
           Object.assign(this.bizProfile, doc.data());
           Object.assign(this.backupProfile, doc.data());
+          this.pageIds = this.bizProfile.pages;
         }
         // get pages
         this.getPages();
@@ -115,8 +118,16 @@ export class ProfileDashboardComponent implements OnInit {
         doc.docs.forEach((i) => {
           if (i.data()) {
             var page = this.util.getPage((i.data() as Page).type);
-            this.pages.push(Object.assign(page, i.data()));
+            this.pagesMap.set(
+              (i.data() as Page).id,
+              Object.assign(page, i.data())
+            );
           }
+        });
+
+        // sort
+        this.bizProfile.pages.forEach((id) => {
+          this.pages.push(this.pagesMap.get(id));
         });
         this.service.dismissLoading();
       });
@@ -207,8 +218,31 @@ export class ProfileDashboardComponent implements OnInit {
     }
   }
 
-  onItemReorder(ev) {
-    ev.detail.complete();
+  onItemReorder(event) {
+    const itemMove = this.pageIds.splice(event.detail.from, 1)[0];
+    this.pageIds.splice(event.detail.to, 0, itemMove);
+    event.detail.complete();
+
+    // update order in profile
+    this.service.presentLoading();
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
+      )
+      .doc(this.bizId)
+      .update({ pages: this.pageIds })
+      .catch(() =>
+        this.service.presentToast(
+          'Error occurred, Please check Internet connectivity'
+        )
+      )
+      .finally(() => {
+        this.service.dismissLoading();
+      });
+
+    // refresh
+    this.reload(false, true);
   }
 
   updateProfile() {

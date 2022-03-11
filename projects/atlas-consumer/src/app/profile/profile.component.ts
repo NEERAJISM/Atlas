@@ -15,8 +15,9 @@ import {
   Page,
   Product,
   Profile,
+  Slides,
   Type,
-  Unit
+  Unit,
 } from 'atlas-core';
 import firebase from 'firebase/app';
 import { Subscription } from 'rxjs';
@@ -88,11 +89,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   // slider config
 
   sliderConfig = {
-    spaceBetween: 10,
+    // spaceBetween: 10,
     centeredSlides: true,
-    slidesPerView: 1,
+    // slidesPerView: 5,
     autoplay: true,
-    loop: true,
+    loop: false,
   };
 
   landingFont = '70px';
@@ -196,18 +197,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   downloadImages() {
-    var counter= 0;
+    var counter = 0;
     this.pagesMap.forEach((v, k) => {
       if (v.type === Type.Info) {
         counter++;
-        this.fbUtil.downloadImage(
-          Constants.PAGES + '/' + this.profile.id + '/' + k
-        ).subscribe((url) => {
-          this.imgMap.set(k, url);
+        this.fbUtil
+          .downloadImage(Constants.PAGES + '/' + this.profile.id + '/' + k)
+          .subscribe((url) => {
+            this.imgMap.set(k, url);
 
-          if (this.imgMap.size == counter) {
-            this.complete = true;
-          }
+            if (this.imgMap.size == counter) {
+              this.complete = true;
+            }
+          });
+      } else if (v.type === Type.Slides) {
+
+        (v as Slides).slides.forEach((slide) => {
+          counter++;
+          this.fbUtil
+            .downloadImage(
+              Constants.PAGES + '/' + this.profile.id + '/' + k + '/' + slide.id
+            )
+            .subscribe((url) => {
+              this.imgMap.set(slide.id, url);
+
+              if (this.imgMap.size == counter) {
+                this.complete = true;
+              }
+            });
         });
       }
     });

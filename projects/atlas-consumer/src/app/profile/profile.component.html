@@ -64,7 +64,6 @@
   </section>
 
   <div *ngFor="let page of pages">
-
     <!-- Text -->
     <section #about *ngIf="page.type === 'Text'">
       <div class="ion-padding my-5">
@@ -107,48 +106,72 @@
       </div>
     </section>
 
-    <section
-    class="fwh-slide"
-    *ngIf="page.type == 'Info'"
-  >
-    <ion-row
-      *ngIf="complete"
-      style="height: 100%"
-      [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse': 'row'"
-    >
-      <ion-col
-        sizeMd="7"
-        style=" background: url({{imgMap.get(page.id)}}) no-repeat center center / cover"
+    <!-- Info -->
+    <section class="fwh-slide" *ngIf="page.type == 'Info'">
+      <ion-row
+        *ngIf="complete"
+        style="height: 100%"
+        [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse' : 'row'"
       >
-      </ion-col>
-      <ion-col sizeMd="5">
-        <ion-row
-          class="ion-padding"
-          [ngClass]="{
-          'ion-text-start': page.align == 'Left',
-          'ion-text-center': page.align == 'Mid',
-          'ion-text-end': page.align == 'Right'
-        }"
+        <ion-col
+          sizeMd="7"
+          style=" background: url({{
+            imgMap.get(page.id)
+          }}) no-repeat center center / cover"
         >
-          <ion-col>
-            <span
-              style="
-                font-family: 'Mulish', sans-serif;
-                white-space: pre-wrap;
-              "
-              [style.color]="page.color"
-              [ngClass]="{
+        </ion-col>
+        <ion-col sizeMd="5">
+          <ion-row
+            class="ion-padding"
+            [ngClass]="{
+              'ion-text-start': page.align == 'Left',
+              'ion-text-center': page.align == 'Mid',
+              'ion-text-end': page.align == 'Right'
+            }"
+          >
+            <ion-col>
+              <span
+                style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
+                [style.color]="page.color"
+                [ngClass]="{
                   'display-4': page.font == 's',
                   'display-3': page.font == 'm',
                   'display-1': page.font == 'l'
                 }"
-              >{{page.info}}</span
-            >
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-  </section>
+                >{{ page.info }}</span
+              >
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </section>
+
+    <!-- Slides -->
+    <section *ngIf="page.type === 'Slides'">
+      <ion-row>
+        <ion-col offset-md="3" size-md="6">
+          <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
+            {{page.title}}
+          </h1>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row>
+        <ion-col>
+          <ion-slides [options]="sliderConfig">
+            <ion-slide *ngFor="let slide of page.slides">
+              <ion-card>
+                <img style="height: 400px" src="{{ imgMap.get(slide.id) }}" />
+                <ion-card-header>
+                  <ion-card-title>{{slide.title}}</ion-card-title>
+                  <ion-card-subtitle>{{slide.description}}</ion-card-subtitle>
+                </ion-card-header>
+              </ion-card>
+            </ion-slide>
+          </ion-slides>
+        </ion-col>
+      </ion-row>
+    </section>
   </div>
 
   <section #services class="ion-padding my-5">
@@ -227,46 +250,7 @@
     </ion-row>
   </section>
 
-  <section #projects class="my-5">
-    <ion-row>
-      <ion-col offset-md="3" size-md="6">
-        <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
-          Our Recent Projects
-        </h1>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-slides [options]="sliderConfig">
-          <ion-slide style="width: 800px">
-            <ion-card>
-              <img style="max-height: 400px" src="{{ project1 }}" />
-              <ion-card-header>
-                <ion-card-title>Project 1</ion-card-title>
-              </ion-card-header>
-            </ion-card>
-          </ion-slide>
-          <ion-slide style="width: 800px">
-            <ion-card>
-              <img style="max-height: 400px" src="{{ project2 }}" />
-              <ion-card-header>
-                <ion-card-title>Project 2</ion-card-title>
-              </ion-card-header>
-            </ion-card>
-          </ion-slide>
-          <ion-slide style="width: 800px">
-            <ion-card>
-              <img style="height: 400px" src="{{ project3 }}" />
-              <ion-card-header>
-                <ion-card-title>Project 3</ion-card-title>
-              </ion-card-header>
-            </ion-card>
-          </ion-slide>
-        </ion-slides>
-      </ion-col>
-    </ion-row>
-  </section>
+  
 
   <section #team class="my-5 pb-5">
     <ion-row class="my-5">

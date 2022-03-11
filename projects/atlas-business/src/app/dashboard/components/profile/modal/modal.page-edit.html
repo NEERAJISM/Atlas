@@ -107,7 +107,8 @@
                       'h2': full.fullTitleFont == 'm',
                       'h1': full.fullTitleFont == 'l'
                     }"
-                >{{full.fullTitle}}</span>
+                  >{{full.fullTitle}}</span
+                >
               </ion-col>
             </ion-row>
           </ion-col>
@@ -203,6 +204,28 @@
           </ion-row>
         </div>
       </section>
+
+      <!-- Slides -->
+      <section style="height: 100%" *ngIf="pageType == 'Slides'" #about>
+        <ion-row class="ion-items-align-center">
+          <ion-col [offsetMd]="slides.slides[currentSlide].orientation === 'p' ? 3 : 0" [sizeMd]="slides.slides[currentSlide].orientation === 'p' ? 6 : 12">
+            <ion-card>
+              <img
+                style="width: 100%; height: 300px"
+                [src]="slideImgs[currentSlide].url"
+              />
+              <ion-card-header>
+                <ion-card-title
+                  >{{slides.slides[currentSlide].title}}</ion-card-title
+                >
+                <ion-card-subtitle style="white-space: pre-wrap"
+                  >{{slides.slides[currentSlide].description}}</ion-card-subtitle
+                >
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </section>
     </ion-col>
 
     <!-- ***** Editor ***** -->
@@ -214,7 +237,7 @@
             style="display: none"
             type="file"
             accept="image/*"
-            #file
+            #file1
             (change)="onFileChangedFull($event)"
             [(ngModel)]="fullImgFile"
           />
@@ -223,7 +246,7 @@
             mode="ios"
             mat-icon-button
             class="img-btn"
-            (click)="file.click()"
+            (click)="file1.click()"
           >
             Change Background Image
           </ion-button>
@@ -342,7 +365,7 @@
             style="display: none"
             type="file"
             accept="image/*"
-            #file
+            #file2
             (change)="onFileChangedInfo($event)"
             [(ngModel)]="infoImgFile"
           />
@@ -351,7 +374,7 @@
             mode="ios"
             mat-icon-button
             class="img-btn"
-            (click)="file.click()"
+            (click)="file2.click()"
           >
             Change Background Image
           </ion-button>
@@ -510,7 +533,129 @@
       </ion-row>
     </ion-col>
 
-    <ion-col *ngIf="pageType === 'Slides'" sizeMd="4"> Slides </ion-col>
+    <ion-col *ngIf="pageType === 'Slides'" sizeMd="4">
+      <ion-row>
+        <ion-col>
+          <ion-button
+            expand="block"
+            style="text-transform: none"
+            (click)="addSlide()"
+            >Add</ion-button
+          >
+        </ion-col>
+        <ion-col>
+          <ion-button
+            color="danger"
+            expand="block"
+            style="text-transform: none"
+            (click)="removeSlide()"
+            >Remove</ion-button
+          >
+        </ion-col>
+        <ion-col>
+          <ion-button class="ion-float-right" (click)="moveLeft()">
+            <i class="fas fa-caret-left"></i>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button (click)="moveRight()">
+            <i class="fas fa-caret-right"></i>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-segment
+            mode="md"
+            scrollable
+            [value]="1"
+            [(ngModel)]="currentSlide"
+          >
+            <ion-segment-button
+              *ngFor="let slide of slideImgs; index as i"
+              [value]="i"
+            >
+              <ion-label>{{i+1}}</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <input
+            style="display: none"
+            type="file"
+            accept="image/*"
+            #file3
+            (change)="onFileChangedSlide($event)"
+            [(ngModel)]="slideImgFile"
+          />
+          <ion-button
+            expand="block"
+            mode="ios"
+            mat-icon-button
+            class="img-btn"
+            (click)="file3.click()"
+          >
+            Change Image
+          </ion-button>
+        </ion-col>
+        
+        <ion-col>
+          <ion-segment
+          mode="md"
+          scrollable
+          value="p"
+          [(ngModel)]="slides.slides[currentSlide].orientation"
+        >
+          <ion-segment-button value="p" layout="icon-start">
+            <i class="fas fa-portrait" style="font-size: larger"></i>
+          </ion-segment-button>
+          <ion-segment-button value="l" layout="icon-start">
+            <i class="fas fa-image" style="font-size: larger"></i>
+          </ion-segment-button>
+        </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-label><b>Heading {{currentSlide*1 + 1}}</b></ion-label>
+            <ion-input
+              maxlength="30"
+              [(ngModel)]="slides.slides[currentSlide].title"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-textarea
+              rows="5"
+              style="--highlight-color-focused: none"
+              placeholder="Description"
+              [(ngModel)]="slides.slides[currentSlide].description"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-col>
     <ion-col *ngIf="pageType === 'Video'" sizeMd="4"> Video </ion-col>
     <ion-col *ngIf="pageType === 'Team'" sizeMd="4"> Team </ion-col>
   </ion-row>

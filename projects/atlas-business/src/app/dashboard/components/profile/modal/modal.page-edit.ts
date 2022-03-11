@@ -5,14 +5,16 @@ import {
   FirebaseUtil,
   Full,
   Info,
-  Profile,
-  Slides,
-  Team,
-  Type,
-  Text,
-  Video,
+  Profile, Slide, Slides,
+  Team, Text, Type, Video
 } from 'atlas-core';
 import { AppService } from 'projects/atlas-business/src/app/app.service';
+
+class Img {
+  url;
+  blob;
+  id;
+}
 
 @Component({
   selector: 'page-edit-modal',
@@ -24,6 +26,7 @@ export class PageEditModal implements OnInit {
   @Input() iType: string;
   @Input() iText: Text;
   @Input() iInfo: Info;
+  @Input() iSlides: Slides;
 
   isHome = false;
   isContact = false;
@@ -48,6 +51,11 @@ export class PageEditModal implements OnInit {
   infoUrl = 'assets/images/profile/white.jpg';
   infoImgFile;
   infoBlob;
+
+  reader = new FileReader();
+  currentSlide: number = 0;
+  slideImgFile;
+  slideImgs = [new Img()];
 
   constructor(private appService: AppService, private fbUtil: FirebaseUtil) {
     this.appService.presentLoading();
@@ -129,8 +137,41 @@ export class PageEditModal implements OnInit {
     this.infoBlob = files[0];
   }
 
+  onFileChangedSlide(event) {
+    const files = event.target.files;
+    if (files.length === 0) {
+      return;
+    }
+
+    if (files[0].size > 5000000) {
+      this.slideImgFile = '';
+      this.appService.presentToast('Please select a file less than 5MB');
+      return;
+    }
+
+    const mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.slideImgFile = '';
+      this.appService.presentToast(
+        'Image format not supported, use either jpg/jpeg/png'
+      );
+      return;
+    }
+
+    this.slideImgs[this.currentSlide].url = URL.createObjectURL(files[0]);
+    this.slideImgs[this.currentSlide].blob = files[0];
+
+    this.reader.readAsDataURL(files[0]);
+    this.reader.onload = (e) => {
+      this.slideImgs[this.currentSlide].url = this.reader.result;
+    };
+  }
+
   publish() {
-    if (this.isOther && (!this.pageTitle || this.pageTitle.trim().length == 0)) {
+    if (
+      this.isOther &&
+      (!this.pageTitle || this.pageTitle.trim().length == 0)
+    ) {
       this.appService.presentToast('Please enter the page title');
       return;
     }
@@ -152,6 +193,12 @@ export class PageEditModal implements OnInit {
           break;
         case 'Text':
           if (this.equalText(this.text, this.iText)) {
+            this.appService.closeModalProfile('success');
+            return;
+          }
+          break;
+        case 'Slides':
+          if (this.equalSlides(this.slides, this.iSlides)) {
             this.appService.closeModalProfile('success');
             return;
           }
@@ -179,11 +226,16 @@ export class PageEditModal implements OnInit {
         case 'Info':
           page = this.info;
           upload = this.infoBlob;
+        case 'Slides':
+          page = this.slides;
           break;
       }
 
       page.id = this.fbUtil.getId();
       page.title = this.pageTitle;
+
+      this.uploadImages();
+
       this.fbUtil
         .getInstance()
         .collection(
@@ -224,6 +276,17 @@ export class PageEditModal implements OnInit {
           this.appService.closeModalProfile('success');
         });
     }
+  }
+
+  uploadImages(){
+    this.slideImgs.forEach((img, i) => {
+      img.id = this.fbUtil.getId();
+      this.slides.slides[i].id = img.id;
+      this.fbUtil.uploadImage(
+        img.blob,
+        Constants.PAGES + '/' + this.profile.id + '/' + this.slides.id + '/' + img.id
+      );
+    });
   }
 
   updateProfile() {
@@ -288,5 +351,80 @@ export class PageEditModal implements OnInit {
       object1.paragraphColor === object2.paragraphColor &&
       object1.paragraphStyle === object2.paragraphStyle
     );
+  }
+
+  equalSlides(object1: Slides, object2: Slides): boolean {
+    if(object1.title !== object2.title || object1.slides.length != object2.slides.length) {
+      return false;
+    }
+
+    for (var i = 0; i < object1.slides.length; i++) {
+      if (
+        object1[i].title !== object2[i].title ||
+        object1[i].description !== object2[i].description ||
+        object1[i].orientation !== object2[i].orientation ||
+        !this.slideImgs[i].url
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  addSlide() {
+    if (this.slides.slides.length > 20) {
+      this.appService.presentToast('Cannot add more that 20 slides!!');
+      return;
+    }
+
+    this.slides.slides.push(new Slide());
+    this.slideImgs.push(new Img());
+
+    this.currentSlide++;
+  }
+
+  removeSlide() {
+    if (this.slides.slides.length <= 1) {
+      return;
+    }
+
+    this.slides.slides.splice(this.currentSlide, 1);
+    this.slideImgs.splice(this.currentSlide, 1);
+  }
+
+  moveRight() {
+    if (this.currentSlide < this.slides.slides.length - 1) {
+      const index: number = Number(this.currentSlide);
+
+      [this.slides.slides[index], this.slides.slides[index + 1]] = [
+        this.slides.slides[index + 1],
+        this.slides.slides[index],
+      ];
+
+      [this.slideImgs[index], this.slideImgs[index + 1]] = [
+        this.slideImgs[index + 1],
+        this.slideImgs[index],
+      ];
+
+      this.currentSlide++;
+    }
+  }
+
+  moveLeft() {
+    if (this.currentSlide > 0) {
+      const index: number = Number(this.currentSlide);
+
+      [this.slides.slides[index - 1], this.slides.slides[index]] = [
+        this.slides.slides[index],
+        this.slides.slides[index - 1],
+      ];
+
+      [this.slideImgs[index - 1], this.slideImgs[index]] = [
+        this.slideImgs[index],
+        this.slideImgs[index - 1],
+      ];
+
+      this.currentSlide--;
+    }
   }
 }

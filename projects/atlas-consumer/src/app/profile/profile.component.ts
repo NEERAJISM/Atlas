@@ -89,11 +89,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   // slider config
 
   sliderConfig = {
-    // spaceBetween: 10,
+    spaceBetween: 5,
     centeredSlides: true,
-    // slidesPerView: 5,
+    slidesPerView: 3  ,
     autoplay: true,
-    loop: false,
   };
 
   landingFont = '70px';
@@ -134,7 +133,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private util: CommonUtil
   ) {
     if (window.innerWidth > 1000) {
-      this.sliderConfig.slidesPerView = 1.8;
       this.landingFont = '120px';
       this.isDesktop = true;
     }

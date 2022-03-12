@@ -8,6 +8,8 @@ import {
   FirebaseUtil,
   Page,
   Profile,
+  Slides,
+  Type,
 } from 'atlas-core';
 import { AppService } from '../../../app.service';
 import { PageEditModal } from './modal/modal.page-edit';
@@ -23,7 +25,7 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49614';
+  url = 'http://localhost:49331';
   controllerSrc: any;
 
   bizId = '';
@@ -44,10 +46,9 @@ export class ProfileDashboardComponent implements OnInit {
   blob;
 
   // pages
-  backup = [];
-  pagesMap: Map<String, Page> = new Map();
   pages: Page[] = [];
   pageIds: string[] = [];
+  pagesMap: Map<String, Page> = new Map();
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -58,7 +59,6 @@ export class ProfileDashboardComponent implements OnInit {
     private util: CommonUtil
   ) {
     this.service.presentLoading();
-    // this.presentModal();
     this.init();
   }
 
@@ -135,13 +135,14 @@ export class ProfileDashboardComponent implements OnInit {
       });
   }
 
-  async presentModal(mode?: string) {
+  async presentModal(mode?: string, page?: Page) {
     const modal = await this.modalController.create({
       component: PageEditModal,
       cssClass: 'page-edit-modal',
       componentProps: {
         mode: mode,
         profile: this.bizProfile,
+        page: page
       },
     });
     return await modal.present();
@@ -300,14 +301,24 @@ export class ProfileDashboardComponent implements OnInit {
     this.pages.splice(index, 1);
     this.fbUtil
       .getInstance()
-      .collection(
-        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PAGES
-      )
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PAGES)
       .doc(id)
       .delete();
 
+    // update Map
+    var tmp = this.pagesMap.get(id);
+    this.pagesMap.delete(id);
+
     // delete images
-    this.fbUtil.deleteImage(Constants.PAGES + '/' + this.bizId + '/' + id);
+    if (tmp.type === Type.Slides) {
+      (tmp as Slides).slides.forEach((slide) => {
+        this.fbUtil.deleteImage(
+          Constants.PAGES + '/' + this.bizId + '/' + tmp.id + '/' + slide.id
+        );
+      });
+    } else {
+      this.fbUtil.deleteImage(Constants.PAGES + '/' + this.bizId + '/' + id);
+    }
 
     // reload + init
     this.reload(false, true);

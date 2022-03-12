@@ -194,7 +194,7 @@
               >
                 <ion-item *ngFor="let page of pages" button>
                   <ion-reorder slot="start"></ion-reorder>
-                  <ion-label (click)="presentModal()"> <i>{{page.title}}</i> </ion-label>
+                  <ion-label (click)="presentModal('Edit', page)"> <i>{{page.title}}</i> </ion-label>
                   <i slot="end" class="far fa-trash-alt" (click)="deletePage(page.id)"></i>
                 </ion-item>
               </ion-reorder-group>

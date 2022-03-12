@@ -5,15 +5,20 @@ import {
   FirebaseUtil,
   Full,
   Info,
-  Profile, Slide, Slides,
-  Team, Text, Type, Video
+  Page,
+  Profile,
+  Slide,
+  Slides,
+  Team,
+  Text,
+  Type,
+  Video,
 } from 'atlas-core';
 import { AppService } from 'projects/atlas-business/src/app/app.service';
 
 class Img {
   url;
   blob;
-  id;
 }
 
 @Component({
@@ -23,14 +28,11 @@ class Img {
 export class PageEditModal implements OnInit {
   @Input() mode: string;
   @Input() profile: Profile;
-  @Input() iType: string;
-  @Input() iText: Text;
-  @Input() iInfo: Info;
-  @Input() iSlides: Slides;
+  @Input() page: Page;
 
   isHome = false;
   isContact = false;
-  isOther = false;
+  isNew = false;
   isEdit = false;
 
   pageTitle = '';
@@ -55,34 +57,114 @@ export class PageEditModal implements OnInit {
   reader = new FileReader();
   currentSlide: number = 0;
   slideImgFile;
-  slideImgs = [new Img()];
+  slideImgs: Img[] = [];
+  imgMap: Map<string, string> = new Map();
+  xhr = new XMLHttpRequest();
 
-  constructor(private appService: AppService, private fbUtil: FirebaseUtil) {
-    this.appService.presentLoading();
-  }
+  constructor(
+    private appService: AppService,
+    private fbUtil: FirebaseUtil,
+  ) {}
 
   ngOnInit(): void {
+    this.appService.presentLoading();
+
     if (this.mode === 'Home') {
       this.isHome = true;
+      this.pageType = Type.Full.toString();
+      this.getImages();
+      this.full = this.profile.home;
     } else if (this.mode === 'Contact') {
       this.isContact = true;
+      this.pageType = Type.Contact.toString();
+      this.appService.dismissLoading();
+    } else if (this.mode === 'Edit') {
+      this.isEdit = true;
+      this.mapPage();
+      this.getImages();
     } else {
-      this.isOther = true;
+      this.isNew = true;
+      this.slideImgs.push(new Img());
+      this.pageType = Type.Full.toString();
+      this.appService.dismissLoading();
     }
-
-    this.iType
-      ? (this.pageType = this.iType)
-      : (this.pageType = Type.Full.toString());
-
-    this.full = this.profile.home;
-    this.isHome ? this.getProfile() : this.appService.dismissLoading();
   }
 
-  getProfile() {
+  mapPage() {
+    this.pageType = this.page.type.toString();
+    this.pageTitle = this.page.title;
+
+    switch (this.page.type) {
+      case Type.Full:
+        Object.assign(this.full, this.page);
+        break;
+      case Type.Info:
+        Object.assign(this.info, this.page);
+        break;
+      case Type.Text:
+        Object.assign(this.text, this.page);
+        break;
+      case Type.Slides:
+        this.slides = JSON.parse(JSON.stringify(this.page)); // becase it has list of objects
+        break;
+      case Type.Team:
+        Object.assign(this.team, this.page);
+        break;
+      case Type.Video:
+        Object.assign(this.video, this.page);
+        break;
+      case Type.Contact:
+        Object.assign(this.contact, this.page);
+        break;
+    }
+  }
+
+  getImages() {
+    if (this.pageType === Type.Text.toString()) {
+      this.appService.dismissLoading();
+      return;
+    }
+
+    if (this.pageType === Type.Slides.toString()) {
+      var counter = 0;
+      this.slides.slides.forEach((slide) => {
+        this.slideImgs.push(new Img());
+        counter++;
+
+        this.fbUtil
+          .downloadImage(
+            Constants.PAGES +
+              '/' +
+              this.profile.id +
+              '/' +
+              this.slides.id +
+              '/' +
+              slide.id
+          )
+          .subscribe((url) => {
+            this.imgMap.set(slide.id, url);
+            if (counter === this.slides.slides.length) {
+              this.appService.dismissLoading();
+            }
+          });
+      });
+      return;
+    }
+
     this.fbUtil
-      .downloadImage(Constants.PROFILE + '/' + this.profile.id + '/home')
+      .downloadImage(
+        (this.isHome ? Constants.PROFILE : Constants.PAGES) +
+          '/' +
+          this.profile.id +
+          '/' +
+          (this.isHome ? 'home' : this.page.id)
+      )
       .subscribe((url) => {
-        this.fullUrl = url;
+        if (this.isHome) {
+          this.fullUrl = url;
+        } else {
+          this.infoUrl = url;
+        }
         this.appService.dismissLoading();
       });
   }
@@ -169,15 +251,29 @@ export class PageEditModal implements OnInit {
 
   publish() {
     if (
-      this.isOther &&
+      (this.isNew || this.isEdit) &&
       (!this.pageTitle || this.pageTitle.trim().length == 0)
     ) {
       this.appService.presentToast('Please enter the page title');
       return;
     }
 
-    // check if no change
-    if (this.isEdit) {
+    if (this.pageType === Type.Slides.toString()) {
+      for (let i = 0; i < this.slides.slides.length; i++) {
+        if (
+          !this.slideImgs[i].url &&
+          !this.imgMap.has(this.slides.slides[i].id)
+        ) {
+          this.currentSlide = i;
+          this.appService.presentToast(
+            'Please slelect an image for slide ' + (i + 1)
+          );
+          return;
+        }
+      }
+    }
+
+    if (!this.isNew && this.pageTitle === this.page.title) {
       switch (this.pageType) {
         case 'Full':
           if (this.equalFull(this.full, this.profile.home)) {
@@ -186,19 +282,19 @@ export class PageEditModal implements OnInit {
           }
           break;
         case 'Info':
-          if (this.equalInfo(this.info, this.iInfo)) {
+          if (this.equalInfo(this.info, this.page as Info)) {
             this.appService.closeModalProfile('success');
             return;
           }
           break;
         case 'Text':
-          if (this.equalText(this.text, this.iText)) {
+          if (this.equalText(this.text, this.page as Text)) {
             this.appService.closeModalProfile('success');
             return;
           }
           break;
         case 'Slides':
-          if (this.equalSlides(this.slides, this.iSlides)) {
+          if (this.equalSlides(this.slides, this.page as Slides)) {
             this.appService.closeModalProfile('success');
             return;
           }
@@ -207,52 +303,54 @@ export class PageEditModal implements OnInit {
     }
 
     this.appService.presentLoading();
-
     if (this.isHome || this.isContact) {
       this.updateProfile();
       return;
     }
 
-    if (this.isOther) {
-      var page;
-      var upload;
-      switch (this.pageType) {
-        case 'Full':
-          page = this.full;
-          break;
-        case 'Text':
-          page = this.text;
-          break;
-        case 'Info':
-          page = this.info;
-          upload = this.infoBlob;
-        case 'Slides':
-          page = this.slides;
-          break;
-      }
+    var page;
+    var upload;
+    switch (this.pageType) {
+      case 'Full':
+        page = this.full;
+        break;
+      case 'Text':
+        page = this.text;
+        break;
+      case 'Info':
+        page = this.info;
+        upload = this.infoBlob;
+        break;
+      case 'Slides':
+        page = this.slides;
+        break;
+    }
 
+    if (this.isNew) {
       page.id = this.fbUtil.getId();
-      page.title = this.pageTitle;
+    }
 
-      this.uploadImages();
+    page.title = this.pageTitle;
+    this.updateImages();
 
-      this.fbUtil
-        .getInstance()
-        .collection(
-          Constants.BUSINESS + '/' + this.profile.id + '/' + Constants.PAGES
-        )
-        .doc(page.id)
-        .set(this.fbUtil.toJson(page))
-        .then(() => {
-          // upload image
-          if (upload) {
-            this.fbUtil.uploadImage(
-              upload,
-              Constants.PAGES + '/' + this.profile.id + '/' + page.id
-            );
-          }
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.profile.id + '/' + Constants.PAGES
+      )
+      .doc(page.id)
+      .set(this.fbUtil.toJson(page))
+      .then(() => {
+        // upload image
+        if (upload) {
+          this.fbUtil.uploadImage(
+            upload,
+            Constants.PAGES + '/' + this.profile.id + '/' + page.id
+          );
+        }
 
-          // update profile index
+        // update profile index - only  New
+        if (this.isNew) {
           this.profile.pages.push(page.id);
           this.fbUtil
             .getInstance()
@@ -265,28 +363,66 @@ export class PageEditModal implements OnInit {
             )
             .doc(this.profile.id)
             .update({ pages: this.profile.pages });
-        })
-        .catch(() =>
-          this.appService.presentToast(
-            'Error occurred, Please check Internet connectivity'
-          )
+        }
+      })
+      .catch(() =>
+        this.appService.presentToast(
+          'Error occurred, Please check Internet connectivity'
         )
-        .finally(() => {
-          this.appService.dismissLoading();
-          this.appService.closeModalProfile('success');
-        });
-    }
+      )
+      .finally(() => {
+        this.appService.dismissLoading();
+        this.appService.closeModalProfile('success');
+      });
   }
 
-  uploadImages(){
+  updateImages() {
+    if (this.pageType !== Type.Slides) {
+      return;
+    }
+
     this.slideImgs.forEach((img, i) => {
-      img.id = this.fbUtil.getId();
-      this.slides.slides[i].id = img.id;
+      if (!img.url) {
+        return;
+      }
+
+      if (!this.slides.slides[i].id) {
+        this.slides.slides[i].id = this.fbUtil.getId();
+      }
+
       this.fbUtil.uploadImage(
         img.blob,
-        Constants.PAGES + '/' + this.profile.id + '/' + this.slides.id + '/' + img.id
+        Constants.PAGES +
+          '/' +
+          this.profile.id +
+          '/' +
+          this.slides.id +
+          '/' +
+          this.slides.slides[i].id
       );
     });
+
+    // cleanup deleted images
+    if (this.isEdit) {
+      var newSlides = [];
+      this.slides.slides.forEach((slide) => {
+        newSlides.push(slide.id);
+      });
+
+      (this.page as Slides).slides.forEach((currentSlide) => {
+        if (newSlides.indexOf(currentSlide.id) === -1) {
+          this.fbUtil.deleteImage(
+            Constants.PAGES +
+              '/' +
+              this.profile.id +
+              '/' +
+              this.slides.id +
+              '/' +
+              currentSlide.id
+          );
+        }
+      });
+    }
   }
 
   updateProfile() {
@@ -320,7 +456,6 @@ export class PageEditModal implements OnInit {
 
   equalFull(object1: Full, object2: Full): boolean {
     return (
-      object1.title === object2.title &&
       object1.fullTitle === object2.fullTitle &&
       object1.fullTitleColor === object2.fullTitleColor &&
       object1.fullTitleX === object2.fullTitleX &&
@@ -332,7 +467,6 @@ export class PageEditModal implements OnInit {
 
   equalInfo(object1: Info, object2: Info): boolean {
     return (
-      object1.title === object2.title &&
       object1.reverse === object2.reverse &&
       object1.info === object2.info &&
       object1.align === object2.align &&
@@ -343,7 +477,6 @@ export class PageEditModal implements OnInit {
 
   equalText(object1: Text, object2: Text): boolean {
     return (
-      object1.title === object2.title &&
       object1.heading === object2.heading &&
       object1.headingColor === object2.headingColor &&
       object1.headingFont === object2.headingFont &&
@@ -354,16 +487,15 @@ export class PageEditModal implements OnInit {
   }
 
   equalSlides(object1: Slides, object2: Slides): boolean {
-    if(object1.title !== object2.title || object1.slides.length != object2.slides.length) {
+    if (object1.slides.length != object2.slides.length) {
       return false;
     }
 
     for (var i = 0; i < object1.slides.length; i++) {
       if (
-        object1[i].title !== object2[i].title ||
-        object1[i].description !== object2[i].description ||
-        object1[i].orientation !== object2[i].orientation ||
-        !this.slideImgs[i].url
+        object1.slides[i].title !== object2.slides[i].title ||
+        object1.slides[i].description !== object2.slides[i].description ||
+        this.slideImgs[i].url
       ) {
         return false;
       }
@@ -380,16 +512,15 @@ export class PageEditModal implements OnInit {
     this.slides.slides.push(new Slide());
     this.slideImgs.push(new Img());
 
-    this.currentSlide++;
+    this.currentSlide = this.slides.slides.length - 1;
   }
 
   removeSlide() {
-    if (this.slides.slides.length <= 1) {
-      return;
-    }
+    const index = this.currentSlide;
+    this.currentSlide = 0;
 
-    this.slides.slides.splice(this.currentSlide, 1);
-    this.slideImgs.splice(this.currentSlide, 1);
+    this.slides.slides.splice(index, 1);
+    this.slideImgs.splice(index, 1);
   }
 
   moveRight() {
@@ -425,6 +556,13 @@ export class PageEditModal implements OnInit {
       ];
 
       this.currentSlide--;
+    }
+  }
+
+  loadImage() {
+    if (this.isEdit) {
+      this.appService.presentLoading();
+      setTimeout(() => this.appService.dismissLoading(), 2000);
     }
   }
 }

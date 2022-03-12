@@ -12,5 +12,4 @@ export class Slide {
   id: string = '';
   title: string = 'Title';
   description: string = 'Description';
-  orientation = 'p';
 }

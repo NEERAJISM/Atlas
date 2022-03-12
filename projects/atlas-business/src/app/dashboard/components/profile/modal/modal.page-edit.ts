@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
   Contact,
@@ -61,9 +62,13 @@ export class PageEditModal implements OnInit {
   imgMap: Map<string, string> = new Map();
   xhr = new XMLHttpRequest();
 
+  ytbUrl;
+  isValidUrl = false;
+
   constructor(
     private appService: AppService,
     private fbUtil: FirebaseUtil,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +92,7 @@ export class PageEditModal implements OnInit {
       this.slideImgs.push(new Img());
       this.pageType = Type.Full.toString();
       this.appService.dismissLoading();
+      this.changeIframe('https://www.youtube-nocookie.com/embed');
     }
   }
 
@@ -112,6 +118,7 @@ export class PageEditModal implements OnInit {
         break;
       case Type.Video:
         Object.assign(this.video, this.page);
+        this.urlUpdate();
         break;
       case Type.Contact:
         Object.assign(this.contact, this.page);
@@ -120,7 +127,10 @@ export class PageEditModal implements OnInit {
   }
 
   getImages() {
-    if (this.pageType === Type.Text.toString()) {
+    if (
+      this.pageType === Type.Text.toString() ||
+      this.pageType === Type.Video.toString()
+    ) {
       this.appService.dismissLoading();
       return;
     }
@@ -250,6 +260,7 @@ export class PageEditModal implements OnInit {
   }
 
   publish() {
+    // Validations
     if (
       (this.isNew || this.isEdit) &&
       (!this.pageTitle || this.pageTitle.trim().length == 0)
@@ -271,8 +282,14 @@ export class PageEditModal implements OnInit {
           return;
         }
       }
+    } else if (this.pageType === Type.Video.toString() && !this.isValidUrl) {
+      this.appService.presentToast(
+        'Please enter a valid video URL from YouTube!!'
+      );
+      return;
     }
 
+    // duplicate check
     if (!this.isNew && this.pageTitle === this.page.title) {
       switch (this.pageType) {
         case 'Full':
@@ -295,6 +312,12 @@ export class PageEditModal implements OnInit {
           break;
         case 'Slides':
           if (this.equalSlides(this.slides, this.page as Slides)) {
+            this.appService.closeModalProfile('success');
+            return;
+          }
+          break;
+        case 'Video':
+          if (this.video.url === (this.page as Video).url && this.video.videoTitle === (this.page as Video).videoTitle) {
             this.appService.closeModalProfile('success');
             return;
           }
@@ -323,6 +346,9 @@ export class PageEditModal implements OnInit {
         break;
       case 'Slides':
         page = this.slides;
+        break;
+      case 'Video':
+        page = this.video;
         break;
     }
 
@@ -564,5 +590,20 @@ export class PageEditModal implements OnInit {
       this.appService.presentLoading();
       setTimeout(() => this.appService.dismissLoading(), 2000);
     }
+  }
+
+  urlUpdate() {
+    var match = this.video.url.match(Constants.ytbRegEx);
+    if (match && match.length > 1 && match[1].length == 11) {
+      this.isValidUrl = true;
+      this.changeIframe('https://www.youtube-nocookie.com/embed/' + match[1]);
+    } else {
+      this.isValidUrl = false;
+      this.changeIframe('https://www.youtube-nocookie.com/embed/');
+    }
+  }
+
+  changeIframe(url) {
+    this.ytbUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

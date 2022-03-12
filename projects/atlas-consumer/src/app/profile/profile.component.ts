@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular';
 import {
@@ -18,6 +19,7 @@ import {
   Slides,
   Type,
   Unit,
+  Video,
 } from 'atlas-core';
 import firebase from 'firebase/app';
 import { Subscription } from 'rxjs';
@@ -91,7 +93,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   sliderConfig = {
     spaceBetween: 5,
     centeredSlides: true,
-    slidesPerView: 3  ,
+    slidesPerView: 3,
     autoplay: true,
   };
 
@@ -123,6 +125,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   imgMap: Map<string, string> = new Map();
   complete = false;
 
+  ytbUrl: Map<string, SafeResourceUrl> = new Map();
+
   constructor(
     private location: Location,
     private router: Router,
@@ -130,7 +134,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private fbUtil: FirebaseUtil,
     private appService: AppService,
-    private util: CommonUtil
+    private util: CommonUtil,
+    private sanitizer: DomSanitizer
   ) {
     if (window.innerWidth > 1000) {
       this.landingFont = '120px';
@@ -182,6 +187,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
               (i.data() as Page).id,
               Object.assign(page, i.data())
             );
+
+            if (page.type === Type.Video) {
+              this.ytbUrl.set(page.id, this.urlUpdate((page as Video).url));
+            }
           }
         });
 
@@ -192,6 +201,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         this.downloadImages();
       });
+  }
+
+  urlUpdate(url: string): SafeResourceUrl {
+    var match = url.match(Constants.ytbRegEx);
+    if (match && match.length > 1 && match[1].length == 11) {
+      return this.sanitizer.bypassSecurityTrustResourceUrl(
+        'https://www.youtube-nocookie.com/embed/' + match[1]
+      );
+    }
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      'https://www.youtube-nocookie.com/embed/'
+    );
   }
 
   downloadImages() {
@@ -209,7 +230,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
             }
           });
       } else if (v.type === Type.Slides) {
-
         (v as Slides).slides.forEach((slide) => {
           counter++;
           this.fbUtil

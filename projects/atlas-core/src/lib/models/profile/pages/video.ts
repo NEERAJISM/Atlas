@@ -5,5 +5,6 @@ export class Video implements Page {
   title: string = '';
   readonly type: Type = Type.Video;
 
-  paragraph: string[] = ['This is a para', 'another para'];
+  videoTitle = 'Our Video'
+  url: string = '';
 }

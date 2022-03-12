@@ -156,7 +156,7 @@
         </ion-col>
       </ion-row>
   
-      <ion-row>
+      <ion-row class="mb-5">
         <ion-col>
           <ion-slides [options]="sliderConfig">
             <ion-slide *ngFor="let slide of page.slides">
@@ -172,85 +172,31 @@
         </ion-col>
       </ion-row>
     </section>
+
+    <!-- Video -->
+    <section style="height: 100%" *ngIf="page.type == 'Video'">
+      <ion-row class="my-5">
+        <ion-col offset-md="3" size-md="6">
+          <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
+            {{page.videoTitle ? page.videoTitle : 'Video'}}
+          </h1>
+        </ion-col>
+      </ion-row>
+      <ion-row class="mt-4">
+        <ion-col offsetMd="3" sizeMd="6">
+          <iframe
+            width="100%"
+            height="400px"
+            [src]="ytbUrl.get(page.id)"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </ion-col>
+      </ion-row>
+    </section>
   </div>
-
-  <section #services class="ion-padding my-5">
-    <ion-row class="mb-5">
-      <ion-col offset-md="3" size-md="6">
-        <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
-          Services
-        </h1>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="12" size-md="3" class="mx-md-5">
-        <ion-card>
-          <img src="{{ service1 }}" />
-          <ion-card-header>
-            <ion-card-title
-              >Structural Consultancy for New Construction</ion-card-title
-            >
-          </ion-card-header>
-          <ion-card-content>
-            <ul>
-              <li>Propose best structural arrangement.</li>
-              <li>Structural Analysis.</li>
-              <li>Structural design</li>
-              <li>Structural drawings & approx. quantities.</li>
-              <li>Project Tenders/ Tender scrutiny</li>
-              <li>Periodic site visits during construction</li>
-              <li>Work Certification</li>
-            </ul>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-md="3" class="mx-md-5">
-        <ion-card>
-          <img src="{{ service2 }}" />
-          <ion-card-header>
-            <ion-card-title>Building Repair Consultancy</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ul>
-              <li>
-                Survey of buildings for distress in structural members,
-                Leakages, plumbing and sanitary related problem.
-              </li>
-              <li>Performing Non Destructive tests on RCC members</li>
-              <li>Structural Audit Report with test result.</li>
-              <li>Repair Estimation</li>
-              <li>Project approval from government authority</li>
-            </ul>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-md="3" class="mx-md-5">
-        <ion-card>
-          <img src="{{ service3 }}" />
-          <ion-card-header>
-            <ion-card-title
-              >Project Management & Construction Supervision</ion-card-title
-            >
-          </ion-card-header>
-          <ion-card-content>
-            <ul>
-              <li>Performing Non Destructive tests on RCC members</li>
-              <li>Structural Audit Report with test result.</li>
-              <li>Repair Estimation</li>
-              <li>Project approval from government authority</li>
-              <li>Supervision during Repair work</li>
-              <li>Bill checking of contractors</li>
-            </ul>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </section>
-
-  
 
   <section #team class="my-5 pb-5">
     <ion-row class="my-5">

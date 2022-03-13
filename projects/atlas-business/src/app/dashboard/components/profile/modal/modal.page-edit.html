@@ -241,6 +241,22 @@
           </ion-col>
         </ion-row>
       </section>
+
+      <!-- Team -->
+      <section style="height: 100%" *ngIf="pageType == 'Team'">
+        <ion-row style="font-family: 'Mulish', sans-serif">
+          <ion-col size="12" class="ion-text-center">
+            <img
+              style="width: 150px; height: 150px; border-radius: 50%"
+              [src]="memberImgs[currentMember].url ? memberImgs[currentMember].url: (imgMap.has(team.members[currentMember].id) ?  imgMap.get(team.members[currentMember].id) : 'https://via.placeholder.com/150?text=Image')"
+            />
+            <h5 class="mt-3">{{team.members[currentMember].name}}</h5>
+            <h6>{{team.members[currentMember].designation}}</h6>
+            <i>{{team.members[currentMember].details}}</i>
+          </ion-col>
+        </ion-row>
+      </section>
+
     </ion-col>
 
     <!-- ***** Editor ***** -->
@@ -591,7 +607,7 @@
             <ion-segment-button
               *ngFor="let slide of slideImgs; index as i"
               [value]="i"
-              (click)="loadImage()"
+              (click)="load()"
             >
               <ion-label>{{i+1}}</ion-label>
             </ion-segment-button>
@@ -698,6 +714,133 @@
     </ion-col>
 
     <!-- Team -->
-    <ion-col *ngIf="pageType === 'Team'" sizeMd="4"> Team </ion-col>
+    <ion-col *ngIf="pageType === 'Team'" sizeMd="4">
+      <ion-row>
+        <ion-col>
+          <ion-button
+            expand="block"
+            style="text-transform: none"
+            (click)="addMember()"
+            >Add</ion-button
+          >
+        </ion-col>
+        <ion-col>
+          <ion-button
+            color="danger"
+            expand="block"
+            style="text-transform: none"
+            [disabled]="team.members.length == 1"
+            (click)="removeMember()"
+            >Remove</ion-button
+          >
+        </ion-col>
+        <ion-col>
+          <ion-button class="ion-float-right" (click)="moveLeftMember()">
+            <i class="fas fa-caret-left"></i>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button (click)="moveRightMember()">
+            <i class="fas fa-caret-right"></i>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-segment
+            mode="md"
+            scrollable
+            [value]="1"
+            [(ngModel)]="currentMember"
+          >
+            <ion-segment-button
+              *ngFor="let member of memberImgs; index as i"
+              [value]="i"
+              (click)="load()"
+            >
+              <ion-label>{{i+1}}</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <input
+            style="display: none"
+            type="file"
+            accept="image/*"
+            #file4
+            (change)="onFileChangedMember($event)"
+            [(ngModel)]="memberImgFile"
+          />
+          <ion-button
+            expand="block"
+            mode="ios"
+            mat-icon-button
+            class="img-btn"
+            (click)="file4.click()"
+          >
+            Change Image
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-label><b>Name</b></ion-label>
+            <ion-input
+              maxlength="30"
+              [(ngModel)]="team.members[currentMember].name"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-label><b>Designation</b></ion-label>
+            <ion-input
+              maxlength="30"
+              [(ngModel)]="team.members[currentMember].designation"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-2">
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-textarea
+              rows="3"
+              style="--highlight-color-focused: none"
+              placeholder="Details"
+              [(ngModel)]="team.members[currentMember].details"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-col>
   </ion-row>
 </ion-content>

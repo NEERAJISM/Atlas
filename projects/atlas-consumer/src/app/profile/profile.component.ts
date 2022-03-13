@@ -17,6 +17,7 @@ import {
   Product,
   Profile,
   Slides,
+  Team,
   Type,
   Unit,
   Video,
@@ -92,8 +93,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   sliderConfig = {
     spaceBetween: 5,
-    centeredSlides: true,
+    centeredSlides: false,
     slidesPerView: 3,
+    autoplay: true,
+  };
+
+  sliderConfigTeam = {
+    spaceBetween: 5,
+    centeredSlides: false,
+    slidesPerView: 4,
     autoplay: true,
   };
 
@@ -238,6 +246,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
             )
             .subscribe((url) => {
               this.imgMap.set(slide.id, url);
+
+              if (this.imgMap.size == counter) {
+                this.complete = true;
+              }
+            });
+        });
+      } else if (v.type === Type.Team) {
+        (v as Team).members.forEach((member) => {
+          counter++;
+          this.fbUtil
+            .downloadImage(
+              Constants.PAGES + '/' + this.profile.id + '/' + k + '/' + member.id
+            )
+            .subscribe((url) => {
+              this.imgMap.set(member.id, url);
 
               if (this.imgMap.size == counter) {
                 this.complete = true;

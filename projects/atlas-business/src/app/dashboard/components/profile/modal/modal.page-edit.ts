@@ -6,6 +6,7 @@ import {
   FirebaseUtil,
   Full,
   Info,
+  Member,
   Page,
   Profile,
   Slide,
@@ -59,8 +60,12 @@ export class PageEditModal implements OnInit {
   currentSlide: number = 0;
   slideImgFile;
   slideImgs: Img[] = [];
+
+  currentMember: number = 0;
+  memberImgFile;
+  memberImgs: Img[] = [];
+
   imgMap: Map<string, string> = new Map();
-  xhr = new XMLHttpRequest();
 
   ytbUrl;
   isValidUrl = false;
@@ -90,6 +95,7 @@ export class PageEditModal implements OnInit {
     } else {
       this.isNew = true;
       this.slideImgs.push(new Img());
+      this.memberImgs.push(new Img());
       this.pageType = Type.Full.toString();
       this.appService.dismissLoading();
       this.changeIframe('https://www.youtube-nocookie.com/embed');
@@ -114,7 +120,7 @@ export class PageEditModal implements OnInit {
         this.slides = JSON.parse(JSON.stringify(this.page)); // becase it has list of objects
         break;
       case Type.Team:
-        Object.assign(this.team, this.page);
+        this.team = JSON.parse(JSON.stringify(this.page));
         break;
       case Type.Video:
         Object.assign(this.video, this.page);
@@ -154,6 +160,32 @@ export class PageEditModal implements OnInit {
           .subscribe((url) => {
             this.imgMap.set(slide.id, url);
             if (counter === this.slides.slides.length) {
+              this.appService.dismissLoading();
+            }
+          });
+      });
+      return;
+    }
+
+    if (this.pageType === Type.Team.toString()) {
+      var counter = 0;
+      this.team.members.forEach((member) => {
+        this.memberImgs.push(new Img());
+        counter++;
+
+        this.fbUtil
+          .downloadImage(
+            Constants.PAGES +
+              '/' +
+              this.profile.id +
+              '/' +
+              this.team.id +
+              '/' +
+              member.id
+          )
+          .subscribe((url) => {
+            this.imgMap.set(member.id, url);
+            if (counter === this.team.members.length) {
               this.appService.dismissLoading();
             }
           });
@@ -259,6 +291,36 @@ export class PageEditModal implements OnInit {
     };
   }
 
+  onFileChangedMember(event) {
+    const files = event.target.files;
+    if (files.length === 0) {
+      return;
+    }
+
+    if (files[0].size > 5000000) {
+      this.memberImgFile = '';
+      this.appService.presentToast('Please select a file less than 5MB');
+      return;
+    }
+
+    const mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.memberImgFile = '';
+      this.appService.presentToast(
+        'Image format not supported, use either jpg/jpeg/png'
+      );
+      return;
+    }
+
+    this.memberImgs[this.currentMember].url = URL.createObjectURL(files[0]);
+    this.memberImgs[this.currentMember].blob = files[0];
+
+    this.reader.readAsDataURL(files[0]);
+    this.reader.onload = (e) => {
+      this.memberImgs[this.currentMember].url = this.reader.result;
+    };
+  }
+
   publish() {
     // Validations
     if (
@@ -278,6 +340,19 @@ export class PageEditModal implements OnInit {
           this.currentSlide = i;
           this.appService.presentToast(
             'Please slelect an image for slide ' + (i + 1)
+          );
+          return;
+        }
+      }
+    } else if (this.pageType === Type.Team.toString()) {
+      for (let i = 0; i < this.team.members.length; i++) {
+        if (
+          !this.memberImgs[i].url &&
+          !this.imgMap.has(this.team.members[i].id)
+        ) {
+          this.currentMember = i;
+          this.appService.presentToast(
+            'Please slelect an image for Member ' + (i + 1)
           );
           return;
         }
@@ -316,8 +391,17 @@ export class PageEditModal implements OnInit {
             return;
           }
           break;
+        case 'Team':
+          if (this.equalTeam(this.team, this.page as Team)) {
+            this.appService.closeModalProfile('success');
+            return;
+          }
+          break;
         case 'Video':
-          if (this.video.url === (this.page as Video).url && this.video.videoTitle === (this.page as Video).videoTitle) {
+          if (
+            this.video.url === (this.page as Video).url &&
+            this.video.videoTitle === (this.page as Video).videoTitle
+          ) {
             this.appService.closeModalProfile('success');
             return;
           }
@@ -350,6 +434,9 @@ export class PageEditModal implements OnInit {
       case 'Video':
         page = this.video;
         break;
+      case 'Team':
+        page = this.team;
+        break;
     }
 
     if (this.isNew) {
@@ -357,7 +444,8 @@ export class PageEditModal implements OnInit {
     }
 
     page.title = this.pageTitle;
-    this.updateImages();
+    this.updateSlideImages();
+    this.updateTeamImages();
 
     this.fbUtil
       .getInstance()
@@ -402,7 +490,7 @@ export class PageEditModal implements OnInit {
       });
   }
 
-  updateImages() {
+  updateSlideImages() {
     if (this.pageType !== Type.Slides) {
       return;
     }
@@ -445,6 +533,55 @@ export class PageEditModal implements OnInit {
               this.slides.id +
               '/' +
               currentSlide.id
+          );
+        }
+      });
+    }
+  }
+
+  updateTeamImages() {
+    if (this.pageType !== Type.Team) {
+      return;
+    }
+
+    this.memberImgs.forEach((img, i) => {
+      if (!img.url) {
+        return;
+      }
+
+      if (!this.team.members[i].id) {
+        this.team.members[i].id = this.fbUtil.getId();
+      }
+
+      this.fbUtil.uploadImage(
+        img.blob,
+        Constants.PAGES +
+          '/' +
+          this.profile.id +
+          '/' +
+          this.team.id +
+          '/' +
+          this.team.members[i].id
+      );
+    });
+
+    // cleanup deleted images
+    if (this.isEdit) {
+      var newMembers = [];
+      this.team.members.forEach((member) => {
+        newMembers.push(member.id);
+      });
+
+      (this.page as Team).members.forEach((currentMember) => {
+        if (newMembers.indexOf(currentMember.id) === -1) {
+          this.fbUtil.deleteImage(
+            Constants.PAGES +
+              '/' +
+              this.profile.id +
+              '/' +
+              this.team.id +
+              '/' +
+              currentMember.id
           );
         }
       });
@@ -529,6 +666,24 @@ export class PageEditModal implements OnInit {
     return true;
   }
 
+  equalTeam(object1: Team, object2: Team): boolean {
+    if (object1.members.length != object2.members.length) {
+      return false;
+    }
+
+    for (var i = 0; i < object1.members.length; i++) {
+      if (
+        object1.members[i].name !== object2.members[i].name ||
+        object1.members[i].designation !== object2.members[i].designation ||
+        object1.members[i].details !== object2.members[i].details ||
+        this.memberImgs[i].url
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   addSlide() {
     if (this.slides.slides.length > 20) {
       this.appService.presentToast('Cannot add more that 20 slides!!');
@@ -541,12 +696,32 @@ export class PageEditModal implements OnInit {
     this.currentSlide = this.slides.slides.length - 1;
   }
 
+  addMember() {
+    if (this.team.members.length > 20) {
+      this.appService.presentToast('Cannot add more that 20 members!!');
+      return;
+    }
+
+    this.team.members.push(new Member());
+    this.memberImgs.push(new Img());
+
+    this.currentMember = this.team.members.length - 1;
+  }
+
   removeSlide() {
     const index = this.currentSlide;
     this.currentSlide = 0;
 
     this.slides.slides.splice(index, 1);
     this.slideImgs.splice(index, 1);
+  }
+
+  removeMember() {
+    const index = this.currentMember;
+    this.currentMember = 0;
+
+    this.team.members.splice(index, 1);
+    this.memberImgs.splice(index, 1);
   }
 
   moveRight() {
@@ -564,6 +739,24 @@ export class PageEditModal implements OnInit {
       ];
 
       this.currentSlide++;
+    }
+  }
+
+  moveRightMember() {
+    if (this.currentMember < this.team.members.length - 1) {
+      const index: number = Number(this.currentMember);
+
+      [this.team.members[index], this.team.members[index + 1]] = [
+        this.team.members[index + 1],
+        this.team.members[index],
+      ];
+
+      [this.memberImgs[index], this.memberImgs[index + 1]] = [
+        this.memberImgs[index + 1],
+        this.memberImgs[index],
+      ];
+
+      this.currentMember++;
     }
   }
 
@@ -585,7 +778,25 @@ export class PageEditModal implements OnInit {
     }
   }
 
-  loadImage() {
+  moveLeftMember() {
+    if (this.currentMember > 0) {
+      const index: number = Number(this.currentMember);
+
+      [this.team.members[index - 1], this.team.members[index]] = [
+        this.team.members[index],
+        this.team.members[index - 1],
+      ];
+
+      [this.memberImgs[index - 1], this.memberImgs[index]] = [
+        this.memberImgs[index],
+        this.memberImgs[index - 1],
+      ];
+
+      this.currentMember--;
+    }
+  }
+
+  load() {
     if (this.isEdit) {
       this.appService.presentLoading();
       setTimeout(() => this.appService.dismissLoading(), 2000);

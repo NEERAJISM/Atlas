@@ -5,5 +5,12 @@ export class Team implements Page {
   title: string = '';
   readonly type: Type = Type.Team;
 
-  paragraph: string[] = ['This is a para', 'another para'];
+  members: Member[] = [new Member()];
+}
+
+export class Member {
+  id: string = '';
+  name: string = '';
+  designation: string = '';
+  details: string = '';
 }

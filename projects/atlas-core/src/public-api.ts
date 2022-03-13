@@ -11,7 +11,6 @@ export * from './lib/models/oms/order';
 export * from './lib/models/product';
 export * from './lib/models/profile/profile';
 export * from './lib/models/profile/pages/text';
-export * from './lib/models/profile/pages/contact';
 export * from './lib/models/profile/pages/info';
 export * from './lib/models/profile/pages/slides';
 export * from './lib/models/profile/pages/team';

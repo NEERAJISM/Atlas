@@ -6,7 +6,6 @@ export interface Page {
 
 export enum Type {
   Text = 'Text',
-  Contact = 'Contact',
   Full = 'Full',
   Info = 'Info',
   Team = 'Team',

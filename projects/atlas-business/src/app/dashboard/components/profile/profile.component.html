@@ -184,7 +184,7 @@
               <!-- The reorder gesture is disabled by default, enable it to drag and drop items -->
               <!-- Default reorder icon, end aligned items -->
               <ion-item button (click)="presentModal('Home')">
-                <ion-label> Home (<b>Top</b>) </ion-label>
+                <ion-label> Home </ion-label>
                 <!-- <ion-reorder slot="end"></ion-reorder> -->
               </ion-item>
 
@@ -198,10 +198,6 @@
                   <i slot="end" class="far fa-trash-alt" (click)="deletePage(page.id)"></i>
                 </ion-item>
               </ion-reorder-group>
-              <ion-item button (click)="presentModal('Contact')">
-                <ion-label> Contact / Address Info (<b>Bottom</b>) </ion-label>
-                <!-- <ion-reorder slot="end"></ion-reorder> -->
-              </ion-item>
             </ion-card>
           </ion-col>
         </ion-row>

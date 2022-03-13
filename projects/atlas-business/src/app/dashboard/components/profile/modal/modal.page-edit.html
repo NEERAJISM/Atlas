@@ -1,7 +1,7 @@
 <ion-content class="ion-padding">
   <ion-row>
     <ion-col>
-      <h5>{{ isHome ? 'Home' : (isContact ? 'Contact' : 'New')}} Section</h5>
+      <h5>{{ isHome ? 'Home' : 'New'}} Section</h5>
     </ion-col>
     <ion-col *ngIf="isNew || isEdit">
       <ion-item
@@ -52,14 +52,6 @@
         <ion-segment-button value="Team" layout="icon-start">
           <i class="fas fa-users" style="font-size: larger"></i>
           <ion-label>Team</ion-label>
-        </ion-segment-button>
-        <ion-segment-button
-          *ngIf="isContact"
-          value="Contact"
-          layout="icon-start"
-        >
-          <i class="fas fa-info" style="font-size: larger"></i>
-          <ion-label>Contact</ion-label>
         </ion-segment-button>
       </ion-segment>
     </ion-col>

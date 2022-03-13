@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
-  Contact,
   FirebaseUtil,
   Full,
   Info,
@@ -33,13 +32,11 @@ export class PageEditModal implements OnInit {
   @Input() page: Page;
 
   isHome = false;
-  isContact = false;
   isNew = false;
   isEdit = false;
 
   pageTitle = '';
   pageType = '';
-  contact = new Contact();
   full = new Full();
   info = new Info();
   slides = new Slides();
@@ -84,10 +81,6 @@ export class PageEditModal implements OnInit {
       this.pageType = Type.Full.toString();
       this.getImages();
       this.full = this.profile.home;
-    } else if (this.mode === 'Contact') {
-      this.isContact = true;
-      this.pageType = Type.Contact.toString();
-      this.appService.dismissLoading();
     } else if (this.mode === 'Edit') {
       this.isEdit = true;
       this.mapPage();
@@ -125,9 +118,6 @@ export class PageEditModal implements OnInit {
       case Type.Video:
         Object.assign(this.video, this.page);
         this.urlUpdate();
-        break;
-      case Type.Contact:
-        Object.assign(this.contact, this.page);
         break;
     }
   }
@@ -410,7 +400,7 @@ export class PageEditModal implements OnInit {
     }
 
     this.appService.presentLoading();
-    if (this.isHome || this.isContact) {
+    if (this.isHome) {
       this.updateProfile();
       return;
     }

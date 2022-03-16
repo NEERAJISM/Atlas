@@ -248,7 +248,6 @@
           </ion-col>
         </ion-row>
       </section>
-
     </ion-col>
 
     <!-- ***** Editor ***** -->
@@ -679,7 +678,10 @@
             "
           >
             <ion-label><b>Title</b></ion-label>
-            <ion-input maxlength="30" [(ngModel)]="video.videoTitle"></ion-input>
+            <ion-input
+              maxlength="30"
+              [(ngModel)]="video.videoTitle"
+            ></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>

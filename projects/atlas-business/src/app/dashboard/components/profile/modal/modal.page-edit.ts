@@ -44,12 +44,14 @@ export class PageEditModal implements OnInit {
   text = new Text();
   video = new Video();
 
+  default = 'assets/images/profile/white.jpg';
+
   //form
-  fullUrl = 'assets/images/profile/white.jpg';
+  fullUrl = this.default;
   fullImgFile;
   fullBlob;
 
-  infoUrl = 'assets/images/profile/white.jpg';
+  infoUrl = this.default;
   infoImgFile;
   infoBlob;
 
@@ -71,7 +73,7 @@ export class PageEditModal implements OnInit {
     private appService: AppService,
     private fbUtil: FirebaseUtil,
     private sanitizer: DomSanitizer
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.appService.presentLoading();
@@ -80,7 +82,7 @@ export class PageEditModal implements OnInit {
       this.isHome = true;
       this.pageType = Type.Full.toString();
       this.getImages();
-      this.full = this.profile.home;
+      Object.assign(this.full, this.profile.home);
     } else if (this.mode === 'Edit') {
       this.isEdit = true;
       this.mapPage();
@@ -110,10 +112,10 @@ export class PageEditModal implements OnInit {
         Object.assign(this.text, this.page);
         break;
       case Type.Slides:
-        this.slides = JSON.parse(JSON.stringify(this.page)); // becase it has list of objects
+        this.slides = JSON.parse(JSON.stringify(this.page)); // because it has list of objects
         break;
       case Type.Team:
-        this.team = JSON.parse(JSON.stringify(this.page));
+        this.team = JSON.parse(JSON.stringify(this.page)); // because it has list of objects
         break;
       case Type.Video:
         Object.assign(this.video, this.page);
@@ -123,10 +125,7 @@ export class PageEditModal implements OnInit {
   }
 
   getImages() {
-    if (
-      this.pageType === Type.Text.toString() ||
-      this.pageType === Type.Video.toString()
-    ) {
+    if (this.pageType === Type.Text.toString() || this.pageType === Type.Video.toString()) {
       this.appService.dismissLoading();
       return;
     }
@@ -140,12 +139,12 @@ export class PageEditModal implements OnInit {
         this.fbUtil
           .downloadImage(
             Constants.PAGES +
-              '/' +
-              this.profile.id +
-              '/' +
-              this.slides.id +
-              '/' +
-              slide.id
+            '/' +
+            this.profile.id +
+            '/' +
+            this.slides.id +
+            '/' +
+            slide.id
           )
           .subscribe((url) => {
             this.imgMap.set(slide.id, url);
@@ -166,12 +165,12 @@ export class PageEditModal implements OnInit {
         this.fbUtil
           .downloadImage(
             Constants.PAGES +
-              '/' +
-              this.profile.id +
-              '/' +
-              this.team.id +
-              '/' +
-              member.id
+            '/' +
+            this.profile.id +
+            '/' +
+            this.team.id +
+            '/' +
+            member.id
           )
           .subscribe((url) => {
             this.imgMap.set(member.id, url);
@@ -186,13 +185,13 @@ export class PageEditModal implements OnInit {
     this.fbUtil
       .downloadImage(
         (this.isHome ? Constants.PROFILE : Constants.PAGES) +
-          '/' +
-          this.profile.id +
-          '/' +
-          (this.isHome ? 'home' : this.page.id)
+        '/' +
+        this.profile.id +
+        '/' +
+        (this.isHome ? 'home' : this.page.id)
       )
       .subscribe((url) => {
-        if (this.isHome) {
+        if (this.pageType === Type.Full.toString()) {
           this.fullUrl = url;
         } else {
           this.infoUrl = url;
@@ -312,53 +311,51 @@ export class PageEditModal implements OnInit {
   }
 
   publish() {
+
     // Validations
-    if (
-      (this.isNew || this.isEdit) &&
-      (!this.pageTitle || this.pageTitle.trim().length == 0)
-    ) {
+    if (!this.isHome && (!this.pageTitle || this.pageTitle.trim().length == 0)) {
       this.appService.presentToast('Please enter the page title');
       return;
-    }
-
-    if (this.pageType === Type.Slides.toString()) {
+    } else if (this.pageType === Type.Full.toString() && this.fullUrl === this.default) {
+      this.appService.presentToast('Please select a background image');
+      return;
+    } else if (this.pageType === Type.Info.toString()) {
+      if (this.infoUrl === this.default) {
+        this.appService.presentToast('Please select a background image');
+        return;
+      } else if (!this.info.info || this.info.info.trim().length == 0) {
+        this.appService.presentToast('Please provide info');
+        return;
+      }
+    } else if (this.pageType === Type.Text.toString() && (!this.text.heading || !this.text.paragraph)) {
+      this.appService.presentToast('Please provide heading/info');
+      return;
+    } else if (this.pageType === Type.Slides.toString()) {
       for (let i = 0; i < this.slides.slides.length; i++) {
-        if (
-          !this.slideImgs[i].url &&
-          !this.imgMap.has(this.slides.slides[i].id)
-        ) {
+        if (!this.slideImgs[i].url && !this.imgMap.has(this.slides.slides[i].id)) {
           this.currentSlide = i;
-          this.appService.presentToast(
-            'Please slelect an image for slide ' + (i + 1)
-          );
+          this.appService.presentToast('Please slelect an image for slide ' + (i + 1));
           return;
         }
       }
     } else if (this.pageType === Type.Team.toString()) {
       for (let i = 0; i < this.team.members.length; i++) {
-        if (
-          !this.memberImgs[i].url &&
-          !this.imgMap.has(this.team.members[i].id)
-        ) {
+        if (!this.memberImgs[i].url && !this.imgMap.has(this.team.members[i].id)) {
           this.currentMember = i;
-          this.appService.presentToast(
-            'Please slelect an image for Member ' + (i + 1)
-          );
+          this.appService.presentToast('Please slelect an image for Member ' + (i + 1));
           return;
         }
       }
     } else if (this.pageType === Type.Video.toString() && !this.isValidUrl) {
-      this.appService.presentToast(
-        'Please enter a valid video URL from YouTube!!'
-      );
+      this.appService.presentToast('Please enter a valid video URL from YouTube!!');
       return;
     }
 
     // duplicate check
-    if (!this.isNew && this.pageTitle === this.page.title) {
+    if (this.isHome || (this.isEdit && this.pageTitle === this.page.title)) {
       switch (this.pageType) {
         case 'Full':
-          if (this.equalFull(this.full, this.profile.home)) {
+          if (this.equalFull(this.full, this.isHome ? this.profile.home : this.page as Full)) {
             this.appService.closeModalProfile('success');
             return;
           }
@@ -410,6 +407,7 @@ export class PageEditModal implements OnInit {
     switch (this.pageType) {
       case 'Full':
         page = this.full;
+        upload = this.fullBlob;
         break;
       case 'Text':
         page = this.text;
@@ -460,10 +458,10 @@ export class PageEditModal implements OnInit {
             .getInstance()
             .collection(
               Constants.BUSINESS +
-                '/' +
-                this.profile.id +
-                '/' +
-                Constants.PROFILE
+              '/' +
+              this.profile.id +
+              '/' +
+              Constants.PROFILE
             )
             .doc(this.profile.id)
             .update({ pages: this.profile.pages });
@@ -497,12 +495,12 @@ export class PageEditModal implements OnInit {
       this.fbUtil.uploadImage(
         img.blob,
         Constants.PAGES +
-          '/' +
-          this.profile.id +
-          '/' +
-          this.slides.id +
-          '/' +
-          this.slides.slides[i].id
+        '/' +
+        this.profile.id +
+        '/' +
+        this.slides.id +
+        '/' +
+        this.slides.slides[i].id
       );
     });
 
@@ -517,12 +515,12 @@ export class PageEditModal implements OnInit {
         if (newSlides.indexOf(currentSlide.id) === -1) {
           this.fbUtil.deleteImage(
             Constants.PAGES +
-              '/' +
-              this.profile.id +
-              '/' +
-              this.slides.id +
-              '/' +
-              currentSlide.id
+            '/' +
+            this.profile.id +
+            '/' +
+            this.slides.id +
+            '/' +
+            currentSlide.id
           );
         }
       });
@@ -546,12 +544,12 @@ export class PageEditModal implements OnInit {
       this.fbUtil.uploadImage(
         img.blob,
         Constants.PAGES +
-          '/' +
-          this.profile.id +
-          '/' +
-          this.team.id +
-          '/' +
-          this.team.members[i].id
+        '/' +
+        this.profile.id +
+        '/' +
+        this.team.id +
+        '/' +
+        this.team.members[i].id
       );
     });
 
@@ -566,12 +564,12 @@ export class PageEditModal implements OnInit {
         if (newMembers.indexOf(currentMember.id) === -1) {
           this.fbUtil.deleteImage(
             Constants.PAGES +
-              '/' +
-              this.profile.id +
-              '/' +
-              this.team.id +
-              '/' +
-              currentMember.id
+            '/' +
+            this.profile.id +
+            '/' +
+            this.team.id +
+            '/' +
+            currentMember.id
           );
         }
       });
@@ -579,21 +577,15 @@ export class PageEditModal implements OnInit {
   }
 
   updateProfile() {
-    this.profile.home = this.full;
     this.fbUtil
       .getInstance()
-      .collection(
-        Constants.BUSINESS + '/' + this.profile.id + '/' + Constants.PROFILE
-      )
+      .collection(Constants.BUSINESS + '/' + this.profile.id + '/' + Constants.PROFILE)
       .doc(this.profile.id)
-      .set(this.fbUtil.toJson(this.profile))
+      .update({ home: this.fbUtil.toJson(this.full) })
       .then(() => {
         // upload back ground
         if (this.fullBlob) {
-          this.fbUtil.uploadImage(
-            this.fullBlob,
-            Constants.PROFILE + '/' + this.profile.id + '/home'
-          );
+          this.fbUtil.uploadImage(this.fullBlob, Constants.PROFILE + '/' + this.profile.id + '/home');
         }
       })
       .catch(() =>
@@ -614,7 +606,8 @@ export class PageEditModal implements OnInit {
       object1.fullTitleX === object2.fullTitleX &&
       object1.fullTitleY === object2.fullTitleY &&
       object1.fullTitleW === object2.fullTitleW &&
-      object1.fullTitleFont === object2.fullTitleFont
+      object1.fullTitleFont === object2.fullTitleFont &&
+      !this.fullBlob
     );
   }
 
@@ -624,7 +617,8 @@ export class PageEditModal implements OnInit {
       object1.info === object2.info &&
       object1.align === object2.align &&
       object1.color === object2.color &&
-      object1.font === object2.font
+      object1.font === object2.font &&
+      !this.infoBlob
     );
   }
 

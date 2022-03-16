@@ -226,7 +226,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   downloadImages() {
     var counter = 0;
     this.pagesMap.forEach((v, k) => {
-      if (v.type === Type.Info) {
+      if (v.type === Type.Full || v.type === Type.Info) {
         counter++;
         this.fbUtil
           .downloadImage(Constants.PAGES + '/' + this.profile.id + '/' + k)

@@ -64,6 +64,55 @@
   </section>
 
   <div *ngFor="let page of pages">
+    <!-- Full  - ignore error in section css-->
+    <section
+      class="fwh-slide"
+      *ngIf="page.type === 'Full'"
+      style="
+          background: url({{
+        imgMap.get(page.id)
+      }}) no-repeat center center / cover;
+        "
+    >
+      <ion-row
+        class="mt-2 pb-3 h-100"
+        [ngClass]="{
+          'ion-text-start': page.fullTitleX == 'Left',
+          'ion-text-center': page.fullTitleX == 'Mid',
+          'ion-text-end': page.fullTitleX == 'Right',
+          'ion-align-items-start': page.fullTitleY == 'Top',
+          'ion-align-items-center': page.fullTitleY == 'Mid',
+          'ion-align-items-end': page.fullTitleY == 'Bottom'
+        }"
+      >
+        <ion-col>
+          <ion-row>
+            <ion-col
+              sizeMd="{{ page.fullTitleW == 'NA' ? '12' : '4' }}"
+              offsetMd="{{ page.fullTitleW == 'E' ? '8' : '0' }}"
+            >
+              <span>
+                <p
+                  style="
+                    font-family: 'Mulish', sans-serif;
+                    white-space: pre-wrap;
+                  "
+                  [style.color]="page.fullTitleColor"
+                  [ngClass]="{
+                    'display-4': page.fullTitleFont == 's',
+                    'display-3': page.fullTitleFont == 'm',
+                    'display-1': page.fullTitleFont == 'l'
+                  }"
+                >
+                  {{ page.fullTitle }}
+                </p>
+              </span>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </section>
+
     <!-- Text -->
     <section #about *ngIf="page.type === 'Text'">
       <div class="ion-padding my-5">
@@ -202,7 +251,6 @@
     </section>
 
     <!-- Team -->
-
     <section #team class="my-5 pb-5" *ngIf="page.type == 'Team'">
       <ion-row class="my-5">
         <ion-col offset-md="3" size-md="6">

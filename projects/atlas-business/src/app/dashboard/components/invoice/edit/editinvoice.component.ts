@@ -137,16 +137,14 @@ export class EditInvoiceComponent {
     this.client.address.pin = i.client.address.pin;
     this.client.address.district = i.client.address.district;
     this.client.address.state = i.client.address.state;
-    this.client.address.lon = i.client.address.lon;
-    this.client.address.lat = i.client.address.lat;
+    this.client.address.location = i.client.address.location;
 
     this.shippingAddress.line1 = i.shippingAddress.line1;
     this.shippingAddress.line2 = i.shippingAddress.line2;
     this.shippingAddress.pin = i.shippingAddress.pin;
     this.shippingAddress.district = i.shippingAddress.district;
     this.shippingAddress.state = i.shippingAddress.state;
-    this.shippingAddress.lon = i.shippingAddress.lon;
-    this.shippingAddress.lat = i.shippingAddress.lat;
+    this.shippingAddress.location = i.shippingAddress.location;
 
     this.shippingAddressSame = i.shippingAddressSame;
     this.isShippingAddressValid = true;
@@ -197,8 +195,7 @@ export class EditInvoiceComponent {
       this.client.address.pin = c.address.pin;
       this.client.address.district = c.address.district;
       this.client.address.state = c.address.state;
-      this.client.address.lon = c.address.lon;
-      this.client.address.lat = c.address.lat;
+      this.client.address.location = c.address.location;
     } else {
       this.client = new Client();
       this.client.name = event;

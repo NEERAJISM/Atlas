@@ -1,13 +1,24 @@
 <ion-content class="ion-padding" style="height: 100%">
   <ion-row style="height: 100%" class="ion-text-center">
     <ion-col class="ion-padding" size="9" style="background: #f2f3f4">
-      <h5>
-        Your Website Preview
+      <ion-row>
+        <ion-col class="ion-text-start">
+          <h5>
+            Website Preview
+            <a [href]="url" target="_blank">
+              <i class="fas fa-external-link-alt"></i>
+            </a>
+          </h5>
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <h5>
+            <a href="javascript:void(0);" (click)="reload()">
+              <i class="fas fa-redo"></i>
+            </a>
+          </h5>
+        </ion-col>
+      </ion-row>
 
-        <a [href]="url" target="_blank">
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-      </h5>
       <iframe
         #profile
         [src]="controllerSrc"
@@ -58,7 +69,10 @@
                 <ion-item lines="none">
                   <ion-label>Company Logo</ion-label>
                   <ion-avatar slot="end">
-                    <img [src]="icon ? icon : placeholder" (click)="editIcon = true; file.click();" />
+                    <img
+                      [src]="icon ? icon : placeholder"
+                      (click)="editIcon = true; file.click()"
+                    />
                   </ion-avatar>
                 </ion-item>
               </ion-col>
@@ -181,11 +195,8 @@
         <ion-row>
           <ion-col>
             <ion-card>
-              <!-- The reorder gesture is disabled by default, enable it to drag and drop items -->
-              <!-- Default reorder icon, end aligned items -->
               <ion-item button (click)="presentModal('Home')">
                 <ion-label> Home </ion-label>
-                <!-- <ion-reorder slot="end"></ion-reorder> -->
               </ion-item>
 
               <ion-reorder-group
@@ -194,8 +205,14 @@
               >
                 <ion-item *ngFor="let page of pages" button>
                   <ion-reorder slot="start"></ion-reorder>
-                  <ion-label (click)="presentModal('Edit', page)"> <i>{{page.title}}</i> </ion-label>
-                  <i slot="end" class="far fa-trash-alt" (click)="deletePage(page.id)"></i>
+                  <ion-label (click)="presentModal('Edit', page)">
+                    <i>{{ page.title }}</i>
+                  </ion-label>
+                  <i
+                    slot="end"
+                    class="far fa-trash-alt"
+                    (click)="deletePage(page.id)"
+                  ></i>
                 </ion-item>
               </ion-reorder-group>
             </ion-card>

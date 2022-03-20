@@ -134,8 +134,7 @@ export class InvoiceService {
       i.shippingAddress.pin = i.client.address.pin;
       i.shippingAddress.district = i.client.address.district;
       i.shippingAddress.state = i.client.address.state;
-      i.shippingAddress.lon = i.client.address.lon;
-      i.shippingAddress.lat = i.client.address.lat;
+      i.shippingAddress.location = i.client.address.location;
     }
     dataSellerAddress[0][2] = i.shippingAddress.line1 ? i.shippingAddress.line1 : '';
     dataSellerAddress[1][2] = i.shippingAddress.line2 ? i.shippingAddress.line2 : '';

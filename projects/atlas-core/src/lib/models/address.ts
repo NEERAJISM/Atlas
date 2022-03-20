@@ -1,16 +1,15 @@
 export class Address {
   id: string;
 
-  name: string;
-  mobile: string;
-  email: string;
+  name: string = '';
+  mobile: string = '';
+  email: string = '';
 
-  line1: string;
-  line2: string;
+  line1: string = '';
+  line2: string = '';
   pin: number;
-  district: string;
-  state: string;
+  district: string = '';
+  state: string = '';
 
-  lon: string;
-  lat: string;
+  location: string = '';
 }

@@ -104,7 +104,7 @@ export class RegisterComponent {
     business.paid = false;
     business.profile = this.profile;
     business.name = this.name;
-    business.email = this.email;
+    business.address.email = this.email;
 
     this.fbUtil
       .getInstance()

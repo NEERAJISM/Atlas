@@ -292,18 +292,28 @@
             style="width: 60px"
           />
           <p>
-            <i class="fas fa-home mr-1"></i> B-12, 78, Tardeo Road,<br />
-            Bombay A. C. Market,<br />
-            Mumbai-400034, Maharashtra
+            <i class="fas fa-home mr-1"></i> {{ business.address.line1 }},
+            <br />
+            {{ business.address.line2 }}, <br />
+            {{ business.address.district }}-{{ business.address.pin }},
+            {{ business.address.state }}
           </p>
           <p>
             <i class="fa fa-envelope mr-1"></i>&nbsp;
-            <a href="mailto:maharajaarchitects@gmail.com"
-              >maharajaarchitects@gmail.com</a
-            >
+            <a href="{{ 'mailto:' + business.address.email }}">{{
+              business.address.email
+            }}</a>
           </p>
-          <p><i class="fa fa-phone mr-1"></i> &nbsp;022 2352 6522</p>
-          <p><i class="fa fa-phone mr-1"></i> + 91 - 9833152271</p>
+          <p>
+            <i class="fa fa-phone-alt mr-1"></i> &nbsp;{{
+              business.address.phone
+            }}
+          </p>
+          <p>
+            <i class="fas fa-mobile-alt mr-1"></i> &nbsp;{{
+              business.address.mobile
+            }}
+          </p>
         </div>
       </ion-col>
 
@@ -331,7 +341,7 @@
 
       <ion-col size="12" offset-md="1" size-md="3">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3773.0685696167448!2d72.81209441516837!3d18.972578887147357!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce71b4849e3b%3A0xe3dae3a45416f64a!2sMaharaja%20Architects%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1638014872891!5m2!1sen!2sin"
+          [src]="locationSrc"
           width="300"
           height="300"
           style="border: 0"

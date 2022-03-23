@@ -10,9 +10,6 @@ export class Business {
 
   gst: string;
 
-  mobile: string;
-  phone: string;
-  email: string;
   website: string;
   address: Address = new Address();
 

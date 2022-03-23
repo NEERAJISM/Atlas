@@ -3,6 +3,7 @@ export class Address {
 
   name: string = '';
   mobile: string = '';
+  phone: string = '';
   email: string = '';
 
   line1: string = '';

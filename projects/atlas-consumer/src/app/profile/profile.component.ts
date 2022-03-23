@@ -124,6 +124,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   chirag = 'assets/images/profile/chirag.jpg';
   logo = 'assets/images/profile/logo.jpg';
 
+  // **************
+  business: Business = new Business();
   profile: Profile = new Profile();
   pagesMap: Map<string, Page> = new Map();
   pages = [];
@@ -134,6 +136,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   complete = false;
 
   ytbUrl: Map<string, SafeResourceUrl> = new Map();
+  locationSrc: any;
 
   constructor(
     private location: Location,
@@ -151,7 +154,38 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     this.init2();
+    this.getBusiness();
     this.getProfile();
+    this.updateLocationUrl();
+  }
+
+  getBusiness(){
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.INFO)
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.business, doc.data());
+          this.updateLocation();
+        }
+      });
+  }
+
+  updateLocation() {
+    if (this.business.address.location && this.business.address.location.includes('src=')) {
+      var tags = this.business.address.location.split(' ');
+      tags.filter(tag => tag.startsWith('src=')).find(src => this.updateLocationUrl(src.slice(5, src.length - 1)));
+    } else {
+      this.updateLocationUrl();
+    }
+  }
+
+  updateLocationUrl(url?: string): void {
+    this.locationSrc = this.sanitizer.bypassSecurityTrustResourceUrl(
+      url ? url : 'https://www.google.com/maps/embed'
+    );
   }
 
   getProfile() {

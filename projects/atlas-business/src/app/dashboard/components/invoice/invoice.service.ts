@@ -48,9 +48,9 @@ export class InvoiceService {
   public getBusinessInfo(): Business {
     const b = new Business();
     b.name = 'Krishna Enterprises';
-    b.email = '8patidarneeraj@gmail.com';
-    b.mobile = '+91 - 8877073059';
-    b.phone = '02964 - 230354';
+    b.address.email = '8patidarneeraj@gmail.com';
+    b.address.mobile = '+91 - 8877073059';
+    b.address.phone = '02964 - 230354';
 
     const a = new Address();
     a.line1 = 'C\\o Balkrishna Patidar';
@@ -86,8 +86,8 @@ export class InvoiceService {
 
     this.dataOwnerAddress[0][0] = b.address.line1 + ', ' + b.address.line2;
     this.dataOwnerAddress[1][0] = b.address.district + ' (' + b.address.state + ') - ' + b.address.pin;
-    this.dataOwnerAddress[2][0] = 'Email : ' + b.email;
-    this.dataOwnerAddress[3][0] = 'Tel : ' + b.phone + ', Mob : ' + b.mobile;
+    this.dataOwnerAddress[2][0] = 'Email : ' + b.address.email;
+    this.dataOwnerAddress[3][0] = 'Tel : ' + b.address.phone + ', Mob : ' + b.address.mobile;
 
     (doc as any).autoTable({
       startY: 9,

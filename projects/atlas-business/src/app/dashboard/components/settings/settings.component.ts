@@ -64,6 +64,8 @@ export class SettingsDashboardComponent {
     if (this.business.address.location && this.business.address.location.includes('src=')) {
       var tags = this.business.address.location.split(' ');
       tags.filter(tag => tag.startsWith('src=')).find(src => this.updateLocationUrl(src.slice(5, src.length - 1)));
+    } else {
+      this.updateLocationUrl();
     }
   }
 

@@ -13,7 +13,7 @@
             <span><b>Email Address</b></span>
           </ion-col>
           <ion-col size="5">
-            <span>{{ business.email }}</span>
+            <span>{{ business.address.email }}</span>
           </ion-col>
           <ion-col offsetMd="1" size="3">
             <ion-button *ngIf="!emailVerified" (click)="verifyEmail()"
@@ -29,7 +29,7 @@
 
           <ion-col size="5">
             <span *ngIf="!editMobile"
-              >{{ initialized ? "+91 -" : "" }} {{ business.mobile }}
+              >{{ initialized ? "+91 -" : "" }} {{ business.address.mobile }}
             </span>
 
             <ion-item
@@ -44,7 +44,7 @@
               <ion-input
                 maxlength="10"
                 placeholder="10-digit number"
-                [(ngModel)]="business.mobile"
+                [(ngModel)]="business.address.mobile"
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -202,7 +202,7 @@
           </ion-col>
 
           <ion-col size="5">
-            <span *ngIf="!editBPhone"> {{ business.phone }} </span>
+            <span *ngIf="!editBPhone"> {{ business.address.phone }} </span>
 
             <ion-item
               *ngIf="editBPhone"
@@ -215,7 +215,7 @@
               <ion-input
                 maxlength="20"
                 placeholder="02946 - 233333"
-                [(ngModel)]="business.phone"
+                [(ngModel)]="business.address.phone"
               ></ion-input>
             </ion-item>
           </ion-col>

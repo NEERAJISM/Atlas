@@ -1,11 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import {
   AuthService,
   CommonUtil,
   Constants,
   FirebaseUtil,
+  Menu,
   Page,
   Profile,
   Slides,
@@ -25,7 +26,7 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49518';
+  url = 'http://localhost:49754';
   controllerSrc: any;
 
   bizId = '';
@@ -56,7 +57,8 @@ export class ProfileDashboardComponent implements OnInit {
     private service: AppService,
     private fbUtil: FirebaseUtil,
     private auth: AuthService,
-    private util: CommonUtil
+    private util: CommonUtil,
+    public alertController: AlertController
   ) {
     this.service.presentLoading();
     this.init();
@@ -133,6 +135,87 @@ export class ProfileDashboardComponent implements OnInit {
         });
         this.service.dismissLoading();
       });
+  }
+
+  async presentAlert(menu?: string, id?: string) {
+    const alert = await this.alertController.create({
+      header: 'Please enter menu name',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          value: menu,
+          placeholder: "'About us', 'Our Team' etc."
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: menu ? 'Update Menu' : 'Create Menu',
+          handler: (alertData) => {
+            if (!alertData.name || alertData.name.trim().length == 0) {
+              this.service.presentToast('Please add a valid menu name!');
+              return false;
+            }
+
+            if (menu === alertData.name) {
+              return true;
+            }
+
+            this.createMenu(alertData.name, id);
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  createMenu(name: string, id?: string) {
+    var menu: Menu = new Menu();
+    menu.id = id ? id : this.fbUtil.getId();
+    menu.title = name;
+    
+    // Only update
+    if (id) {
+      this.pagesMap.get(id).title = name;
+
+      this.fbUtil
+        .getInstance()
+        .collection(
+          Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PAGES
+        )
+        .doc(menu.id)
+        .update({ title: name })
+        .catch(() =>
+          this.service.presentToast(
+            'Error occurred, Please check Internet connectivity'
+          )
+        );
+      return;
+    }
+
+    this.pages.push(menu);
+    this.pageIds.push(menu.id);
+    this.pagesMap.set(menu.id, menu);
+
+    // new 
+    this.updateProfile();
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PAGES
+      )
+      .doc(menu.id)
+      .set(this.fbUtil.toJson(menu))
+      .catch(() =>
+        this.service.presentToast(
+          'Error occurred, Please check Internet connectivity'
+        )
+      );
   }
 
   async presentModal(mode?: string, page?: Page) {

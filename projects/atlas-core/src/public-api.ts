@@ -17,6 +17,7 @@ export * from './lib/models/profile/pages/team';
 export * from './lib/models/profile/pages/video';
 export * from './lib/models/profile/pages/full';
 export * from './lib/models/profile/pages/page';
+export * from './lib/models/profile/pages/menu';
 
 export * from './lib/services/auth.service';
 export * from './lib/services/common.util';

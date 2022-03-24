@@ -7,6 +7,7 @@ import { Slides } from '../models/profile/pages/slides';
 import { Team } from '../models/profile/pages/team';
 import { Text } from '../models/profile/pages/text';
 import { Video } from '../models/profile/pages/video';
+import { Menu } from '../models/profile/pages/menu';
 
 @Injectable()
 export class CommonUtil {
@@ -41,6 +42,8 @@ export class CommonUtil {
         return new Team();
       case 'Video':
         return new Video();
+      case 'Menu':
+        return new Menu();
     }
     return null;
   }

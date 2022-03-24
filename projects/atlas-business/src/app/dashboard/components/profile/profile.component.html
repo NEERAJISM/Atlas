@@ -1,6 +1,6 @@
 <ion-content class="ion-padding" style="height: 100%">
   <ion-row style="height: 100%" class="ion-text-center">
-    <ion-col class="ion-padding" size="9" style="background: #f2f3f4">
+    <ion-col class="ion-padding" size="9" style="background: #f2f3f4; max-height: 90vh;">
       <ion-row>
         <ion-col class="ion-text-start">
           <h5>
@@ -204,9 +204,9 @@
                 disabled="false"
               >
                 <ion-item *ngFor="let page of pages" button>
-                  <ion-reorder slot="start"></ion-reorder>
-                  <ion-label (click)="presentModal('Edit', page)">
-                    <i>{{ page.title }}</i>
+                  <ion-reorder *ngIf="(page.type !== 'Menu')" slot="start"></ion-reorder>
+                  <ion-label (click)="page.type !== 'Menu' ? presentModal('Edit', page) : presentAlert(page.title, page.id)">
+                    <span [style.font-weight]="page.type === 'Menu' ? 'bold': ''">{{ page.title }}</span>
                   </ion-label>
                   <i
                     slot="end"
@@ -220,6 +220,9 @@
         </ion-row>
 
         <ion-row>
+          <ion-col>
+            <ion-button color="warning" (click)="presentAlert()">Add Menu</ion-button>
+          </ion-col>
           <ion-col>
             <ion-button (click)="presentModal()">Add New Page</ion-button>
           </ion-col>

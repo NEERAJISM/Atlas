@@ -11,4 +11,5 @@ export enum Type {
   Team = 'Team',
   Video = 'Video',
   Slides = 'Slides',
+  Menu = 'Menu',
 }

@@ -70,6 +70,7 @@ export class ProfileComponent {
   displayPages = [];
 
   home = true;
+  hashes: string[] = []
   menus: string[] = []
   menuPages: Map<number, any[]> = new Map();
 
@@ -191,6 +192,7 @@ export class ProfileComponent {
             if (newMenu) {
               newMenu = false;
               this.menus.push(menu);
+              this.hashes.push(menu.split(' ').map(x => x.trim()).join(''));
               this.menuPages.set(this.menus.length, []);
             }
             if (this.menus.length > 0) {
@@ -199,7 +201,15 @@ export class ProfileComponent {
           }
         });
 
-        this.displayPages = this.pages;
+
+        // set header
+        var name = this.location.path(true);
+        if (name.length > 1 && name.startsWith('#')) {
+          name = name.substring(1);
+          this.header(name, this.hashes.indexOf(name) + 1);
+        } else {
+          this.displayPages = this.pages;
+        }
         this.downloadImages();
       });
   }
@@ -273,12 +283,12 @@ export class ProfileComponent {
   }
 
   header(menu: string, index?: number) {
-    this.location.replaceState('#' + menu);
+    this.location.replaceState('#' + menu.split(' ').map(x => x.trim()).join(''));
 
     if (index) {
       this.home = false;
       this.displayPages = this.menuPages.get(index);
-    } else if ("home" === menu) {
+    } else if ("contact" !== menu) {
       this.home = true;
       this.displayPages = this.pages;
     }

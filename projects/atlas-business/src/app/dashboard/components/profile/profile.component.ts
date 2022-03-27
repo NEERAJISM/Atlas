@@ -48,6 +48,7 @@ export class ProfileDashboardComponent implements OnInit {
 
   // pages
   pages: Page[] = [];
+  menus: string[] = [];
   pageIds: string[] = [];
   pagesMap: Map<String, Page> = new Map();
 
@@ -131,7 +132,12 @@ export class ProfileDashboardComponent implements OnInit {
         // sort
         this.pages = [];
         this.bizProfile.pages.forEach((id) => {
-          this.pages.push(this.pagesMap.get(id));
+          var page = this.pagesMap.get(id);
+          this.pages.push(page);
+
+          if (page.type === Type.Menu) {
+            this.menus.push(page.title.split(' ').map(x => x.trim()).join(''));
+          }
         });
         this.service.dismissLoading();
       });
@@ -161,6 +167,11 @@ export class ProfileDashboardComponent implements OnInit {
               return false;
             }
 
+            if (this.menus.indexOf(alertData.name.split(' ').map(x => x.trim()).join('')) !== -1) {
+              this.service.presentToast('Menu already exists!');
+              return false;
+            }
+
             if (menu === alertData.name) {
               return true;
             }
@@ -168,6 +179,25 @@ export class ProfileDashboardComponent implements OnInit {
             this.createMenu(alertData.name, id);
             return true;
           },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async presentDeleteAlert(id) {
+    const alert = await this.alertController.create({
+      header: 'Please confirm to delete',
+      buttons: [
+        {
+          text: 'Confirm',
+          handler: () => {
+            this.deletePage(id);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
         },
       ],
     });

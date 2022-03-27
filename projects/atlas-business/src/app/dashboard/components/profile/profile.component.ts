@@ -26,7 +26,7 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49754';
+  url = 'http://localhost:49254';
   controllerSrc: any;
 
   bizId = '';
@@ -178,7 +178,7 @@ export class ProfileDashboardComponent implements OnInit {
     var menu: Menu = new Menu();
     menu.id = id ? id : this.fbUtil.getId();
     menu.title = name;
-    
+
     // Only update
     if (id) {
       this.pagesMap.get(id).title = name;

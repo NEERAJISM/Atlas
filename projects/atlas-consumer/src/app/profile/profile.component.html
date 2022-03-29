@@ -213,14 +213,13 @@
         <ion-col>
           <ion-slides [options]="sliderConfig">
             <ion-slide *ngFor="let slide of page.slides">
-              <ion-card>
+              <ion-card button (click)="presentSlideModal(imgMap.get(slide.id), slide.title, slide.description)">
                 <img style="height: 400px" src="{{ imgMap.get(slide.id) }}" />
                 <ion-card-header>
                   <ion-card-title>{{ slide.title }}</ion-card-title>
                   <ion-card-subtitle
-                    style="white-space: pre-wrap"
-                    class="ion-text-start"
-                    >{{ slide.description }}</ion-card-subtitle
+                    class="ion-text-center"
+                    ><i>Click to see detail</i></ion-card-subtitle
                   >
                 </ion-card-header>
               </ion-card>

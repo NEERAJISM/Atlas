@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { IonContent } from '@ionic/angular';
+import { IonContent, ModalController } from '@ionic/angular';
 import {
   Business, CommonUtil,
   Constants,
@@ -12,6 +12,7 @@ import {
   Type, Video
 } from 'atlas-core';
 import { AppService } from '../app.service';
+import { SlideModal } from './modal/modal.slide';
 
 @Component({
   selector: 'app-profile',
@@ -88,7 +89,8 @@ export class ProfileComponent {
     private fbUtil: FirebaseUtil,
     private appService: AppService,
     private util: CommonUtil,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalController: ModalController
   ) {
     if (window.innerWidth > 1000) {
       this.landingFont = '120px';
@@ -98,6 +100,19 @@ export class ProfileComponent {
     this.getBusiness();
     this.getProfile();
     this.updateLocationUrl();
+  }
+
+  async presentSlideModal(img: string, title: string, desc: string) {
+    const modal = await this.modalController.create({
+      component: SlideModal,
+      cssClass: 'page-edit-modal',
+      componentProps: {
+        img: img,
+        title: title,
+        desc: desc
+      },
+    });
+    return await modal.present();
   }
 
   getBusiness() {

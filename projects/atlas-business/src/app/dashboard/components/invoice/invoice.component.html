@@ -1,11 +1,9 @@
-<spinner *ngIf="showSpinner"></spinner>
-
 <div class="container-fluid mt-3">
   <h5 class="mb-3 font-weight-light">Billing / Invoice</h5>
 
   <div class="row">
     <div class="col-lg-3">
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Start typing to filter invoices ...</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input />
       </mat-form-field>
@@ -27,7 +25,6 @@
   <div class="row mt-2">
     <div class="col">
       <div class="mat-elevation-z8">
-        <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
         <table mat-table [dataSource]="dataSource" matSort>
           <ng-container matColumnDef="invoiceNo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -147,6 +144,7 @@
             </td>
           </tr>
         </table>
+        <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
       </div>
     </div>
   </div>

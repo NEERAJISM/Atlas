@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FirebaseUtil, Product } from 'atlas-core';
 import { Subscription } from 'rxjs';
+import { AppService } from '../../../app.service';
 import { NewProductComponent } from './new/new.product.component';
 import { RemoveProductComponent } from './remove/remove.product.component';
 
@@ -14,8 +15,6 @@ import { RemoveProductComponent } from './remove/remove.product.component';
   styleUrls: ['./inventory.component.scss'],
 })
 export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
-  showSpinner = true;
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -34,7 +33,8 @@ export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
     'actions'
   ];
 
-  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog) {
+  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog, private service: AppService) {
+    this.service.presentLoading();
     this.dataSource = new MatTableDataSource();
     this.subscribeToUpdates();
     this.dialogSubscription = this.dialog.afterAllClosed.subscribe(() => this.fetchProducts());
@@ -80,7 +80,7 @@ export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.showSpinner = false;
+    this.service.dismissLoading();
   }
 
   addNewProduct() {

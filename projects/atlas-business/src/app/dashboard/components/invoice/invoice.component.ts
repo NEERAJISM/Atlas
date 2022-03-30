@@ -16,8 +16,6 @@ import { InvoiceService } from './invoice.service';
   styleUrls: ['./invoice.component.scss'],
 })
 export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
-  showSpinner = true;
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -37,11 +35,11 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private fbutil: FirebaseUtil,
-    private app : AppService,
+    private app: AppService,
     private router: Router,
     private invoiceService: InvoiceService,
-    private dialog: MatDialog,
-    private util: CommonUtil) {
+    private dialog: MatDialog) {
+    this.app.presentLoading();
     this.dataSource = new MatTableDataSource();
     this.subscribeToUpdates();
   }
@@ -86,7 +84,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.showSpinner = false;
+    this.app.dismissLoading();
   }
 
   loadNewInvoiceComponent(id: string) {

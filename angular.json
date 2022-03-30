@@ -35,6 +35,9 @@
             ],
             "styles": [
               {
+                "input": "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+              },
+              {
                 "input": "projects/atlas-business/src/theme/variables.scss"
               },
               {

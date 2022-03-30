@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Client, FirebaseUtil } from 'atlas-core';
 import { Subscription } from 'rxjs';
+import { AppService } from '../../../app.service';
 import { NewClientComponent } from './new/new.client.component';
 import { RemoveClientComponent } from './remove/remove.client.component';
 
@@ -14,8 +15,6 @@ import { RemoveClientComponent } from './remove/remove.client.component';
   styleUrls: ['./customers.component.scss'],
 })
 export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
-  showSpinner = true;
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -34,7 +33,8 @@ export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
     'actions',
   ];
 
-  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog) {
+  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog, private service: AppService) {
+    this.service.presentLoading();
     this.dataSource = new MatTableDataSource();
     this.subscribeToUpdates();
     this.dialogSubscription = this.dialog.afterAllClosed.subscribe(() => this.fetchClients());
@@ -79,8 +79,7 @@ export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
     this.dataSource = new MatTableDataSource(result);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-
-    this.showSpinner = false;
+    this.service.dismissLoading();
   }
 
   applyFilter(event: Event) {

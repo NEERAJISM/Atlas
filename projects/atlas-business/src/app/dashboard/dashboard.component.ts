@@ -37,12 +37,12 @@ export class DashboardComponent {
     },
     {
       name: 'Biiling / Invoice',
-      icon: 'fas fa-receipt ps-1',
+      icon: 'fas fa-receipt pl-1',
       link: '/dashboard/invoice',
     },
     {
       name: 'Inventory',
-      icon: 'fab fa-buffer ps-1',
+      icon: 'fab fa-buffer pl-1',
       link: '/dashboard/inventory',
     },
     {
@@ -52,7 +52,7 @@ export class DashboardComponent {
     },
     {
       name: '  Tax / GST',
-      icon: 'fas fa-cog ps-1',
+      icon: 'fas fa-cog pl-1',
       link: '/dashboard/settings',
     },
     {

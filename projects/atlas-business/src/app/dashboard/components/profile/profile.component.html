@@ -1,6 +1,10 @@
 <ion-content class="ion-padding" style="height: 100%">
   <ion-row style="height: 100%" class="ion-text-center">
-    <ion-col class="ion-padding" size="9" style="background: #f2f3f4; max-height: 90vh;">
+    <ion-col
+      class="ion-padding"
+      size="9"
+      style="background: #f2f3f4; max-height: 90vh"
+    >
       <ion-row>
         <ion-col class="ion-text-start">
           <h5>
@@ -26,7 +30,7 @@
         height="100%"
         allowfullscreen=""
         loading="lazy"
-        style="pointer-events: none"
+        style="pointer-events: none;border: none;"
       ></iframe>
     </ion-col>
     <ion-col size="3">
@@ -110,6 +114,7 @@
                 <ion-item lines="none">
                   <ion-label>Toolbar Color</ion-label>
                   <input
+                    style="border: none; padding: 0"
                     #tColor
                     type="color"
                     [(ngModel)]="bizProfile.color"
@@ -143,6 +148,7 @@
                 <ion-item lines="none">
                   <ion-label>Font Color</ion-label>
                   <input
+                    style="border: none; padding: 0"
                     #fColor
                     type="color"
                     [(ngModel)]="bizProfile.fontColor"
@@ -204,9 +210,21 @@
                 disabled="false"
               >
                 <ion-item *ngFor="let page of pages" button>
-                  <ion-reorder *ngIf="(page.type !== 'Menu')" slot="start"></ion-reorder>
-                  <ion-label (click)="page.type !== 'Menu' ? presentModal('Edit', page) : presentAlert(page.title, page.id)">
-                    <span [style.font-weight]="page.type === 'Menu' ? 'bold': ''">{{ page.title }}</span>
+                  <ion-reorder
+                    *ngIf="page.type !== 'Menu'"
+                    slot="start"
+                  ></ion-reorder>
+                  <ion-label
+                    (click)="
+                      page.type !== 'Menu'
+                        ? presentModal('Edit', page)
+                        : presentAlert(page.title, page.id)
+                    "
+                  >
+                    <span
+                      [style.font-weight]="page.type === 'Menu' ? 'bold' : ''"
+                      >{{ page.title }}</span
+                    >
                   </ion-label>
                   <i
                     slot="end"
@@ -221,7 +239,9 @@
 
         <ion-row>
           <ion-col>
-            <ion-button color="warning" (click)="presentAlert()">Add Menu</ion-button>
+            <ion-button color="warning" (click)="presentAlert()"
+              >Add Menu</ion-button
+            >
           </ion-col>
           <ion-col>
             <ion-button (click)="presentModal()">Add New Page</ion-button>

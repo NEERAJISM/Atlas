@@ -1,14 +1,14 @@
 import { Component, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { Address, Business, Client, CommonUtil, Constants, FirebaseUtil, Invoice, InvoicePreview, InvoiceVersion, Item, Product, Unit } from 'atlas-core';
 import 'jspdf-autotable';
 import { AppService } from 'projects/atlas-business/src/app/app.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { InvoiceService } from '../invoice.service';
-import { InvoicePreviewComponent } from './preview/invoice.preview.component';
+import { PdfModal } from './modal/modal.pdf';
 
 @Component({
   selector: 'app-edit-invoice',
@@ -80,7 +80,7 @@ export class EditInvoiceComponent {
 
   constructor(
     private router: Router,
-    private dialog: MatDialog,
+    private modalController: ModalController,
     private fbutil: FirebaseUtil,
     private util: CommonUtil,
     private elRef: ElementRef,
@@ -88,6 +88,17 @@ export class EditInvoiceComponent {
     private app: AppService
   ) {
     this.app.presentLoading();
+    this.init();
+  }
+
+  init() {
+    this.app.modalPdfCloseEvent.subscribe((s) => {
+      if (s === 'Save') {
+        this.createAndSaveInvoice();
+      }
+      this.modalController.dismiss();
+    });
+
     this.getBusinessInfo();
     this.fetchClients();
     this.fetchProducts();
@@ -346,7 +357,7 @@ export class EditInvoiceComponent {
 
     const index = Constants.optionsTax.indexOf(item.tax);
     if (index !== -1) {
-      item.taxValue = this.util.getTax(item.total, Constants.optionsTaxValue[index]);        
+      item.taxValue = this.util.getTax(item.total, Constants.optionsTaxValue[index]);
     }
 
     item.total += item.taxValue;
@@ -414,7 +425,7 @@ export class EditInvoiceComponent {
     return false;
   }
 
-  openPreviewDialog() {
+  async openPreviewDialog() {
     if (!this.isValidInvoice()) {
       this.app.presentToast('Missing fields required to generate invoice!');
       return;
@@ -423,16 +434,16 @@ export class EditInvoiceComponent {
     this.updateInvoice(false);
     const invoice = this.invoiceService.generatePDF(this.invoice);
     const pdf: ArrayBuffer = invoice.output('arraybuffer');
-    const dialogRef = this.dialog.open(InvoicePreviewComponent, {
-      data: pdf,
-      position: { top: '20px' },
+   
+    const modal = await this.modalController.create({
+      component: PdfModal,
+      cssClass: 'pdf-modal',
+      componentProps: {
+        data: pdf,
+        isEdit: true
+      },
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.event === 'Save') {
-        this.createAndSaveInvoice();
-      }
-    });
+    return await modal.present();
   }
 
   saveAsDraft() {

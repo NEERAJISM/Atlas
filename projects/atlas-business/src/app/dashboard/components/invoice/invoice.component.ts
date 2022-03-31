@@ -4,10 +4,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { CommonUtil, FirebaseUtil, Invoice, InvoicePreview } from 'atlas-core';
+import { ModalController } from '@ionic/angular';
+import { FirebaseUtil, Invoice, InvoicePreview } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../app.service';
-import { InvoicePreviewComponent } from './edit/preview/invoice.preview.component';
+import { PdfModal } from './edit/modal/modal.pdf';
 import { InvoiceService } from './invoice.service';
 
 @Component({
@@ -34,6 +35,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   ];
 
   constructor(
+    private modalController: ModalController,
     private fbutil: FirebaseUtil,
     private app: AppService,
     private router: Router,
@@ -115,20 +117,25 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
       if (invoice.exists) {
         const i: Invoice = new Invoice();
         Object.assign(i, invoice.data());
-        this.openPreviewDialog(i);
+        this.presentPdfModal(i)
       }
     }).catch(e => {
       this.app.presentToast('Error while loading invoice data!');
     });
   }
 
-  openPreviewDialog(invoice: Invoice) {
+  async presentPdfModal(invoice: Invoice) {
     const invoicePdf = this.invoiceService.generatePDF(invoice);
     const pdf: ArrayBuffer = invoicePdf.output('arraybuffer');
-    const dialogRef = this.dialog.open(InvoicePreviewComponent, {
-      data: pdf,
-      position: { top: '20px' },
+    const modal = await this.modalController.create({
+      component: PdfModal,
+      cssClass: 'pdf-modal',
+      componentProps: {
+        data: pdf,
+        isEdit: false
+      },
     });
+    return await modal.present();
   }
 
   mail(id: string) {

@@ -39,7 +39,6 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MainDashboardComponent } from './components/maindashboard/maindashboard.component';
 import { InvoiceDashboardComponent } from './components/invoice/invoice.component';
 import { EditInvoiceComponent } from './components/invoice/edit/editinvoice.component';
-import { InvoicePreviewComponent } from './components/invoice/edit/preview/invoice.preview.component';
 import { InventoryDashboardComponent } from './components/inventory/inventory.component';
 import { CustomersDashboardComponent } from './components/customers/customers.component';
 import { SettingsDashboardComponent } from './components/settings/settings.component';
@@ -56,6 +55,7 @@ import { IonicModule } from '@ionic/angular';
 import { AppService } from '../app.service';
 import { ProfileDashboardComponent } from './components/profile/profile.component';
 import { PageEditModal } from './components/profile/modal/modal.page-edit';
+import { PdfModal } from './components/invoice/edit/modal/modal.pdf';
 
 @NgModule({
   imports: [
@@ -104,13 +104,13 @@ import { PageEditModal } from './components/profile/modal/modal.page-edit';
     SettingsDashboardComponent,
     OrdersDashboardComponent,
     SupportDashboardComponent,
-    InvoicePreviewComponent,
     NewClientComponent,
     RemoveClientComponent,
     NewProductComponent,
     RemoveProductComponent,
     ProfileDashboardComponent,
-    PageEditModal
+    PageEditModal,
+    PdfModal
   ],
   exports: [
     DashboardComponent,

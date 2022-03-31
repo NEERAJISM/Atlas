@@ -20,6 +20,8 @@ export class AppService {
   modalCloseEvent = this.modal.asObservable();
   private modalProfile = new BehaviorSubject<string>('');
   modalProfileCloseEvent = this.modalProfile.asObservable();
+  private modalPdf = new BehaviorSubject<string>('');
+  modalPdfCloseEvent = this.modalPdf.asObservable();
   private cart = new BehaviorSubject<string>('');
   cartUpdatedEvent = this.cart.asObservable();
 
@@ -36,6 +38,10 @@ export class AppService {
 
   closeModalProfile(s: string) {
     this.modalProfile.next(s);
+  }
+
+  closeModalPdf(s: string) {
+    this.modalPdf.next(s);
   }
 
   cartUpdated(s: string) {

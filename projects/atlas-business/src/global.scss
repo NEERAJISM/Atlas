@@ -107,10 +107,17 @@ invisible {
   }
 }
 
-
 .page-edit-modal {
   .modal-wrapper {
     width: 1000px;
+    border-radius: 15px;
+  }
+}
+
+.pdf-modal {
+  .modal-wrapper {
+    width: 100vh;
+    height: 95vh;
     border-radius: 15px;
   }
 }

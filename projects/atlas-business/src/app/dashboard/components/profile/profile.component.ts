@@ -26,7 +26,7 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49639';
+  url = 'http://localhost:49583';
   controllerSrc: any;
 
   bizId = '';

@@ -74,7 +74,7 @@ export class DashboardComponent {
   init() {
     this.auth.afAuth.authState.subscribe((user) => {
       if (user) {
-        this.getProfile(user.uid);
+        this.getBusiness(user.uid);
       }
     });
   }
@@ -107,7 +107,7 @@ export class DashboardComponent {
     await alert.present();
   }
 
-  getProfile(id) {
+  getBusiness(id) {
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + id + '/' + Constants.INFO)

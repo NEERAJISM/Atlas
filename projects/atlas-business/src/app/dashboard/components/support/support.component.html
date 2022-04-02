@@ -1,1 +1,31 @@
-<h1>Support Page</h1>
+<ion-content class="ion-padding">
+  <h5 class="mb-3 font-weight-light">Write a query to us</h5>
+
+  <ion-row>
+    <ion-col sizeLg="4">
+      <ion-input
+        style="border: solid 0.5px; border-radius: 15px"
+        placeholder="Title"
+        [(ngModel)]="title"
+      ></ion-input>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeLg="4">
+      <ion-textarea
+        style="border: solid 0.5px; border-radius: 15px"
+        rows="5"
+        placeholder="Issue / query details"
+        maxlength="200"
+        [(ngModel)]="desc"
+      ></ion-textarea>
+    </ion-col>
+  </ion-row>
+  <ion-row class="mt-3">
+    <ion-col>
+      <ion-button [disabled]="!isInitialized" (click)="submit()"
+        >Submit Query</ion-button
+      >
+    </ion-col>
+  </ion-row>
+</ion-content>

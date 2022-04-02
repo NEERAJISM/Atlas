@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AlertController } from '@ionic/angular';
+import { AuthService, Business, Constants, FirebaseUtil } from 'atlas-core';
 import { AppService } from '../app.service';
 
 export interface MenuItem {
@@ -18,6 +20,8 @@ export class DashboardComponent {
 
   showFiller = false;
   showMenuName = false;
+
+  business = new Business();
 
   menu: MenuItem[] = [
     {
@@ -62,8 +66,17 @@ export class DashboardComponent {
     },
   ];
 
-  constructor(private service: AppService) {
+  constructor(private service: AppService, private alertController: AlertController, private auth: AuthService, private fbUtil: FirebaseUtil) {
     this.isDesktop = service.isDesktop;
+    this.init();
+  }
+
+  init() {
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.getProfile(user.uid);
+      }
+    });
   }
 
   go(url: string) {
@@ -72,5 +85,38 @@ export class DashboardComponent {
 
   toggleMenu() {
     this.showMenuName = !this.showMenuName;
+  }
+
+  async logout() {
+    const alert = await this.alertController.create({
+      header: 'Confirmation',
+      message: 'Please confirm if you want to sign out.',
+      buttons: [
+        {
+          text: 'Signout',
+          handler: () => {
+            this.auth.signOut().then(() => this.service.go(''));
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  getProfile(id) {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + id + '/' + Constants.INFO)
+      .doc(id)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.business, doc.data());
+        }
+      });
   }
 }

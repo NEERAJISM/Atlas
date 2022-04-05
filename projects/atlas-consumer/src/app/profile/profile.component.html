@@ -1,9 +1,9 @@
-<ion-header>
+<ion-header *ngIf="initialized">
   <ion-toolbar
     style="--background: {{ profile.color }}; --color: {{ profile.fontColor }}"
   >
     <ion-title style="font-family: 'Mulish', sans-serif">
-      <img style="height: 35px" [src]="icon" />
+      <img style="height: 60px" [src]="icon" />
       <b>&nbsp; {{ profile.title }} </b></ion-title
     >
 
@@ -21,7 +21,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="initialized">
   <!-- Full  - ignore error in section css-->
   <section
     *ngIf="home"

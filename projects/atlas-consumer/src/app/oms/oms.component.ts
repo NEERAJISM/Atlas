@@ -38,6 +38,7 @@ export class OmsComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   isDesktop = false;
+  profileName = '';
 
   constructor(
     private router: Router,
@@ -49,6 +50,8 @@ export class OmsComponent implements OnInit, OnDestroy {
   ) {
     this.isDesktop = service.isDesktop;
     this.service.presentLoading();
+
+    this.profileName = this.location.path().substring(1).split('/')[0];
 
     this.init();
     this.profile = this.service.getProfile();
@@ -89,6 +92,10 @@ export class OmsComponent implements OnInit, OnDestroy {
   }
 
   initForUser() {
+    if(!this.uid){
+      return;
+    }
+
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.uid + '/' + Constants.CART)
@@ -186,7 +193,7 @@ export class OmsComponent implements OnInit, OnDestroy {
   }
 
   routeToCheckout() {
-    this.router.navigateByUrl('/checkout');
+    this.router.navigateByUrl(this.profileName + '/checkout');
   }
 
   account() {

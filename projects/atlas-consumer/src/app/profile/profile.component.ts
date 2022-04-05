@@ -75,7 +75,9 @@ export class ProfileComponent {
   menus: string[] = []
   menuPages: Map<number, any[]> = new Map();
 
-  bizId = 'bA3Y7HgRrbNGfgisuXCKTtSeYLk2';
+  bizId = '';
+  profileName = '';
+  initialized = false;
 
   imgMap: Map<string, string> = new Map();
   complete = false;
@@ -96,10 +98,32 @@ export class ProfileComponent {
       this.landingFont = '120px';
       this.isDesktop = true;
     }
-
-    this.getBusiness();
-    this.getProfile();
+    this.appService.presentLoading();
+    this.init();
     this.updateLocationUrl();
+  }
+
+  init() {
+    this.profileName = this.location.path().substring(1);
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.PROFILE)
+      .doc(this.profileName)
+      .get()
+      .subscribe((doc) => {
+        this.appService.dismissLoading();
+
+        if (!doc.exists) {
+          this.appService.presentToast('No Profile found for - ' + this.profileName);
+          this.router.navigateByUrl('');
+          return;
+        }
+
+        this.bizId = (doc.data() as any).id;
+        this.getBusiness();
+        this.getProfile();
+        this.updateLocationUrl();
+      });
   }
 
   async presentSlideModal(img: string, title: string, desc: string) {
@@ -168,6 +192,7 @@ export class ProfileComponent {
         if (doc.data()) {
           Object.assign(this.profile, doc.data());
         }
+        this.initialized = true;
         this.getPages();
       });
   }
@@ -219,8 +244,8 @@ export class ProfileComponent {
 
         // set header
         var name = this.location.path(true);
-        if (name.length > 1 && name.startsWith('#')) {
-          name = name.substring(1);
+        if (name.length > 1 && name.indexOf('#') !== -1) {
+          name = name.substring(name.indexOf('#') + 1);
           this.header(name, this.hashes.indexOf(name) + 1);
         } else {
           this.displayPages = this.pages;
@@ -289,7 +314,7 @@ export class ProfileComponent {
     });
   }
   routeToOrder() {
-    this.router.navigateByUrl('/order');
+    this.router.navigateByUrl(this.profileName + '/order');
   }
   async presentToast() {
     this.appService.presentToast(
@@ -298,7 +323,7 @@ export class ProfileComponent {
   }
 
   header(menu: string, index?: number) {
-    this.location.replaceState('#' + menu.split(' ').map(x => x.trim()).join(''));
+    this.location.replaceState(this.profileName + '#' + menu.split(' ').map(x => x.trim()).join(''));
 
     if (index) {
       this.home = false;

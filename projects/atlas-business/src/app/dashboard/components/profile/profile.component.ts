@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AlertController, ModalController } from '@ionic/angular';
 import {
   AuthService,
+  Business,
   CommonUtil,
   Constants,
   FirebaseUtil,
@@ -26,10 +27,11 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('fColor') fColor: ElementRef;
 
   //TODO Remove
-  url = 'http://localhost:49290';
+  url = '';
   controllerSrc: any;
 
   bizId = '';
+  business = new Business();
   backupProfile = new Profile();
   bizProfile = new Profile();
 
@@ -75,6 +77,7 @@ export class ProfileDashboardComponent implements OnInit {
     this.auth.afAuth.authState.subscribe((user) => {
       if (user) {
         this.bizId = user.uid;
+        this.getBusinessInfo();
         this.getProfile();
       }
     });
@@ -82,10 +85,25 @@ export class ProfileDashboardComponent implements OnInit {
     this.service.modalProfileCloseEvent.subscribe((s) => {
       if (s === 'success') {
         this.reload(false, true);
+        this.getProfile();
         this.modalController.dismiss();
-        this.getPages();
       }
     });
+  }
+
+  getBusinessInfo() {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.INFO)
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.business, doc.data());
+          this.url = 'http://localhost:49245/' + this.business.profile;
+          this.reload();
+        }
+      });
   }
 
   getProfile() {
@@ -177,6 +195,8 @@ export class ProfileDashboardComponent implements OnInit {
             }
 
             this.createMenu(alertData.name, id);
+            this.reload(false, true);
+            this.getProfile();
             return true;
           },
         },
@@ -276,11 +296,6 @@ export class ProfileDashboardComponent implements OnInit {
 
   edit_Title() {
     if (this.editTitle) {
-      if (!this.bizProfile.title) {
-        this.service.presentToast('Please enter a valid Company Name!');
-        return;
-      }
-
       if (this.bizProfile.title !== this.backupProfile.title) {
         this.updateProfile();
       }

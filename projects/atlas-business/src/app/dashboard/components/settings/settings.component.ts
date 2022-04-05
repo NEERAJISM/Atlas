@@ -12,8 +12,8 @@ export class SettingsDashboardComponent {
   initialized = false;
 
   user: firebase.User;
+  backup: Business = new Business();
   business: Business = new Business();
-  profileOld = '';
 
   emailVerified = true;
   editMobile = false;
@@ -53,6 +53,7 @@ export class SettingsDashboardComponent {
       .subscribe((doc) => {
         if (doc.data()) {
           Object.assign(this.business, doc.data());
+          this.backup = JSON.parse(JSON.stringify(doc.data()));
           this.updateLocation();
         }
         this.initialized = true;
@@ -85,74 +86,208 @@ export class SettingsDashboardComponent {
 
   editMob() {
     if (this.editMobile) {
-      this.updateBusinessInfo();
+      if (this.business.address.mobile === this.backup.address.mobile) {
+        this.editProfile = false;
+        return;
+      }
+
+      if (this.business.address.mobile.trim().length !== 10) {
+        this.app.presentToast('Invalid Mobile number!!');
+        this.business.address.mobile = this.backup.address.mobile;
+        return;
+      }
+      this.updateBusinessInfo({ 'address.mobile': this.business.address.mobile });
     }
     this.editMobile = !this.editMobile;
   }
 
   edit_Profile() {
     if (this.editProfile) {
-      this.updateBusinessInfo();
-      if (!this.business.profile || this.business.profile.length < 6 || !Constants.usernameRegEx.test(this.business.profile)) {
-        this.app.presentToast("Please enter a valid username - min 6 characters, special char '.' or '_'");
-        this.business.profile = this.profileOld;
+      if (this.business.profile === this.backup.profile) {
+        this.editProfile = false;
         return;
       }
+
+      if (!this.business.profile || this.business.profile.length < 6 || !Constants.usernameRegEx.test(this.business.profile)) {
+        this.app.presentToast("Please enter a valid username - min 6 characters, only letter, number, '-' or '_'");
+        this.business.profile = this.backup.profile;
+        return;
+      }
+
+      // check if name exists
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.PROFILE)
+        .doc(this.business.profile)
+        .get()
+        .subscribe((doc) => {
+          if (doc.exists) {
+            this.app.presentToast("This username is not available!");
+            return;
+          }
+          this.updateBusinessInfo({ profile: this.business.profile });
+          this.updateProfile();
+          this.editProfile = false;
+        });
     }
 
-    this.profileOld = this.business.profile;
-    this.editProfile = !this.editProfile;
+    if (!this.editProfile) {
+      this.editProfile = true;
+    }
   }
 
   edit_BName() {
     if (this.editBName) {
-      this.updateBusinessInfo();
+      if (this.business.name === this.backup.name) {
+        this.editProfile = false;
+        return;
+      }
+
+      if (this.business.name.trim().length === 0) {
+        this.app.presentToast('Invalid Name!!');
+        this.business.name = this.backup.name;
+        return;
+      }
+      this.updateBusinessInfo({ name: this.business.name });
     }
     this.editBName = !this.editBName;
   }
 
   edit_BYear() {
     if (this.editBYear) {
-      this.updateBusinessInfo();
+      if (this.business.year === this.backup.year) {
+        this.editProfile = false;
+        return;
+      }
+
+      if (this.business.year.toString().length !== 4) {
+        this.app.presentToast('Invalid year!!');
+        this.business.year = this.backup.year;
+        return;
+      }
+      this.updateBusinessInfo({ year: this.business.year });
     }
     this.editBYear = !this.editBYear;
   }
 
   edit_BGST() {
     if (this.editBGST) {
-      this.updateBusinessInfo();
+      if (this.business.gst === this.backup.gst) {
+        this.editProfile = false;
+        return;
+      }
+
+      if (this.business.gst.trim().length !== 15) {
+        this.app.presentToast('Invalid GST Number!!');
+        this.business.gst = this.backup.gst;
+        return;
+      }
+      this.updateBusinessInfo({ gst: this.business.gst });
     }
     this.editBGST = !this.editBGST;
   }
 
   edit_BPhone() {
     if (this.editBPhone) {
-      this.updateBusinessInfo();
+      if (this.business.address.phone === this.backup.address.phone) {
+        this.editProfile = false;
+        return;
+      }
+
+      if (this.business.address.phone.trim().length === 0) {
+        this.app.presentToast('Invalid Phone Number!!');
+        this.business.address.phone = this.backup.address.phone;
+        return;
+      }
+      this.updateBusinessInfo({ 'address.phone': this.business.address.phone });
     }
     this.editBPhone = !this.editBPhone;
   }
 
   edit_BAddress() {
     if (this.editBAddress) {
-      this.updateBusinessInfo();
+
+      if (
+        this.business.address.line1 === this.backup.address.line1 &&
+        this.business.address.line2 === this.backup.address.line2 &&
+        this.business.address.pin === this.backup.address.pin &&
+        this.business.address.district === this.backup.address.district &&
+        this.business.address.state === this.backup.address.state
+      ) {
+        this.editProfile = false;
+        return;
+      }
+
+      if (
+        this.business.address.line1.trim().length === 0 ||
+        this.business.address.pin.toString().trim().length !== 6 ||
+        this.business.address.district.trim().length === 0 ||
+        this.business.address.state.trim().length === 0
+      ) {
+        this.app.presentToast('Invalid Address!!');
+        this.business.address.line1 = this.backup.address.line1;
+        this.business.address.line2 = this.backup.address.line2;
+        this.business.address.pin = this.backup.address.pin;
+        this.business.address.district = this.backup.address.district;
+        this.business.address.state = this.backup.address.state;
+        return;
+      }
+      this.updateBusinessInfo({
+        'address.line1': this.business.address.line1,
+        'address.line2': this.business.address.line2,
+        'address.pin': this.business.address.pin,
+        'address.district': this.business.address.district,
+        'address.state': this.business.address.state
+      });
     }
     this.editBAddress = !this.editBAddress;
   }
 
   edit_BLocation() {
     if (this.editBLocation) {
-      this.updateBusinessInfo();
+      if (this.business.address.location === this.backup.address.location) {
+        this.editProfile = false;
+        return;
+      }
+
+      if (this.business.address.location.trim().length === 0) {
+        this.app.presentToast('Invalid Location!!');
+        this.business.address.location = this.backup.address.location;
+        return;
+      }
+      this.updateBusinessInfo({ 'address.location': this.business.address.location });
       this.updateLocation();
     }
     this.editBLocation = !this.editBLocation;
   }
 
-  updateBusinessInfo() {
+  updateBusinessInfo(update) {
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.business.id + '/' + Constants.INFO)
       .doc(this.business.id)
-      .set(this.fbUtil.toJson(this.business))
+      .update(update)
+      .then(() => this.backup = JSON.parse(JSON.stringify(this.business)))
+      .catch(() =>
+        this.app.presentToast(
+          'Error occurred, Please check Internet connectivity'
+        )
+      );
+  }
+
+  updateProfile() {
+    // delete previous
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.PROFILE)
+      .doc(this.backup.profile)
+      .delete();
+
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.PROFILE)
+      .doc(this.business.profile)
+      .set({ id: this.business.id })
       .catch(() =>
         this.app.presentToast(
           'Error occurred, Please check Internet connectivity'

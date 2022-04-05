@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccountComponent } from './account/account.component';
 import { CheckoutComponent } from './checkout/checkout.component';
-import { LandingComponent } from './landing/landing.component';
 import { OmsComponent } from './oms/oms.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
@@ -10,18 +9,10 @@ import { SearchComponent } from './search/search.component';
 const routes: Routes = [
   {
     path: '',
-    component: ProfileComponent,
-  },
-  {
-    path: 'search',
     component: SearchComponent,
   },
   {
-    path: 'profile',
-    component: ProfileComponent,
-  },
-  {
-    path: 'order',
+    path: ':id/order',
     component: OmsComponent,
   },
   {
@@ -29,8 +20,12 @@ const routes: Routes = [
     component: AccountComponent,
   },
   {
-    path: 'checkout',
+    path: ':id/checkout',
     component: CheckoutComponent,
+  },
+  {
+    path: ':id',
+    component: ProfileComponent,
   },
   {
     // Always keep this in the END
@@ -43,4 +38,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

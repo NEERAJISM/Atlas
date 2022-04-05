@@ -34,7 +34,13 @@ export class AppService {
   }
 
   async dismissLoading(){
-    this.loading.dismiss();
+    var dismissed = false;
+    if(this.loading) {
+      dismissed = await this.loading.dismiss();
+    }
+    if(!dismissed) {
+      setTimeout(()=> this.dismissLoading(), 500)
+    }
   }
 
   async presentToast(message: string) {

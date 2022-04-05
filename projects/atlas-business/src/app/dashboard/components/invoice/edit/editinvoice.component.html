@@ -1,4 +1,4 @@
-<div class="container-fluid mt-2">
+<ion-content class="ion-padding">
   <div class="row mt-4">
     <div class="col">
       <h5>
@@ -673,7 +673,7 @@
       (click)="openPreviewDialog()"
     >
       <i class="fas fa-check text-white py-3" style="font-size: 1.6em"></i>
-      &nbsp; Create Invoice
+      &nbsp; {{ existingInvoice ? 'Update' : 'Create' }} Invoice
     </button>
 
     <button class="ml-4 btn-info" mat-raised-button (click)="saveAsDraft()">
@@ -696,4 +696,4 @@
       <h5 class="text-light mb-0">Total : &#8377; {{ calculateTotal() }}</h5>
     </div>
   </div>
-</div>
+</ion-content>

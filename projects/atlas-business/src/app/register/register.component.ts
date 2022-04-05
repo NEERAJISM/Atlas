@@ -89,6 +89,7 @@ export class RegisterComponent {
       if (Constants.SUCCESS === x[0]) {
         this.setupProfile(x[1]);
         this.setupBusiness(x[1]);
+        this.setupCounters(x[1]);
       } else {
         this.inProgress = false;
         this.app.presentToast(
@@ -138,5 +139,13 @@ export class RegisterComponent {
           'Error occurred, Please check Internet connectivity'
         )
       );
+  }
+
+  setupCounters(id: string) {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS)
+      .doc(id)
+      .set({ invoiceNo: 1, visitor: 1 })
   }
 }

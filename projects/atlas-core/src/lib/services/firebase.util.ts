@@ -56,16 +56,16 @@ export class FirebaseUtil {
 
   getInvoiceRef(bizId: string): AngularFirestoreCollection {
     return this.firestore
-      .collection(Constants.INVOICE_DB)
+      .collection(Constants.BUSINESS)
       .doc(bizId)
-      .collection(Constants.INVOICES);
+      .collection(Constants.INVOICE);
   }
 
   getInvoicePreviewRef(bizId: string): AngularFirestoreCollection {
     return this.firestore
-      .collection(Constants.INVOICE_PREVIEW_DB)
+      .collection(Constants.BUSINESS)
       .doc(bizId)
-      .collection(Constants.INVOICE_PREVIEWS);
+      .collection(Constants.INVOICE_PREVIEW);
   }
 
   toJson(obj: any) {

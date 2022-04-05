@@ -1,8 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Business, CommonUtil, Constants, Invoice, InvoiceVersion } from 'atlas-core';
 import { jsPDF, jsPDFOptions } from 'jspdf';
 
-import { HttpClient } from '@angular/common/http';
-import { Address, Business, CommonUtil, Constants, Invoice, InvoiceVersion } from 'atlas-core';
 
 @Injectable()
 export class InvoiceService {
@@ -11,8 +11,6 @@ export class InvoiceService {
   title = 'jspdf-autotable-demo';
   headOwnerAddress = [['']];
   dataOwnerAddress = [[''], [''], [''], ['']];
-
-  headInvoiceDetails = [['Invoice # 1254-5621']];
 
   dataInvoiceDetails = [
     'Issue Date     : ',
@@ -45,25 +43,7 @@ export class InvoiceService {
 
   constructor(private http: HttpClient, private util: CommonUtil) { }
 
-  public getBusinessInfo(): Business {
-    const b = new Business();
-    b.name = 'Krishna Enterprises';
-    b.address.email = '8patidarneeraj@gmail.com';
-    b.address.mobile = '+91 - 8877073059';
-    b.address.phone = '02964 - 230354';
-
-    const a = new Address();
-    a.line1 = 'C\\o Balkrishna Patidar';
-    a.line2 = 'Gamda Brahmaniya, Sagwara';
-    a.district = 'Dungarpur';
-    a.state = 'Rajasthan';
-    a.pin = 314025;
-    b.address = a;
-
-    return b;
-  }
-
-  public generatePDF(invoice: Invoice): jsPDF {
+  public generatePDF(invoice: Invoice, business: Business): jsPDF {
     let i: InvoiceVersion = invoice.allVersions[invoice.allVersions.length - 1];
 
     // Only show a non-draft version as Preview
@@ -81,13 +61,12 @@ export class InvoiceService {
     // Icon / logo creator - font + color or photo
     doc.addImage('../../assets/icons/atlas-small.png', 'PNG', 7, 12, 17, 17);
 
-    const b: Business = this.getBusinessInfo();
-    this.headOwnerAddress[0][0] = b.name;
+    this.headOwnerAddress[0][0] = business.name;
 
-    this.dataOwnerAddress[0][0] = b.address.line1 + ', ' + b.address.line2;
-    this.dataOwnerAddress[1][0] = b.address.district + ' (' + b.address.state + ') - ' + b.address.pin;
-    this.dataOwnerAddress[2][0] = 'Email : ' + b.address.email;
-    this.dataOwnerAddress[3][0] = 'Tel : ' + b.address.phone + ', Mob : ' + b.address.mobile;
+    this.dataOwnerAddress[0][0] = business.address.line1 + ', ' + business.address.line2;
+    this.dataOwnerAddress[1][0] = business.address.district + ' (' + business.address.state + ') - ' + business.address.pin;
+    this.dataOwnerAddress[2][0] = 'Email : ' + business.address.email;
+    this.dataOwnerAddress[3][0] = 'Tel : ' + business.address.phone + ', Mob : ' + business.address.mobile;
 
     (doc as any).autoTable({
       startY: 9,
@@ -143,7 +122,7 @@ export class InvoiceService {
 
     (doc as any).autoTable({
       startY: 9,
-      head: this.headInvoiceDetails,
+      head: [[invoice.invoiceNo ? ('Invoice # ' + invoice.invoiceNo) : '']],
       body: dataInvoiceDetails,
       theme: 'plain',
       margin: { left: 150 },
@@ -278,18 +257,18 @@ export class InvoiceService {
     return dataArr;
   }
 
-  sendEmail(){
+  sendEmail() {
     let key = '0445ED7941A25CD2AED36FA0FAEA2712BAB7B62980D56AE2F742E3C63EF77F7D9F6A3C3146CF23234632CCE713C2CE44';
 
     let url = 'https://api.elasticemail.com/v2/email/send?apikey=' + key +
-    '&from=neerajism@cse.ism.ac.in&fromName=Neeraj&subject=ElasticEmailTest1&msgTo=mymailboxmark2@gmail.com&bodyHtml=<h3>This is a test email using Elastic</h3>&isTransactional=true';
+      '&from=neerajism@cse.ism.ac.in&fromName=Neeraj&subject=ElasticEmailTest1&msgTo=mymailboxmark2@gmail.com&bodyHtml=<h3>This is a test email using Elastic</h3>&isTransactional=true';
 
 
     let url2 = 'https://api.elasticemail.com/v2/sms/send?apikey=' + key + '&to=+918877073059&body=SMS from Elastic Email';
     //8patidarneeraj@gmail.com
     //mymailboxmark2@gmail.com
 
-    this.http.post(url, {responseType: 'json'})
+    this.http.post(url, { responseType: 'json' })
       .subscribe(r => console.log(r));
 
 

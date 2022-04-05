@@ -1,11 +1,12 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Address, Business, Client, CommonUtil, Constants, FirebaseUtil, Invoice, InvoicePreview, InvoiceVersion, Item, Product, Unit } from 'atlas-core';
+import { Address, AuthService, Business, Client, CommonUtil, Constants, FirebaseUtil, Invoice, InvoicePreview, InvoiceVersion, Item, Product, Unit } from 'atlas-core';
+import * as firebase from 'firebase';
 import 'jspdf-autotable';
 import { AppService } from 'projects/atlas-business/src/app/app.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { InvoiceService } from '../invoice.service';
 import { PdfModal } from './modal/modal.pdf';
@@ -15,7 +16,7 @@ import { PdfModal } from './modal/modal.pdf';
   templateUrl: './editinvoice.component.html',
   styleUrls: ['./editinvoice.component.scss'],
 })
-export class EditInvoiceComponent {
+export class EditInvoiceComponent implements OnDestroy {
   invoice: Invoice = new Invoice();
   preview: InvoicePreview = new InvoicePreview();
   existingInvoice = false;
@@ -31,7 +32,7 @@ export class EditInvoiceComponent {
   dueDate: Date = new Date();
   customDueDate = false;
 
-  business: Business;
+  business: Business = new Business();
   supplyPlace = '';
   supplyState = '';
   states = Constants.states;
@@ -78,6 +79,10 @@ export class EditInvoiceComponent {
   totalTax = 0;
   total = 0;
 
+  bizId = '';
+  invoiceCreated = false;
+  subscription: Subscription;
+
   constructor(
     private router: Router,
     private modalController: ModalController,
@@ -85,24 +90,39 @@ export class EditInvoiceComponent {
     private util: CommonUtil,
     private elRef: ElementRef,
     private invoiceService: InvoiceService,
-    private app: AppService
+    private app: AppService,
+    private auth: AuthService
   ) {
     this.app.presentLoading();
-    this.init();
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+        this.init();
+      }
+    });
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   init() {
-    this.app.modalPdfCloseEvent.subscribe((s) => {
-      if (s === 'Save') {
-        this.createAndSaveInvoice();
-      }
-      this.modalController.dismiss();
-    });
-
     this.getBusinessInfo();
     this.fetchClients();
     this.fetchProducts();
     this.fetchInvoice();
+
+    this.subscription = this.app.modalPdfCloseEvent.subscribe((s) => {
+      if (!this.invoiceCreated && s === 'Save') {
+        this.invoiceCreated = true;
+        this.createAndSaveInvoice();
+      }
+
+      this.modalController.getTop().then(x => {
+        if(x) {
+          this.modalController.dismiss();
+        }
+      });
+    });
   }
 
   fetchInvoice() {
@@ -113,7 +133,7 @@ export class EditInvoiceComponent {
     }
 
     this.existingInvoice = true;
-    this.fbutil.getInvoiceRef('bizId')
+    this.fbutil.getInvoiceRef(this.bizId)
       .doc(this.invoiceService.invoiceId).get().forEach((invoice) => {
         if (invoice.exists) {
           Object.assign(this.invoice, invoice.data());
@@ -242,7 +262,7 @@ export class EditInvoiceComponent {
   fetchProducts() {
     const result: Product[] = [];
     this.fbutil
-      .getProductRef('bizId')
+      .getProductRef(this.bizId)
       .get()
       .forEach((res) =>
         res.forEach((data) => {
@@ -432,9 +452,9 @@ export class EditInvoiceComponent {
     }
 
     this.updateInvoice(false);
-    const invoice = this.invoiceService.generatePDF(this.invoice);
+    const invoice = this.invoiceService.generatePDF(this.invoice, this.business);
     const pdf: ArrayBuffer = invoice.output('arraybuffer');
-   
+
     const modal = await this.modalController.create({
       component: PdfModal,
       cssClass: 'pdf-modal',
@@ -464,8 +484,6 @@ export class EditInvoiceComponent {
         this.invoice.allVersions.push(version);
       }
     } else {
-      // TODO generate invoice no using counter
-      this.invoice.invoiceNo = '12345';
       this.invoice.id = this.fbutil.getId();
 
       version = new InvoiceVersion();
@@ -504,15 +522,50 @@ export class EditInvoiceComponent {
   }
 
   createAndSaveInvoice() {
-    this.fbutil.getInvoicePreviewRef('bizId')
+    this.app.presentLoading();
+
+    if(this.existingInvoice) {
+      this.uploadInvoice();
+      return;
+    }
+
+    // invoice number get + increment
+    this.fbutil.getInstance()
+      .collection(Constants.BUSINESS)
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.exists) {
+          var invoiceNo = (doc.data() as any).invoiceNo;
+          this.invoice.invoiceNo = invoiceNo;
+          this.preview.invoiceNo = this.invoice.invoiceNo;
+          this.incrementCounter();
+          this.uploadInvoice();
+        }
+      });
+  }
+
+  incrementCounter(){
+    this.fbutil
+    .getInstance()
+    .collection(Constants.BUSINESS)
+    .doc(this.bizId)
+    .update({ invoiceNo: firebase.default.firestore.FieldValue.increment(1) });
+  }
+
+  uploadInvoice() {
+    this.fbutil.getInvoicePreviewRef(this.bizId)
       .doc(this.preview.id)
       .set(this.fbutil.toJson(this.preview));
 
     this.fbutil
-      .getInvoiceRef('bizId')
+      .getInvoiceRef(this.bizId)
       .doc(this.invoice.id)
       .set(this.fbutil.toJson(this.invoice))
-      .then(() => this.goBackToInvoiceComponent())
+      .then(() => {
+        this.app.dismissLoading();
+        this.goBackToInvoiceComponent();
+      })
       .catch((e) => {
         this.app.presentToast('Error while saving data');
       });
@@ -561,11 +614,19 @@ export class EditInvoiceComponent {
   }
 
   getBusinessInfo() {
-    this.business = this.invoiceService.getBusinessInfo();
-    this.supplyPlace = this.business.address.district;
-    this.supplyState = this.business.address.state;
-
-    this.isInvoiceDetailValid = (this.supplyPlace && this.supplyState) ? true : false;
+    this.fbutil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.INFO)
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.business, doc.data());
+          this.supplyPlace = this.business.address.district;
+          this.supplyState = this.business.address.state;
+          this.isInvoiceDetailValid = (this.supplyPlace && this.supplyState) ? true : false;
+        }
+      });
   }
 
   supplyPlaceChange() {

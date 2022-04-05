@@ -1,6 +1,6 @@
 export class InvoicePreview {
   id: string;
-  invoiceNo: string;
+  invoiceNo: number;
   isDraft: boolean;
 
   client: string;

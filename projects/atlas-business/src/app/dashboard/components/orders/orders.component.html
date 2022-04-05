@@ -1,16 +1,22 @@
-<div class="container-fluid mt-3">
+<ion-content class="ion-padding">
   <h5 class="mb-3">Orders</h5>
   <!-- Quick Summary -->
 
   <div class="row">
     <div class="col p-0">
-      
       <mat-form-field class="col-lg-3" appearance="outline">
         <mat-label>
           <i class="fas fa-search"></i>
-          Type here to search/filter orders ...</mat-label>
-        <input matInput type="text" [(ngModel)]="value" (input)="onInput()">
-        <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="searchClear()">
+          Type here to search/filter orders ...</mat-label
+        >
+        <input matInput type="text" [(ngModel)]="value" (input)="onInput()" />
+        <button
+          *ngIf="value"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="searchClear()"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
@@ -71,10 +77,9 @@
     </mat-tab>
   </mat-tab-group>
 
-  <div class="row">
-    <div class="col">
+  <ion-row>
+    <ion-col>
       <mat-card class="order-card" *ngFor="let order of orders; index as i">
-        
         <div class="row mx-0" style="padding: 16px; background: #eeeeee">
           <div class="col-lg-2">
             <h5>Date</h5>
@@ -82,14 +87,22 @@
           </div>
           <div class="col-lg-2">
             <h5>Status</h5>
-            <b [ngClass]="{
-              'text-primary' : order.status[order.status.length - 1].status === 'New',
-              'text-info' : order.status[order.status.length - 1].status === 'Accept',
-              'text-warning' : order.status[order.status.length - 1].status === 'Progress',
-              'text-success' : order.status[order.status.length - 1].status === 'Complete',
-              'text-danger' : order.status[order.status.length - 1].status === 'Cancel'
-            }">
-              {{ order.status[order.status.length - 1].status }}</b>
+            <b
+              [ngClass]="{
+                'text-primary':
+                  order.status[order.status.length - 1].status === 'New',
+                'text-info':
+                  order.status[order.status.length - 1].status === 'Accept',
+                'text-warning':
+                  order.status[order.status.length - 1].status === 'Progress',
+                'text-success':
+                  order.status[order.status.length - 1].status === 'Complete',
+                'text-danger':
+                  order.status[order.status.length - 1].status === 'Cancel'
+              }"
+            >
+              {{ order.status[order.status.length - 1].status }}</b
+            >
           </div>
           <div class="col-lg-2">
             <h5>Total</h5>
@@ -97,7 +110,7 @@
           </div>
           <div class="col-lg-3">
             <h5>Customer</h5>
-            <p>{{ order.client.name + '  ('  + order.client.mobile + ')'  }}</p>
+            <p>{{ order.client.name + "  (" + order.client.mobile + ")" }}</p>
           </div>
           <div class="col-lg-3">
             <h5># Order Id</h5>
@@ -106,8 +119,8 @@
         </div>
 
         <mat-expansion-panel>
-          <mat-expansion-panel-header>            
-            <mat-panel-description style="justify-content: center;">
+          <mat-expansion-panel-header>
+            <mat-panel-description style="justify-content: center">
               Click here for more order details.
             </mat-panel-description>
           </mat-expansion-panel-header>
@@ -139,7 +152,9 @@
                   <!-- Success -->
                   <div
                     class="row"
-                    *ngIf="order.status[order.status.length - 1].status === 'New'"
+                    *ngIf="
+                      order.status[order.status.length - 1].status === 'New'
+                    "
                   >
                     <button
                       mat-flat-button
@@ -170,7 +185,8 @@
                   <div
                     class="row"
                     *ngIf="
-                      order.status[order.status.length - 1].status === 'Progress'
+                      order.status[order.status.length - 1].status ===
+                      'Progress'
                     "
                   >
                     <button
@@ -187,7 +203,8 @@
                   <div
                     class="row"
                     *ngIf="
-                      order.status[order.status.length - 1].status !== 'Complete' &&
+                      order.status[order.status.length - 1].status !==
+                        'Complete' &&
                       order.status[order.status.length - 1].status !== 'Cancel'
                     "
                   >
@@ -216,7 +233,6 @@
             </mat-card-content>
           </ng-template>
         </mat-expansion-panel>
-
       </mat-card>
 
       <div class="row mt-2 mb-4" style="display: flex; justify-content: center">
@@ -236,6 +252,6 @@
           }}
         </button>
       </div>
-    </div>
-  </div>
-</div>
+    </ion-col>
+  </ion-row>
+</ion-content>

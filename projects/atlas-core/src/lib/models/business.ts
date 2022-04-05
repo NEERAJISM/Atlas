@@ -4,15 +4,15 @@ import { Address } from "./address";
 export class Business {
   id: string;
 
-  profile: string;
-  name: string;
+  profile: string = '';
+  name: string = '';
   year: number;
 
-  gst: string;
+  gst: string = '';
 
-  website: string;
+  website: string = '';
   address: Address = new Address();
 
   paid: boolean = false;
-  expiry: string;
+  expiry: string = '';
 }

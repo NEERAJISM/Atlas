@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { FirebaseUtil, Invoice, InvoicePreview } from 'atlas-core';
+import { AuthService, Business, Constants, FirebaseUtil, Invoice, InvoicePreview } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../app.service';
 import { PdfModal } from './edit/modal/modal.pdf';
@@ -34,16 +33,26 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
     'actions',
   ];
 
+  bizId = '';
+  business: Business = new Business();
+
   constructor(
     private modalController: ModalController,
     private fbutil: FirebaseUtil,
     private app: AppService,
+    private auth: AuthService,
     private router: Router,
-    private invoiceService: InvoiceService,
-    private dialog: MatDialog) {
+    private invoiceService: InvoiceService) {
     this.app.presentLoading();
     this.dataSource = new MatTableDataSource();
-    this.subscribeToUpdates();
+
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+        this.getBusinessInfo();
+        this.subscribeToUpdates();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -55,9 +64,22 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
     this.dataSource.sort = this.sort;
   }
 
+  getBusinessInfo() {
+    this.fbutil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.INFO)
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.business, doc.data());
+        }
+      });
+  }
+
   subscribeToUpdates() {
     this.subscription = this.fbutil
-      .getInvoicePreviewRef('bizId')
+      .getInvoicePreviewRef(this.bizId)
       .snapshotChanges()
       .subscribe(() => {
         this.fetchInvoicePreviews();
@@ -67,7 +89,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   fetchInvoicePreviews() {
     const result: InvoicePreview[] = [];
     this.fbutil
-      .getInvoicePreviewRef('bizId')
+      .getInvoicePreviewRef(this.bizId)
       .get()
       .forEach((res) =>
         res.forEach((data) => {
@@ -113,7 +135,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   }
 
   preview(id: string) {
-    this.fbutil.getInvoiceRef('bizId').doc(id).get().forEach((invoice) => {
+    this.fbutil.getInvoiceRef(this.bizId).doc(id).get().forEach((invoice) => {
       if (invoice.exists) {
         const i: Invoice = new Invoice();
         Object.assign(i, invoice.data());
@@ -125,7 +147,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   }
 
   async presentPdfModal(invoice: Invoice) {
-    const invoicePdf = this.invoiceService.generatePDF(invoice);
+    const invoicePdf = this.invoiceService.generatePDF(invoice, this.business);
     const pdf: ArrayBuffer = invoicePdf.output('arraybuffer');
     const modal = await this.modalController.create({
       component: PdfModal,
@@ -143,11 +165,11 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   }
 
   download(id: string) {
-    this.fbutil.getInvoiceRef('bizId').doc(id).get().forEach((invoice) => {
+    this.fbutil.getInvoiceRef(this.bizId).doc(id).get().forEach((invoice) => {
       if (invoice.exists) {
         const i: Invoice = new Invoice();
         Object.assign(i, invoice.data());
-        this.invoiceService.generatePDF(i).save('atlas.pdf');
+        this.invoiceService.generatePDF(i, this.business).save('atlas.pdf');
       }
     }).catch(e => {
       this.app.presentToast('Error while loading invoice data!');
@@ -155,11 +177,11 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   }
 
   print(id: string) {
-    this.fbutil.getInvoiceRef('bizId').doc(id).get().forEach((invoice) => {
+    this.fbutil.getInvoiceRef(this.bizId).doc(id).get().forEach((invoice) => {
       if (invoice.exists) {
         const i: Invoice = new Invoice();
         Object.assign(i, invoice.data());
-        this.invoiceService.generatePDF(i).output('dataurlnewwindow').open();
+        this.invoiceService.generatePDF(i, this.business).output('dataurlnewwindow').open();
       }
     }).catch(e => {
       this.app.presentToast('Error while loading invoice data!');

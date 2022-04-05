@@ -6,7 +6,7 @@ import { Item } from './order';
 
 export class Invoice {
   id: string;
-  invoiceNo: string;
+  invoiceNo: number;
   allVersions: InvoiceVersion[] = [];
 }
 

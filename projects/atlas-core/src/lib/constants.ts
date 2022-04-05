@@ -14,16 +14,17 @@ export class Constants {
   static readonly PAGES = 'PAGES';
   
   static readonly ORDERS = 'ORDERS';
+  static readonly INVOICE = 'INVOICE';
+  static readonly INVOICE_PREVIEW = 'INVOICE_PREVIEW';
+  static readonly INVOICE_NUMBER = 'INVOICE_NUMBER';
 
   static readonly USER = 'USER';
   static readonly CART = 'CART';
 
-  // old
+  // TODO remove old
   static readonly USER_DB = 'UserDB';
   static readonly CLIENT_DB = 'ClientDB';
   static readonly PRODUCT_DB = 'ProductDB';
-  static readonly INVOICE_DB = 'InvoiceDB';
-  static readonly INVOICE_PREVIEW_DB = 'InvoicePreviewDB';
   static readonly ORDER_DB = 'OrderDB';
   static readonly BIZ_ORDER_DB = 'BizOrderDB';
   static readonly CLIENT_ORDER_DB = 'ClientOrderDB';
@@ -31,8 +32,6 @@ export class Constants {
   static readonly USERS = 'Users';
   static readonly CLIENTS = 'Clients';
   static readonly PRODUCTS = 'Products';
-  static readonly INVOICES = 'Invoices';
-  static readonly INVOICE_PREVIEWS = 'InvoicePreviews';
 
   // UI
   static readonly TAX_STRING_SGST = 'Tax (SGST + CGST)';

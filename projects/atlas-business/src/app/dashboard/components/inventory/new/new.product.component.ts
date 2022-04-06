@@ -121,14 +121,14 @@ export class NewProductComponent {
 
     if (files[0].size > 500000) {
       this.imgFile = '';
-      this.appService.presentToast('Please select a file less than 500KB');
+      this.appService.presentToast('Please select a file less than 500KB', true);
       return;
     }
 
     const mimeType = files[0].type;
     if (mimeType.match(/image\/*/) == null) {
       this.imgFile = '';
-      this.appService.presentToast('Image format not supported, use either jpg/jpeg/png');
+      this.appService.presentToast('Image format not supported, use either jpg/jpeg/png', true);
       return;
     }
 

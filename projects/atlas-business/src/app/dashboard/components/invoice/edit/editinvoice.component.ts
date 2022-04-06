@@ -109,7 +109,6 @@ export class EditInvoiceComponent implements OnDestroy {
     this.getBusinessInfo();
     this.fetchClients();
     this.fetchProducts();
-    this.fetchInvoice();
 
     this.subscription = this.app.modalPdfCloseEvent.subscribe((s) => {
       if (!this.invoiceCreated && s === 'Save') {
@@ -156,11 +155,11 @@ export class EditInvoiceComponent implements OnDestroy {
     this.paymentTerms = i.paymentTerms;
     this.customDueDate = (i.paymentTerms === this.allPaymentTerms[0]);
 
-    this.client.name = i.client.name;
+    this.client.address.name = i.client.address.name;
     this.client.pan = i.client.pan;
     this.client.gst = i.client.gst;
-    this.client.mobile = i.client.mobile;
-    this.client.email = i.client.email;
+    this.client.address.mobile = i.client.address.mobile;
+    this.client.address.email = i.client.address.email;
 
     this.client.address.line1 = i.client.address.line1;
     this.client.address.line2 = i.client.address.line2;
@@ -214,11 +213,11 @@ export class EditInvoiceComponent implements OnDestroy {
     if (event && this.clientsMap.has(event.toLowerCase())) {
       const c: Client = this.clientsMap.get(event.toLowerCase());
 
-      this.client.name = c.name;
+      this.client.address.name = c.address.name;
       this.client.pan = c.pan;
       this.client.gst = c.gst;
-      this.client.mobile = c.mobile;
-      this.client.email = c.email;
+      this.client.address.mobile = c.address.mobile;
+      this.client.address.email = c.address.email;
 
       this.client.address.line1 = c.address.line1;
       this.client.address.line2 = c.address.line2;
@@ -228,18 +227,18 @@ export class EditInvoiceComponent implements OnDestroy {
       this.client.address.location = c.address.location;
     } else {
       this.client = new Client();
-      this.client.name = event;
+      this.client.address.name = event;
     }
     this.customerDetailChange();
   }
 
   updateClients(c: Client[]) {
     this.clients = c;
-    c.forEach(client => this.clientsMap.set(client.name.toLowerCase(), client));
+    c.forEach(client => this.clientsMap.set(client.address.name.toLowerCase(), client));
 
     this.clientControl.valueChanges.subscribe((value) => {
       if (typeof value === 'string') {
-        this.client.name = value;
+        this.client.address.name = value;
       }
     });
 
@@ -247,7 +246,7 @@ export class EditInvoiceComponent implements OnDestroy {
       startWith(''),
       map((value) =>
         this.clients.filter((option) =>
-          option.name
+          option.address.name
             .toLowerCase()
             .includes(
               typeof value === 'string'
@@ -273,7 +272,10 @@ export class EditInvoiceComponent implements OnDestroy {
           }
         })
       )
-      .finally(() => this.updateProducts(result));
+      .finally(() => {
+        this.updateProducts(result);
+        this.fetchInvoice();
+      });
   }
 
   updateProducts(p: Product[]) {
@@ -372,15 +374,14 @@ export class EditInvoiceComponent implements OnDestroy {
   calculate(item: Item): number {
     this.itemChange();
     item.taxValue = 0;
-    item.total =
-      Math.abs(item.qty) * Math.abs(item.price) - Math.abs(item.discount);
+    item.total = this.util.roundOff(Math.abs(item.qty) * Math.abs(item.price) - Math.abs(item.discount));
 
     const index = Constants.optionsTax.indexOf(item.tax);
     if (index !== -1) {
       item.taxValue = this.util.getTax(item.total, Constants.optionsTaxValue[index]);
     }
 
-    item.total += item.taxValue;
+    item.total = this.util.roundOff(item.total + item.taxValue);
     return item.taxValue;
   }
 
@@ -388,7 +389,7 @@ export class EditInvoiceComponent implements OnDestroy {
     let total = 0;
     this.items.forEach((item) => {
       if (item.taxValue) {
-        total += item.taxValue;
+        total = this.util.roundOff(total + item.taxValue);
       }
     });
     return total;
@@ -398,7 +399,7 @@ export class EditInvoiceComponent implements OnDestroy {
     let total = 0;
     this.items.forEach((item) => {
       if (item.total) {
-        total += item.total;
+        total = this.util.roundOff(total + item.total);
       }
     });
     return total;
@@ -427,9 +428,9 @@ export class EditInvoiceComponent implements OnDestroy {
       this.supplyState.length > 0 &&
       this.supplyPlace.length > 0 &&
       this.client &&
-      this.client.name &&
-      this.client.name.length > 0 &&
-      this.client.mobile &&
+      this.client.address.name &&
+      this.client.address.name.length > 0 &&
+      this.client.address.mobile &&
       this.client.address &&
       this.client.address.line1 &&
       this.client.address.line1.length > 0 &&
@@ -513,7 +514,7 @@ export class EditInvoiceComponent implements OnDestroy {
     this.preview.id = this.invoice.id;
     this.preview.invoiceNo = this.invoice.invoiceNo;
     this.preview.isDraft = saveAsDraft;
-    this.preview.client = version.client.name;
+    this.preview.client = version.client.address.name;
     this.preview.address = version.client.address.district + ', ' + version.client.address.state + ' - ' + version.client.address.pin;
     this.preview.amount = version.total;
     this.preview.invoiceDate = version.invoiceDate;
@@ -572,7 +573,7 @@ export class EditInvoiceComponent implements OnDestroy {
   }
 
   getClientOptionText(option: Client) {
-    return option ? option.name : '';
+    return option ? option.address.name : '';
   }
 
   getAddressOptionText(option: Address) {
@@ -638,7 +639,7 @@ export class EditInvoiceComponent implements OnDestroy {
   }
 
   customerDetailChange() {
-    if (this.client.name && this.client.mobile) {
+    if (this.client.address.name && this.client.address.mobile) {
       this.isCustomerDetailValid = true;
     } else {
       this.isCustomerDetailValid = false;

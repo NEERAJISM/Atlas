@@ -1,10 +1,19 @@
 <ion-header *ngIf="isDesktop">
   <ion-toolbar>
-    <ion-title
-      style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
-    >
-      <b>&nbsp; ATLAS</b></ion-title
-    >
+    <ion-row>
+      <ion-col>
+        <ion-title style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'">
+          <b>&nbsp; ATLAS</b>
+        </ion-title>
+      </ion-col>
+      <ion-col>
+        <ion-button color="danger" *ngIf="uid" class="float-right" (click)="app.logout()">
+          <ion-icon name="power-outline"></ion-icon>
+          &nbsp;Logout
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -28,7 +37,7 @@
               Status -
               <b class="text-success">{{
                 order.status[order.status.length - 1].status
-              }}</b>
+                }}</b>
             </ion-col>
 
             <ion-col size="12" sizeMd="5">
@@ -41,7 +50,7 @@
               Status -
               <b class="text-success">{{
                 order.status[order.status.length - 1].status
-              }}</b>
+                }}</b>
             </ion-col>
           </ion-row>
         </ion-card-header>
@@ -50,7 +59,7 @@
             <ion-col size="12" sizeMd="8">
               <ion-item *ngFor="let item of order.items; index as i">
                 <ion-thumbnail slot="start" style="width: 75px; height: 75px">
-                  <img src="assets/images/profile/food1.jpg" />
+                  <img [src]="imgMap.get(item.id)" />
                 </ion-thumbnail>
                 <ion-label>
                   <h3>
@@ -82,9 +91,7 @@
 
   <ion-row>
     <ion-col offset-md="2" size-md="8" size="12">
-      <ion-button expand="block" (click)="increaseOrderLimit()"
-        >Show Previous Orders</ion-button
-      >
+      <ion-button expand="block" (click)="increaseOrderLimit()">Show Previous Orders</ion-button>
     </ion-col>
   </ion-row>
 </ion-content>

@@ -110,7 +110,7 @@
           </div>
           <div class="col-lg-3">
             <h5>Customer</h5>
-            <p>{{ order.client.name + "  (" + order.client.mobile + ")" }}</p>
+            <p>{{ order.client.address.name + "  (" + order.client.address.mobile + ")" }}</p>
           </div>
           <div class="col-lg-3">
             <h5># Order Id</h5>
@@ -130,7 +130,7 @@
                 <div class="col-lg-10">
                   <div *ngFor="let item of order.items" class="row mt-4">
                     <div>
-                      <img class="img-img" [src]="url" />
+                      <img class="img-img" [src]="imgMap.get(item.id)" />
                     </div>
                     <div class="col-lg-8 ml-4">
                       <div class="row">

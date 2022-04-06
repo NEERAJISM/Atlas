@@ -14,7 +14,7 @@
           <mat-label>Client Name</mat-label>
           <input
             matInput
-            [(ngModel)]="client.name"
+            [(ngModel)]="client.address.name"
             required
             type="text"
             name="clientName"
@@ -31,7 +31,7 @@
           <mat-label>Mobile No.</mat-label>
           <input
             matInput
-            [(ngModel)]="client.mobile"
+            [(ngModel)]="client.address.mobile"
             required
             type="number"
             name="clientMobile"
@@ -45,7 +45,7 @@
           <mat-label>Email-Id</mat-label>
           <input
             matInput
-            [(ngModel)]="client.email"
+            [(ngModel)]="client.address.email"
             type="email"
             name="clientEmail"
           />
@@ -174,9 +174,9 @@
     (click)="submit()"
     [disabled]="
       !(
-        client.name &&
-        client.name.length > 0 &&
-        client.mobile &&
+        client.address.name &&
+        client.address.name.length > 0 &&
+        client.address.mobile &&
         client.address &&
         client.address.line1 &&
         client.address.line1.length > 0 &&

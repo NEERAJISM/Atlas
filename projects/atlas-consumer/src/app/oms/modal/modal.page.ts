@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from 'atlas-core';
+import { AuthService, Client, Constants, FirebaseUtil } from 'atlas-core';
 import firebase from 'firebase/app';
 import { AppService } from '../../app.service';
 
@@ -23,7 +23,7 @@ export class ModalPage {
   recaptchaVerifier: firebase.auth.RecaptchaVerifier;
   confirmationResult: firebase.auth.ConfirmationResult;
 
-  constructor(private auth: AuthService, private service: AppService) {}
+  constructor(private auth: AuthService, private service: AppService, private fbUtil: FirebaseUtil) { }
 
   otpController(event, next, prev) {
     if (event.target.value.length < 1 && prev) {
@@ -62,14 +62,26 @@ export class ModalPage {
       this.confirmationResult
         .confirm(code)
         .then((result) => {
+          this.createUser(result.user.uid)
           this.service.closeModal('close');
         })
-        .catch((error) => {})
-        .finally(() => {this.verifying = false;});
+        .catch((error) => { })
+        .finally(() => { this.verifying = false; });
     }
   }
 
-  mobileChange(){
+  mobileChange() {
     this.otpRequested = false;
+  }
+
+  createUser(id) {
+    var client = new Client();
+    client.id = id;
+    client.address.mobile = this.mobile;
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.USER)
+      .doc(id)
+      .set(this.fbUtil.toJson(client), { merge: true });
   }
 }

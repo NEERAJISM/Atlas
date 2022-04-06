@@ -17,6 +17,10 @@ export class CommonUtil {
     return Math.round((price * tax + Number.EPSILON) * 100) / 100;
   }
 
+  roundOff(x: number){
+    return Math.round((x + Number.EPSILON) * 100) / 100;
+  }
+
   getFormattedDate(date: Date): string {
     const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
     const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);

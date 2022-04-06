@@ -97,10 +97,10 @@ export class InvoiceService {
 
     const dataSellerAddress = this.getAddressArray();
 
-    dataSellerAddress[0][0] = i.client.name;
+    dataSellerAddress[0][0] = i.client.address.name;
     dataSellerAddress[1][0] = 'PAN : ' + (i.client.gst ? i.client.gst : '');
-    dataSellerAddress[2][0] = 'Email : ' + (i.client.email ? i.client.email : '');
-    dataSellerAddress[3][0] = 'Mobile : ' + (i.client.mobile ? '+91 - ' + i.client.mobile : '');
+    dataSellerAddress[2][0] = 'Email : ' + (i.client.address.email ? i.client.address.email : '');
+    dataSellerAddress[3][0] = 'Mobile : ' + (i.client.address.mobile ? '+91 - ' + i.client.address.mobile : '');
 
     dataSellerAddress[0][1] = i.client.address.line1 ? i.client.address.line1 : '';
     dataSellerAddress[1][1] = i.client.address.line2 ? i.client.address.line2 : '';

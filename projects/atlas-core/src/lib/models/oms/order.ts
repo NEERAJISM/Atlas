@@ -5,16 +5,11 @@ export class Order {
   id: string;
   vId: string;
 
-  //TODO remove later
-  userId: string;
-
   client: Client = new Client();
   billingAddress: Address = new Address();
   shippingAddress: Address = new Address();
 
   bizId: string;
-  bizName: string;
-  bizMob: string;
 
   createdTimeUTC: number;
   status: OrderStatus[] = [];

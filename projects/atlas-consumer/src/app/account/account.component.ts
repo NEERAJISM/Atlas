@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonUtil, Constants, FirebaseUtil, Order } from 'atlas-core';
+import { AuthService, CommonUtil, Constants, FirebaseUtil, Order } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
 
@@ -12,11 +12,26 @@ export class AccountComponent {
   isDesktop = false;
 
   orders: Order[] = [];
+  imgMap: Map<string, string> = new Map();
   orderSubscription: Subscription;
 
-  constructor(public fbUtil: FirebaseUtil, private commonUtil : CommonUtil, private app: AppService) {
+  uid = '';
+  constructor(public fbUtil: FirebaseUtil, private commonUtil : CommonUtil, private auth: AuthService, public app: AppService) {
+    this.app.presentLoading();
     this.isDesktop = app.isDesktop;
-    this.loadOrders();
+    this.initUser();
+  }
+
+  initUser() {
+    this.auth.getUserId().subscribe((user) => {
+      if (!user) {
+        this.app.dismissLoading();
+        this.app.go('');
+      } else {
+        this.uid = user.uid;
+        this.loadOrders();
+      }
+    });
   }
 
   loadOrders() {
@@ -26,7 +41,7 @@ export class AccountComponent {
       .collection(
         Constants.USER +
           '/' +
-          'my7dwdbkikdLXrKvZDtYSV3ugfP2' +
+          this.uid+
           '/' +
           Constants.ORDERS,
         (ref) => ref.orderBy('createdTimeUTC', 'desc').limit(this.limit)
@@ -46,6 +61,19 @@ export class AccountComponent {
 
   updateOrders(result: Order[]) {
     this.orders = result;
+    this.orders.forEach(order => {
+      order.items.forEach(item => {
+        this.downloadProductImage(order.bizId, item.id);
+      });
+    });
+    this.app.dismissLoading();
+  }
+
+  downloadProductImage(bizId, id) {
+    this.fbUtil.downloadImage(Constants.PRODUCT + '/' + bizId + '/' + id + '/1.png')
+      .subscribe((url) => {
+        this.imgMap.set(id, url);
+      });
   }
 
   increaseOrderLimit() {

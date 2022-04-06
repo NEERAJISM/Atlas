@@ -1,34 +1,26 @@
 <ion-header>
-  <ion-toolbar class="my-2">
+  <ion-toolbar style="--background: {{ profile.color }}; --color: {{ profile.fontColor }}">
     <ion-row>
       <ion-col class="ion-no-padding" size="0" sizeMd="3">
-        <ion-title
-          style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
-          class="pt-3"
-        >
-          <img style="height: 60px" src="{{ profile.icon }}" (click)="home()" />
-          <b>&nbsp; {{ profile.title }} </b></ion-title
-        >
+        <ion-title style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'">
+          <img style="height: 60px" [src]="icon" (click)="home()" />
+          <b>&nbsp; {{ profile.title }} </b>
+        </ion-title>
       </ion-col>
       <ion-col class="mt-md-0" size="9" size-md="6">
-        <ion-searchbar
-          [(ngModel)]="search"
-          (ngModelChange)="updateSearchResults()"
-        ></ion-searchbar>
+        <ion-searchbar [(ngModel)]="search" (ngModelChange)="updateSearchResults()"></ion-searchbar>
       </ion-col>
       <ion-col size="3">
-        <ion-button
-          *ngIf="isDesktop"
-          (click)="routeToCheckout()"
-          disabled="{{ cartSize == 0 }}"
-        >
+        <ion-button *ngIf="uid" class="float-right" color="danger" (click)="service.logout()">
+          <ion-icon name="power-outline"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="uid" class="float-right" (click)="account()">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button class="mx-4 float-right" *ngIf="isDesktop" (click)="routeToCheckout()" disabled="{{ cartSize == 0 }}">
           <ion-icon slot="start" name="bag-handle-outline"></ion-icon>
           <ion-text class="d-none d-md-block"> Cart &nbsp;</ion-text>
           <ion-badge color="warning">{{ cartSize }}</ion-badge>
-        </ion-button>
-
-        <ion-button (click)="account()">
-          <ion-icon name="person-circle-outline"></ion-icon>
         </ion-button>
       </ion-col>
     </ion-row>
@@ -37,107 +29,78 @@
 
 <ion-content class="ion-padding">
   <!-- fab placed to the bottom end -->
-  <ion-fab
-    *ngIf="!isDesktop && cartSize > 0"
-    vertical="bottom"
-    horizontal="end"
-    slot="fixed"
-  >
+  <ion-fab *ngIf="!isDesktop && cartSize > 0" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="routeToCheckout()">
       <ion-icon name="cart-outline"></ion-icon>
-      <ion-badge
-        color="warning"
-        style="position: absolute; top: 1mm; right: 3mm"
-        >{{ cartSize }}</ion-badge
-      >
+      <ion-badge color="warning" style="position: absolute; top: 1mm; right: 3mm">{{ cartSize }}</ion-badge>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-row noWrap class="mx-md-5" *ngIf="this.unitDisplayMap.size > 0">
-    <ion-col
-      *ngFor="let item of items | keyvalue"
-      size-lg="3"
-      size-md="4"
-      size-sm="6"
-      size="12"
-      [style.display]="displayMap.get(item.value.id) ? 'block' : 'none'"
-    >
+  <ion-row noWrap class="mx-md-5">
+    <ion-col *ngFor="let item of items | keyvalue" size-lg="3" size-md="4" size-sm="6" size="12"
+      [style.display]="displayMap.get(item.key) ? 'block' : 'none'">
       <ion-card>
-        <img
-          style="width: 100%; height: 300px;"
-          [src]="imgMap.get(item.value.id)"
-        />
+        <img style="width: 100%; height: 300px" [src]="imgMap.get(item.key)" />
         <ion-card-header>
           <ion-card-title>{{ item.value.name }}</ion-card-title>
-          <ion-card-subtitle>{{item.value.desc}}</ion-card-subtitle>
+          <ion-card-subtitle>{{ item.value.desc }}</ion-card-subtitle>
           <ion-row>
             <ion-col class="ion-no-padding">
               <p style="height: 100%; align-items: center; display: flex">
-                Rs. {{ item.value.units[unitDisplayMap.get(item.value.id)].price }}
+                Rs.
+                {{ item.value.units[unitDisplayMap.get(item.key)].price}}
               </p>
             </ion-col>
             <ion-col>
-              <ion-select
-                interface="popover"
-                [value]="item.value.units[0].unit"
-                (ionChange)="selectionChange($event, item.value.id)"
-              >
-                <ion-select-option
-                  *ngFor="let unit of item.value.units"
-                  [value]="unit.unit"
-                  >{{ unit.unit }}</ion-select-option
-                >
+              <ion-select interface="popover" [value]="item.value.units[unitDisplayMap.get(item.key)].unit"
+                (ionChange)="selectionChange($event, item.key)">
+                <ion-select-option *ngFor="let unit of item.value.units" [value]="unit.unit">{{ unit.unit }}
+                </ion-select-option>
               </ion-select>
             </ion-col>
           </ion-row>
 
-          <ion-row
-            *ngIf="
+          <ion-row *ngIf="
               !(
-                cartMap.has(item.value.id) &&
+                cartMap.has(item.key) &&
                 cartMap
-                  .get(item.value.id)
-                  .has(item.value.units[unitDisplayMap.get(item.value.id)].unit)
+                  .get(item.key)
+                  .has(item.value.units[unitDisplayMap.get(item.key)].unit)
               )
-            "
-          >
+            ">
             <ion-col>
-              <ion-button expand="block" (click)="addToCart(item.value.id)"
-                >Add to Cart</ion-button
-              >
+              <ion-button expand="block" (click)="addToCart(item.key)">Add to Cart</ion-button>
             </ion-col>
           </ion-row>
 
-          <ion-row
-            *ngIf="
-              cartMap.has(item.value.id) &&
+          <ion-row *ngIf="
+              cartMap.has(item.key) &&
               cartMap
-                .get(item.value.id)
-                .has(item.value.units[unitDisplayMap.get(item.value.id)].unit)
-            "
-          >
+                .get(item.key)
+                .has(item.value.units[unitDisplayMap.get(item.key)].unit)
+            ">
             <ion-col>
-              <ion-button expand="block" (click)="addToCart(item.value.id)">
+              <ion-button expand="block" (click)="addToCart(item.key)">
                 <ion-icon name="add-outline"></ion-icon>
               </ion-button>
             </ion-col>
-            <ion-col
-              style="
+            <ion-col style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              "
-            >
+              ">
               <h5>
                 {{
-                  cartMap
-                    .get(item.value.id)
-                    .get(item.value.units[unitDisplayMap.get(item.value.id)].unit)
+                cartMap
+                .get(item.key)
+                .get(
+                item.value.units[unitDisplayMap.get(item.key)].unit
+                )
                 }}
               </h5>
             </ion-col>
             <ion-col>
-              <ion-button expand="block" (click)="removeFromCart(item.value.id)">
+              <ion-button expand="block" (click)="removeFromCart(item.key)">
                 <ion-icon name="remove-outline"></ion-icon>
               </ion-button>
             </ion-col>

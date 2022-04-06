@@ -139,7 +139,7 @@
               <input
                 matInput
                 required
-                [ngModel]="client.name"
+                [ngModel]="client.address.name"
                 (ngModelChange)="clientNameChange($event)"
                 type="text"
                 name="customerName"
@@ -150,9 +150,9 @@
               <mat-autocomplete #autoClient="matAutocomplete">
                 <mat-option
                   *ngFor="let option of clientObservable | async"
-                  [value]="option.name"
+                  [value]="option.address.name"
                 >
-                  {{ option.name }}
+                  {{ option.address.name }}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
@@ -196,7 +196,7 @@
               <mat-label>Mobile No. (10 digit)</mat-label>
               <input
                 matInput
-                [ngModel]="client.mobile"
+                [ngModel]="client.address.mobile"
                 (ngModelChange)="customerDetailChange()"
                 required
                 type="text"
@@ -211,7 +211,7 @@
               <mat-label>Email-Id</mat-label>
               <input
                 matInput
-                [(ngModel)]="client.email"
+                [(ngModel)]="client.address.email"
                 type="email"
                 name="customerEmail"
               />

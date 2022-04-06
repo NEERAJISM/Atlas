@@ -48,9 +48,9 @@ export class AppService {
     this.cart.next(s);
   }
 
-  async presentToast(message: string) {
+  async presentToast(message: string, bottom?: boolean) {
     const toast = await this.toastController.create({
-      position: this.isDesktop ? 'top' : 'bottom',
+      position: bottom ? 'bottom' : this.isDesktop ? 'top' : 'bottom',
       message: message,
       duration: 3000,
     });

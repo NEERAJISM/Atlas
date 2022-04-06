@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import {
   AuthService,
   Cart,
@@ -20,8 +20,8 @@ import { ModalPage } from './modal/modal.page';
   templateUrl: './oms.component.html',
 })
 export class OmsComponent implements OnInit, OnDestroy {
-  display = true;
-  profile: Profile;
+  profile: Profile = new Profile();
+  icon = '';
 
   items: Map<string, Product> = new Map();
   imgMap: Map<string, string> = new Map();
@@ -44,17 +44,14 @@ export class OmsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    public modalController: ModalController,
-    private service: AppService,
+    private modalController: ModalController,
+    public service: AppService,
     private location: Location,
     private fbUtil: FirebaseUtil,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
     this.isDesktop = service.isDesktop;
     this.service.presentLoading();
-
-    this.profile = this.service.getProfile();
-
     this.init();
   }
 
@@ -72,15 +69,36 @@ export class OmsComponent implements OnInit, OnDestroy {
           return;
         }
         this.bizId = (doc.data() as any).id;
+        this.getProfile();
         this.getItems();
         this.initUser();
+      });
+  }
+
+  getProfile() {
+    this.fbUtil
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
+
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
+      )
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.profile, doc.data());
+        }
       });
   }
 
   initUser(){
     this.subscriptions.push(
       this.authService.getUserId().subscribe((user) => {
-        this.service.dismissLoading();
         if (user) {
           this.uid = user.uid;
           this.initForUser();
@@ -98,15 +116,14 @@ export class OmsComponent implements OnInit, OnDestroy {
           if (data.data()) {
             const p = new Product();
             Object.assign(p, data.data());
+            this.unitDisplayMap.set(p.id, 0);
+            this.displayMap.set(p.id, true);
             this.items.set(p.id, p);
             this.downloadProductImage(p.id);
           }
         })
       ).then(() => {
-        for (let i of this.items.values()) {
-          this.unitDisplayMap.set(i.id, 0);
-          this.displayMap.set(i.id, true);
-        }
+        this.service.dismissLoading();
       });
   }
 
@@ -157,13 +174,26 @@ export class OmsComponent implements OnInit, OnDestroy {
           const cart = new Cart();
           Object.assign(cart, doc.data());
           cart.items.forEach((item) => {
+            let index = this.items.get(item.itemId).units.findIndex(unit => unit.unit === item.unit);
+            
+            if(index === -1) {
+              // do not add to cart in cases when unit is not available / updated
+              return;
+            }
+           
             this.cartSize++;
             if (!this.cartMap.has(item.itemId)) {
               this.cartMap.set(item.itemId, new Map());
             }
+
             var m = this.cartMap.get(item.itemId);
             m.set(item.unit, item.qty);
+            this.unitDisplayMap.set(item.itemId, index);
           });
+
+          if(this.cartSize > cart.items.length) {
+            this.updateCart();
+          }
         }
       });
   }

@@ -133,7 +133,7 @@ export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
     this.dialog.open(RemoveClientComponent, {
       data: {
         id: client.id,
-        name: client.name,
+        name: client.address.name,
       },
     });
   }

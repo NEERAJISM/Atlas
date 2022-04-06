@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   AlertController,
-  ModalController,
+  ModalController
 } from '@ionic/angular';
 import {
   Address,
@@ -19,11 +20,10 @@ import {
   Product,
   Profile,
   Status,
-  Unit,
+  Unit
 } from 'atlas-core';
 import { v4 as uuidv4 } from 'uuid';
 import { AppService } from '../app.service';
-import { ModalPage } from '../oms/modal/modal.page';
 
 @Component({
   selector: 'app-account',
@@ -31,14 +31,15 @@ import { ModalPage } from '../oms/modal/modal.page';
   styleUrls: ['./checkout.component.scss'],
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
-  profile: Profile;
+  icon = '';
+  profile: Profile = new Profile();
   client = new Client();
 
   items: Map<string, Product> = new Map();
   units: Map<string, Unit> = new Map();
+  imgMap: Map<string, string> = new Map();
 
   cartItems: CartItem[] = [];
-  orderRequested = false;
 
   edit_address = false;
   shippingAddressSame = true;
@@ -48,25 +49,97 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   total = 0;
   isDesktop = false;
 
+  bizId = '';
+
   constructor(
-    public modalController: ModalController,
-    public alertController: AlertController,
-    private service: AppService,
+    private router: Router,
+    private modalController: ModalController,
+    private alertController: AlertController,
+    public service: AppService,
     private authService: AuthService,
     private location: Location,
     private fbUtil: FirebaseUtil,
     private commonUtil: CommonUtil
   ) {
     this.isDesktop = service.isDesktop;
-    this.getClient();
-    this.profile = this.service.getProfile();
-    this.mapItems(this.service.getItems());
+    this.service.presentLoading();
+    this.init();
+  }
 
+  init() {
+    var profileName = this.location.path().substring(1).split('/')[0];
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.PROFILE)
+      .doc(profileName)
+      .get()
+      .subscribe((doc) => {
+        if (!doc.exists) {
+          this.service.presentToast('No Profile found for - ' + profileName);
+          this.router.navigateByUrl('');
+          return;
+        }
+        this.bizId = (doc.data() as any).id;
+        this.getProfile();
+        this.getItems();
+        this.initUser();
+      });
+  }
+
+  getProfile() {
+    this.fbUtil
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
+
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.PROFILE
+      )
+      .doc(this.bizId)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          Object.assign(this.profile, doc.data());
+        }
+      });
+  }
+
+  getItems() {
+    this.fbUtil
+      .getProductRef(this.bizId)
+      .get()
+      .forEach((res) =>
+        res.forEach((data) => {
+          if (data.data()) {
+            const p = new Product();
+            Object.assign(p, data.data());
+            this.items.set(p.id, p);
+            this.downloadProductImage(p.id);
+          }
+        })
+      ).then(() => {
+        this.service.dismissLoading();
+      });
+  }
+
+  downloadProductImage(id) {
+    this.fbUtil.downloadImage(Constants.PRODUCT + '/' + this.bizId + '/' + id + '/1.png')
+      .subscribe((url) => {
+        this.imgMap.set(id, url);
+      });
+  }
+
+  initUser() {
     this.authService.getUserId().subscribe((user) => {
       if (!user) {
-        setTimeout(() => this.presentModal(), 700);
+        this.home();
       } else {
         this.client.id = user.uid;
+        this.client.address.mobile = user.phoneNumber;
+        this.shippingAddress = this.client.address;
         this.initForUser();
       }
     });
@@ -77,6 +150,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async presentAlert() {
+    if (!this.isValidAddress()) {
+      this.service.presentToast('Please enter valid address details!')
+      return;
+    }
+
     const alert = await this.alertController.create({
       header: 'Confirmation',
       message: 'Please confirm your order.',
@@ -96,6 +174,28 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
+  isValidAddress() {
+    return (
+      this.shippingAddress.name &&
+      this.shippingAddress.mobile &&
+      this.shippingAddress.mobile.length > 9 &&
+      this.shippingAddress.line1 &&
+      this.shippingAddress.pin &&
+      this.shippingAddress.pin.toString().length > 5 &&
+      this.shippingAddress.district &&
+      this.shippingAddress.state &&
+      (this.shippingAddressSame ||
+        (this.billingAddress.name &&
+          this.billingAddress.mobile &&
+          this.billingAddress.mobile.length > 9 &&
+          this.billingAddress.line1 &&
+          this.billingAddress.pin &&
+          this.billingAddress.pin.toString().length > 5 &&
+          this.billingAddress.district &&
+          this.billingAddress.state))
+    );
+  }
+
   ngOnInit(): void {
     this.service.modalCloseEvent.subscribe((s) => {
       if (s === 'close') {
@@ -110,26 +210,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.modalController.dismiss();
   }
 
-  async presentModal() {
-    const modal = await this.modalController.create({
-      component: ModalPage,
-      backdropDismiss: false,
-    });
-    return await modal.present();
-  }
-
-  getClient() {
-    this.shippingAddress.name = 'Neeraj Patidar';
-    this.shippingAddress.mobile = '8877073059';
-    this.shippingAddress.email = 'abc@gmail.com';
-    this.shippingAddress.line1 =
-      'c/o Balkrishna Patidar, Patidar basti, Gamda Brahmaniya';
-    this.shippingAddress.line2 = 'Sagwara';
-    this.shippingAddress.district = 'Dungarpur';
-    this.shippingAddress.state = 'Rajasthan';
-    this.shippingAddress.pin = 314025;
-  }
-
   home() {
     this.service.go('');
   }
@@ -142,34 +222,45 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.client.id + '/' + Constants.CART)
-      .doc('bizId')
+      .doc(this.bizId)
       .get()
       .subscribe((doc) => {
         if (doc.data()) {
           var cart = new Cart();
           Object.assign(cart, doc.data());
-          this.cartItems = cart.items;
-          this.mapUnits();
-          this.calcTotal();
+          this.mapUnits(cart.items);
+        }
+      });
+
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.USER)
+      .doc(this.client.id)
+      .get()
+      .subscribe(doc => {
+        if (doc.exists) {
+          Object.assign(this.client, doc.data());
+          Object.assign(this.shippingAddress, this.client.address);
         }
       });
   }
 
-  mapItems(allItems: Product[]) {
-    allItems.forEach((product) => {
-      this.items.set(product.id, product);
-    });
-  }
+  mapUnits(items: CartItem[]) {
+    items.forEach((item) => {
+      var unit = this.items.get(item.itemId).units.find((unit) => item.unit === unit.unit);
 
-  mapUnits() {
-    this.cartItems.forEach((item) => {
-      this.units.set(
-        item.itemId + '-' + item.unit,
-        this.items
-          .get(item.itemId)
-          .units.find((unit) => item.unit === unit.unit)
-      );
+      if (!unit) {
+        return;
+      }
+      this.cartItems.push(item);
+      this.units.set(item.itemId + '-' + item.unit, unit);
     });
+
+    if (this.cartItems.length < items.length) {
+      this.syncCart();
+    } else {
+      this.calcTotal();
+    }
   }
 
   getDate(epoch: number) {
@@ -185,12 +276,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.calcTotal();
     var cart = new Cart();
     cart.items = this.cartItems;
-    const doc = this.fbUtil.toJson(cart);
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.client.id + '/' + Constants.CART)
-      .doc('bizId')
-      .set(doc)
+      .doc(this.bizId)
+      .set(this.fbUtil.toJson(cart))
       .finally(() => this.service.cartUpdated(''));
   }
 
@@ -225,8 +315,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   placeOrder() {
     // TODO Show referenece number / send email to customer
-
-    // create or get user - based on mobile no verification
+    this.service.presentLoading();
 
     const order: Order = new Order();
     order.id = this.fbUtil.getId();
@@ -239,9 +328,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       ? this.shippingAddress
       : this.billingAddress;
 
-    order.bizId = 'bizId';
-    order.bizName = 'Lakecity Waters';
-    order.bizMob = '+91 - 8877073059';
+    order.bizId = this.bizId;
 
     const status: OrderStatus = new OrderStatus();
     status.status = Status.New;
@@ -276,7 +363,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     const doc = this.fbUtil.toJson(order);
 
-    this.orderRequested = true;
     this.fbUtil
       .getInstance()
       .collection(
@@ -297,15 +383,23 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.presentToast();
         this.cartItems = [];
         this.syncCart();
+        this.updateClient();
         this.service.go('/account');
       })
-      .catch(() =>
-        this.service.presentToast(
-          'Error occurred, Please check Internet connectivity'
-        )
-      )
-      .finally(() => {
-        this.orderRequested = false;
-      });
+      .catch(() => this.service.presentToast('Error occurred, Please check Internet connectivity'))
+      .finally(() => this.service.dismissLoading());
+  }
+
+  account() {
+    this.router.navigateByUrl('/account');
+  }
+
+  updateClient() {
+    this.client.address = this.shippingAddressSame ? this.shippingAddress : this.billingAddress;
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.USER)
+      .doc(this.client.id)
+      .set(this.fbUtil.toJson(this.client), { merge: true });
   }
 }

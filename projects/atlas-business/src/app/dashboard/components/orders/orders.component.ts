@@ -18,6 +18,7 @@ export class OrdersDashboardComponent implements OnDestroy {
 
   tabStatus: Status = null;
 
+  imgMap: Map<string, string> = new Map();
   allOrders: Order[] = [];
   orders: Order[] = [];
   orderSubscription: Subscription;
@@ -26,8 +27,6 @@ export class OrdersDashboardComponent implements OnDestroy {
   timeout?: number;
 
   bizId = '';
-  //TODO update
-  url = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
 
   constructor(private fbUtil: FirebaseUtil, private util: CommonUtil, private app: AppService, private auth: AuthService) {
     this.auth.afAuth.authState.subscribe((user) => {
@@ -78,6 +77,19 @@ export class OrdersDashboardComponent implements OnDestroy {
     this.allOrders = result;
     this.orders = result;
     this.updateTabs();
+
+    this.orders.forEach(order => {
+      order.items.forEach(item => {
+        this.downloadProductImage(item.id);
+      });
+    });
+  }
+
+  downloadProductImage(id) {
+    this.fbUtil.downloadImage(Constants.PRODUCT + '/' + this.bizId + '/' + id + '/1.png')
+      .subscribe((url) => {
+        this.imgMap.set(id, url);
+      });
   }
 
   updateTabs() {
@@ -181,7 +193,7 @@ export class OrdersDashboardComponent implements OnDestroy {
         this.fbUtil
           .getInstance()
           .collection(
-            Constants.USER + '/' + order.client.userId + '/' + Constants.ORDERS
+            Constants.USER + '/' + order.client.id + '/' + Constants.ORDERS
           )
           .doc(order.id)
           .set(doc)

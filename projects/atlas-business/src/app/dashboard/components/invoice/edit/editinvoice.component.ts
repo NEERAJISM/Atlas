@@ -196,7 +196,7 @@ export class EditInvoiceComponent implements OnDestroy {
   fetchClients() {
     const result: Client[] = [];
     this.fbutil
-      .getClientRef('bizId')
+      .getClientRef(this.bizId)
       .get()
       .forEach((res) =>
         res.forEach((data) => {

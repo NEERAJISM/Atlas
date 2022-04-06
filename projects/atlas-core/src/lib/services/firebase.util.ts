@@ -42,16 +42,16 @@ export class FirebaseUtil {
 
   getClientRef(bizId: string): AngularFirestoreCollection {
     return this.firestore
-      .collection(Constants.CLIENT_DB)
+      .collection(Constants.BUSINESS)
       .doc(bizId)
-      .collection(Constants.CLIENTS);
+      .collection(Constants.CLIENT);
   }
 
   getProductRef(bizId: string): AngularFirestoreCollection {
     return this.firestore
-      .collection(Constants.PRODUCT_DB)
+      .collection(Constants.BUSINESS)
       .doc(bizId)
-      .collection(Constants.PRODUCTS);
+      .collection(Constants.PRODUCT);
   }
 
   getInvoiceRef(bizId: string): AngularFirestoreCollection {

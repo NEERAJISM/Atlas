@@ -23,11 +23,12 @@ export class OmsComponent implements OnInit, OnDestroy {
   display = true;
   profile: Profile;
 
-  items: Product[] = [];
+  items: Map<string, Product> = new Map();
+  imgMap: Map<string, string> = new Map();
 
   search: string = '';
-  displayMap: Map<number, boolean> = new Map();
-  unitDisplayMap: Map<number, number> = new Map();
+  displayMap: Map<string, boolean> = new Map();
+  unitDisplayMap: Map<string, number> = new Map();
 
   cartSize = 0;
   cartMap: Map<string, Map<string, number>> = new Map();
@@ -39,6 +40,7 @@ export class OmsComponent implements OnInit, OnDestroy {
 
   isDesktop = false;
   profileName = '';
+  bizId = '';
 
   constructor(
     private router: Router,
@@ -51,11 +53,31 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.isDesktop = service.isDesktop;
     this.service.presentLoading();
 
-    this.profileName = this.location.path().substring(1).split('/')[0];
-
-    this.init();
     this.profile = this.service.getProfile();
 
+    this.init();
+  }
+
+  init() {
+    this.profileName = this.location.path().substring(1).split('/')[0];
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.PROFILE)
+      .doc(this.profileName)
+      .get()
+      .subscribe((doc) => {
+        if (!doc.exists) {
+          this.service.presentToast('No Profile found for - ' + this.profileName);
+          this.router.navigateByUrl('');
+          return;
+        }
+        this.bizId = (doc.data() as any).id;
+        this.getItems();
+        this.initUser();
+      });
+  }
+
+  initUser(){
     this.subscriptions.push(
       this.authService.getUserId().subscribe((user) => {
         this.service.dismissLoading();
@@ -65,6 +87,34 @@ export class OmsComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  getItems() {
+    this.fbUtil
+      .getProductRef(this.bizId)
+      .get()
+      .forEach((res) =>
+        res.forEach((data) => {
+          if (data.data()) {
+            const p = new Product();
+            Object.assign(p, data.data());
+            this.items.set(p.id, p);
+            this.downloadProductImage(p.id);
+          }
+        })
+      ).then(() => {
+        for (let i of this.items.values()) {
+          this.unitDisplayMap.set(i.id, 0);
+          this.displayMap.set(i.id, true);
+        }
+      });
+  }
+
+  downloadProductImage(id) {
+    this.fbUtil.downloadImage(Constants.PRODUCT + '/' + this.bizId + '/' + id + '/1.png')
+      .subscribe((url) => {
+        this.imgMap.set(id, url);
+      });
   }
 
   ngOnInit(): void {
@@ -92,14 +142,14 @@ export class OmsComponent implements OnInit, OnDestroy {
   }
 
   initForUser() {
-    if(!this.uid){
+    if (!this.uid || !this.bizId) {
       return;
     }
 
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.uid + '/' + Constants.CART)
-      .doc('bizId')
+      .doc(this.bizId)
       .get()
       .subscribe((doc) => {
         if (doc.data()) {
@@ -126,24 +176,13 @@ export class OmsComponent implements OnInit, OnDestroy {
     return await modal.present();
   }
 
-  init() {
-    this.items = this.service.getItems();
-
-    for (let i = 0; i <= this.items.length; i++) {
-      this.unitDisplayMap.set(i, 0);
-      this.displayMap.set(i, true);
-    }
-  }
-
-  addToCart(i: number) {
-    if(!this.uid) {
+  addToCart(id: string) {
+    if (!this.uid) {
       this.presentModal();
       return;
     }
 
-    var id = this.items[i].id;
-    var u = this.items[i].units[this.unitDisplayMap.get(i)];
-
+    var u = this.items.get(id).units[this.unitDisplayMap.get(id)];
     if (this.cartMap.has(id) && this.cartMap.get(id).has(u.unit)) {
       this.cartMap.get(id).set(u.unit, this.cartMap.get(id).get(u.unit) + 1);
     } else {
@@ -157,9 +196,8 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.updateCart();
   }
 
-  removeFromCart(i: number) {
-    var id = this.items[i].id;
-    var u = this.items[i].units[this.unitDisplayMap.get(i)];
+  removeFromCart(id: string) {
+    var u = this.items.get(id).units[this.unitDisplayMap.get(id)];
 
     this.cartMap.get(id).set(u.unit, this.cartMap.get(id).get(u.unit) - 1);
     if (this.cartMap.get(id).get(u.unit) === 0) {
@@ -172,21 +210,21 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.updateCart();
   }
 
-  selectionChange(event, i: number) {
-    this.unitDisplayMap.set(i, this.items[i].units.indexOf(event.detail.value));
-    for (let index in this.items[i].units) {
-      var u = this.items[i].units[index];
+  selectionChange(event, id: string) {
+    this.unitDisplayMap.set(id, this.items.get(id).units.indexOf(event.detail.value));
+    for (let index in this.items.get(id).units) {
+      var u = this.items.get(id).units[index];
       if (u.unit === event.detail.value) {
-        this.unitDisplayMap.set(i, Number(index));
+        this.unitDisplayMap.set(id, Number(index));
         return;
       }
     }
   }
 
   updateSearchResults() {
-    this.items.forEach((item, i) => {
+    this.items.forEach((item) => {
       this.displayMap.set(
-        i,
+        item.id,
         item.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
       );
     });
@@ -216,7 +254,7 @@ export class OmsComponent implements OnInit, OnDestroy {
     this.fbUtil
       .getInstance()
       .collection(Constants.USER + '/' + this.uid + '/' + Constants.CART)
-      .doc('bizId')
+      .doc(this.bizId)
       .set(doc);
   }
 

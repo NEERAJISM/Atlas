@@ -1,20 +1,29 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FirebaseUtil } from 'atlas-core';
+import { AuthService, FirebaseUtil } from 'atlas-core';
 
 @Component({
   selector: 'remove-product-dialog',
   templateUrl: 'remove.product.component.html',
 })
 export class RemoveProductComponent {
+  bizId = '';
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
-    public fbutil: FirebaseUtil
-  ) {}
+    public fbutil: FirebaseUtil,
+    private auth: AuthService
+  ) {
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+      }
+    });
+  }
 
   submit() {
     this.fbutil
-      .getProductRef('bizId')
+      .getProductRef(this.bizId)
       .doc(this.data.id)
       .delete()
       .then((res) => console.log(res))

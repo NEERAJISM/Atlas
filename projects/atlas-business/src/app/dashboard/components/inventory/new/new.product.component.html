@@ -48,7 +48,7 @@
       <button *ngIf="placeholder" mat-icon-button class="img-btn" (click)="file.click()">
         <i class="fa fa-camera text-white" style="font-size: 45px;"></i>
       </button>
-      <img class="img-img" *ngIf="!placeholder" [src]="url | async">
+      <img class="img-img" *ngIf="!placeholder" [src]="url">
     </div>
   </div>
 

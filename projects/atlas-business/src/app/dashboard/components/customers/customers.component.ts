@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Client, FirebaseUtil } from 'atlas-core';
+import { AuthService, Client, FirebaseUtil } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../app.service';
 import { NewClientComponent } from './new/new.client.component';
@@ -19,7 +19,7 @@ export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   client: Client;
-  dataSource: MatTableDataSource<Client>;
+  dataSource: MatTableDataSource<Client> = new MatTableDataSource();
   subscription: Subscription;
   dialogSubscription: Subscription;
   displayedColumns: string[] = [
@@ -33,12 +33,19 @@ export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
     'actions',
   ];
 
-  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog, private service: AppService) {
+  bizId = '';
+
+  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog, private service: AppService, private auth: AuthService) {
     this.service.presentLoading();
-    this.dataSource = new MatTableDataSource();
-    this.subscribeToUpdates();
-    this.dialogSubscription = this.dialog.afterAllClosed.subscribe(() => this.fetchClients());
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+        this.subscribeToUpdates();
+        this.dialogSubscription = this.dialog.afterAllClosed.subscribe(() => this.fetchClients());
+      }
+    });
   }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.dialogSubscription.unsubscribe();
@@ -51,7 +58,7 @@ export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
 
   subscribeToUpdates() {
     this.subscription = this.fbutil
-      .getClientRef('bizId')
+      .getClientRef(this.bizId)
       .snapshotChanges()
       .subscribe(() => {
         this.fetchClients();
@@ -61,7 +68,7 @@ export class CustomersDashboardComponent implements AfterViewInit, OnDestroy {
   fetchClients() {
     const result: Client[] = [];
     this.fbutil
-      .getClientRef('bizId')
+      .getClientRef(this.bizId)
       .get()
       .forEach((res) =>
         res.forEach((data) => {

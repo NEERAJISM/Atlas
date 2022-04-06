@@ -18,20 +18,11 @@ export class Constants {
   static readonly INVOICE_PREVIEW = 'INVOICE_PREVIEW';
   static readonly INVOICE_NUMBER = 'INVOICE_NUMBER';
 
+  static readonly PRODUCT = 'PRODUCT';
+  static readonly CLIENT = 'CLIENT';
+
   static readonly USER = 'USER';
   static readonly CART = 'CART';
-
-  // TODO remove old
-  static readonly USER_DB = 'UserDB';
-  static readonly CLIENT_DB = 'ClientDB';
-  static readonly PRODUCT_DB = 'ProductDB';
-  static readonly ORDER_DB = 'OrderDB';
-  static readonly BIZ_ORDER_DB = 'BizOrderDB';
-  static readonly CLIENT_ORDER_DB = 'ClientOrderDB';
-
-  static readonly USERS = 'Users';
-  static readonly CLIENTS = 'Clients';
-  static readonly PRODUCTS = 'Products';
 
   // UI
   static readonly TAX_STRING_SGST = 'Tax (SGST + CGST)';

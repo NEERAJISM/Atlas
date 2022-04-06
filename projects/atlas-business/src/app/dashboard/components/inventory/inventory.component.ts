@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FirebaseUtil, Product } from 'atlas-core';
+import { AuthService, FirebaseUtil, Product } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../app.service';
 import { NewProductComponent } from './new/new.product.component';
@@ -21,7 +21,7 @@ export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
   product: Product;
   subscription: Subscription;
   dialogSubscription: Subscription;
-  dataSource: MatTableDataSource<Product>;
+  dataSource: MatTableDataSource<Product> = new MatTableDataSource();
   displayedColumns: string[] = [
     'name',
     'serial',
@@ -33,11 +33,17 @@ export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
     'actions'
   ];
 
-  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog, private service: AppService) {
+  bizId = '';
+
+  constructor(public fbutil: FirebaseUtil, public dialog: MatDialog, private service: AppService, private auth: AuthService) {
     this.service.presentLoading();
-    this.dataSource = new MatTableDataSource();
-    this.subscribeToUpdates();
-    this.dialogSubscription = this.dialog.afterAllClosed.subscribe(() => this.fetchProducts());
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+        this.subscribeToUpdates();
+        this.dialogSubscription = this.dialog.afterAllClosed.subscribe(() => this.fetchProducts());
+      }
+    });
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -51,7 +57,7 @@ export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
 
   subscribeToUpdates() {
     this.subscription = this.fbutil
-      .getProductRef('bizId')
+      .getProductRef(this.bizId)
       .snapshotChanges()
       .subscribe(() => {
         this.fetchProducts();
@@ -61,7 +67,7 @@ export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
   fetchProducts() {
     const result: Product[] = [];
     this.fbutil
-      .getProductRef('bizId')
+      .getProductRef(this.bizId)
       .get()
       .forEach((res) =>
         res.forEach((data) => {

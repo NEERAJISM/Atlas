@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { CommonUtil, Constants, FirebaseUtil, Order, OrderStatus, Status } from 'atlas-core';
+import { AuthService, CommonUtil, Constants, FirebaseUtil, Order, OrderStatus, Status } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../../../app.service';
 
@@ -25,24 +25,33 @@ export class OrdersDashboardComponent implements OnDestroy {
   value = '';
   timeout?: number;
 
+  bizId = '';
+  //TODO update
   url = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
 
-  constructor(private fbUtil: FirebaseUtil, private util: CommonUtil, private app: AppService) {
-    this.orderSubscription = this.fbUtil
-      .getInstance()
-      .collection(Constants.BUSINESS + '/' + 'bizId' + '/' + Constants.ORDERS)
-      .valueChanges()
-      .subscribe(() => this.loadOrders());
+  constructor(private fbUtil: FirebaseUtil, private util: CommonUtil, private app: AppService, private auth: AuthService) {
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+        this.init();
+      }
+    });
   }
 
-  // TODO better filtering to get actual new orders
+  init(){
+    this.orderSubscription = this.fbUtil
+    .getInstance()
+    .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.ORDERS)
+    .valueChanges()
+    .subscribe(() => this.loadOrders());
+  }
 
   loadOrders(isSearch?: boolean) {
     const result: Order[] = [];
     this.fbUtil
       .getInstance()
       .collection(
-        Constants.BUSINESS + '/' + 'bizId' + '/' + Constants.ORDERS,
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.ORDERS,
         (ref) => ref.orderBy('createdTimeUTC', 'desc').limit(this.limit)
       )
       .get()

@@ -6,7 +6,7 @@
           style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'"
           class="pt-3"
         >
-          <img style="height: 35px" src="{{ profile.icon }}" (click)="home()" />
+          <img style="height: 60px" src="{{ profile.icon }}" (click)="home()" />
           <b>&nbsp; {{ profile.title }} </b></ion-title
         >
       </ion-col>
@@ -53,37 +53,37 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-row noWrap class="mx-md-5">
+  <ion-row noWrap class="mx-md-5" *ngIf="this.unitDisplayMap.size > 0">
     <ion-col
-      *ngFor="let item of items; index as i"
+      *ngFor="let item of items | keyvalue"
       size-lg="3"
       size-md="4"
       size-sm="6"
       size="12"
-      [style.display]="displayMap.get(i) ? 'block' : 'none'"
+      [style.display]="displayMap.get(item.value.id) ? 'block' : 'none'"
     >
       <ion-card>
         <img
           style="width: 100%; height: 300px;"
-          src="{{ items[i].photoUrl }}"
+          [src]="imgMap.get(item.value.id)"
         />
         <ion-card-header>
-          <ion-card-title>{{ items[i].name }}</ion-card-title>
-          <ion-card-subtitle>Men Slim fit Casual Shirt</ion-card-subtitle>
+          <ion-card-title>{{ item.value.name }}</ion-card-title>
+          <ion-card-subtitle>{{item.value.desc}}</ion-card-subtitle>
           <ion-row>
             <ion-col class="ion-no-padding">
               <p style="height: 100%; align-items: center; display: flex">
-                Rs. {{ items[i].units[unitDisplayMap.get(i)].price }}
+                Rs. {{ item.value.units[unitDisplayMap.get(item.value.id)].price }}
               </p>
             </ion-col>
             <ion-col>
               <ion-select
                 interface="popover"
-                [value]="items[i].units[0].unit"
-                (ionChange)="selectionChange($event, i)"
+                [value]="item.value.units[0].unit"
+                (ionChange)="selectionChange($event, item.value.id)"
               >
                 <ion-select-option
-                  *ngFor="let unit of items[i].units"
+                  *ngFor="let unit of item.value.units"
                   [value]="unit.unit"
                   >{{ unit.unit }}</ion-select-option
                 >
@@ -94,15 +94,15 @@
           <ion-row
             *ngIf="
               !(
-                cartMap.has(items[i].id) &&
+                cartMap.has(item.value.id) &&
                 cartMap
-                  .get(items[i].id)
-                  .has(items[i].units[unitDisplayMap.get(i)].unit)
+                  .get(item.value.id)
+                  .has(item.value.units[unitDisplayMap.get(item.value.id)].unit)
               )
             "
           >
             <ion-col>
-              <ion-button expand="block" (click)="addToCart(i)"
+              <ion-button expand="block" (click)="addToCart(item.value.id)"
                 >Add to Cart</ion-button
               >
             </ion-col>
@@ -110,14 +110,14 @@
 
           <ion-row
             *ngIf="
-              cartMap.has(items[i].id) &&
+              cartMap.has(item.value.id) &&
               cartMap
-                .get(items[i].id)
-                .has(items[i].units[unitDisplayMap.get(i)].unit)
+                .get(item.value.id)
+                .has(item.value.units[unitDisplayMap.get(item.value.id)].unit)
             "
           >
             <ion-col>
-              <ion-button expand="block" (click)="addToCart(i)">
+              <ion-button expand="block" (click)="addToCart(item.value.id)">
                 <ion-icon name="add-outline"></ion-icon>
               </ion-button>
             </ion-col>
@@ -131,13 +131,13 @@
               <h5>
                 {{
                   cartMap
-                    .get(items[i].id)
-                    .get(items[i].units[unitDisplayMap.get(i)].unit)
+                    .get(item.value.id)
+                    .get(item.value.units[unitDisplayMap.get(item.value.id)].unit)
                 }}
               </h5>
             </ion-col>
             <ion-col>
-              <ion-button expand="block" (click)="removeFromCart(i)">
+              <ion-button expand="block" (click)="removeFromCart(item.value.id)">
                 <ion-icon name="remove-outline"></ion-icon>
               </ion-button>
             </ion-col>

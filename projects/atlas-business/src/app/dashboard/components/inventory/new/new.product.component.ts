@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CommonUtil, Constants, FirebaseUtil, Product, Unit } from 'atlas-core';
+import { AuthService, CommonUtil, Constants, FirebaseUtil, Product, Unit } from 'atlas-core';
 import { AppService } from 'projects/atlas-business/src/app/app.service';
 
 @Component({
@@ -9,24 +9,34 @@ import { AppService } from 'projects/atlas-business/src/app/app.service';
   styleUrls: ['./new.product.component.scss'],
 })
 export class NewProductComponent {
+  readonly optionsTax = Constants.optionsTax;
+
   product: Product;
   action = 'Add Product';
 
   url;
+  blob1;
   imgFile;
   placeholder = true;
 
-  blob1;
-  blob2;
-
-  readonly optionsTax = Constants.optionsTax;
+  bizId = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
     public fbutil: FirebaseUtil,
     public commonUtil: CommonUtil,
-    public appService: AppService
+    public appService: AppService,
+    private auth: AuthService
   ) {
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+        this.init(data);
+      }
+    });
+  }
+
+  init(data) {
     if (data) {
       this.product = data;
       this.action = 'Update Product';
@@ -38,12 +48,15 @@ export class NewProductComponent {
     }
   }
 
-  loadImage(){
-    this.url = this.fbutil.downloadImage(Constants.PRODUCTS + '/bizId/' + this.product.id + '/1.png');
-    this.placeholder = false;
+  loadImage() {
+    this.fbutil.downloadImage(Constants.PRODUCT + '/' + this.bizId + '/' + this.product.id + '/1.png')
+      .subscribe((url) => {
+        this.url = url;
+        this.placeholder = false;
+      })
   }
 
-  noPlaceholder(){
+  noPlaceholder() {
     this.placeholder = false;
   }
 
@@ -54,18 +67,14 @@ export class NewProductComponent {
         : this.fbutil.getId();
 
     this.fbutil
-      .getProductRef('bizId')
+      .getProductRef(this.bizId)
       .doc(this.product.id)
       .set(this.fbutil.toJson(this.product))
       .catch((err) => console.log(err));
 
-    let name;
-
-    if (this.blob1.type === 'image/png') {
-      name = '1.png';
+    if(this.blob1) {
+      this.fbutil.uploadImage(this.blob1, Constants.PRODUCT + '/' + this.bizId + '/' + this.product.id + '/1.png').catch((error) => console.log(error));
     }
-
-    this.fbutil.uploadImage(this.blob1, Constants.PRODUCTS + '/bizId/' + this.product.id + '/1.png').catch((error) => console.log(error));
   }
 
   addNewUnit() {

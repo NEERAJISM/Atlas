@@ -54,7 +54,7 @@ export class LandingComponent {
       this.service.modalCloseEvent.subscribe((s) => {
         if (s === 'success') {
           this.modalController.dismiss();
-          this.service.go('/dashboard');
+          setTimeout(() => this.service.go('/dashboard'), 1000);
         }
       })
     );

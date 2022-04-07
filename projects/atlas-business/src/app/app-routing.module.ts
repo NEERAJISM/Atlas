@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SplashComponent } from 'atlas-core';
-import { AuthGuard } from './auth.guard';
 import { LandingComponent } from './landing/landing.component';
 import { RegisterComponent } from './register/register.component';
-
 
 const routes: Routes = [
   // TODO default goto page + secure all links
@@ -25,7 +23,6 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import(`./dashboard/dashboard-routing.module`).then(m => m.DashboardRoutingModule),
-    canActivate: [AuthGuard]
   },
   {
     // Always keep this in the END

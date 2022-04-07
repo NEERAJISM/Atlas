@@ -52,7 +52,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   bizId = '';
 
   constructor(
-    private router: Router,
     private modalController: ModalController,
     private alertController: AlertController,
     public service: AppService,
@@ -76,7 +75,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .subscribe((doc) => {
         if (!doc.exists) {
           this.service.presentToast('No Profile found for - ' + profileName);
-          this.router.navigateByUrl('');
+          this.service.go('');
           return;
         }
         this.bizId = (doc.data() as any).id;
@@ -391,7 +390,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   account() {
-    this.router.navigateByUrl('/account');
+    this.service.go('/account');
   }
 
   updateClient() {

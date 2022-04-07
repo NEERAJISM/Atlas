@@ -13,6 +13,7 @@ export class NewProductComponent {
 
   product: Product;
   action = 'Add Product';
+  unitSet: Set<string> = new Set();  
 
   url;
   blob1;
@@ -95,6 +96,7 @@ export class NewProductComponent {
 
   isValidUnits(): boolean {
     let isValid = true;
+    this.unitSet.clear();
     this.product.units.forEach((unit) => {
       if (
         !(
@@ -109,8 +111,10 @@ export class NewProductComponent {
         isValid = false;
         return;
       }
+      unit.unit = unit.unit.trim();
+      this.unitSet.add(unit.unit)
     });
-    return isValid;
+    return this.unitSet.size === this.product.units.length;
   }
 
   onFileChanged(event) {

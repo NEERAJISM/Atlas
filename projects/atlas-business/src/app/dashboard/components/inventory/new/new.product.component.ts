@@ -149,4 +149,16 @@ export class NewProductComponent {
     this.imgFile = '';
     this.placeholder = true;
   }
+
+  getUnitPrice(x){
+    return this.commonUtil.roundOff(x - this.getTaxValue(x));
+  }
+
+  getTaxValue(x){
+    const index = Constants.optionsTax.indexOf(this.product.gst);
+    if (index !== -1) {
+      return this.commonUtil.getTax(x, Constants.optionsTaxValue[index]);
+    }
+    return undefined;
+  }
 }

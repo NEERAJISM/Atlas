@@ -32,6 +32,7 @@ export class EditInvoiceComponent implements OnDestroy {
   dueDate: Date = new Date();
   customDueDate = false;
 
+  icon = '';
   business: Business = new Business();
   supplyPlace = '';
   supplyState = '';
@@ -75,7 +76,7 @@ export class EditInvoiceComponent implements OnDestroy {
   items: Item[] = [];
   data = [];
 
-  totalAmount = 0;
+  totalTaxableValue = 0;
   totalTax = 0;
   total = 0;
 
@@ -187,7 +188,7 @@ export class EditInvoiceComponent implements OnDestroy {
 
     this.total = i.total;
     this.totalTax = i.totalTax;
-    this.totalAmount = i.totalTaxableValue;
+    this.totalTaxableValue = i.totalTaxableValue;
 
     this.app.dismissLoading();
   }
@@ -389,7 +390,7 @@ export class EditInvoiceComponent implements OnDestroy {
     let total = 0;
     this.items.forEach((item) => {
       if (item.taxValue) {
-        total = this.util.roundOff(total + item.taxValue);
+        total = this.util.roundOff(total + item.taxValue * item.qty);
       }
     });
     return total;
@@ -403,6 +404,24 @@ export class EditInvoiceComponent implements OnDestroy {
       }
     });
     return total;
+  }
+
+  getUnitPrice(item: Item){
+    return this.util.roundOff(item.price - this.getTaxValue(item));
+  }
+
+  getTaxValue(item: Item){
+    const index = Constants.optionsTax.indexOf(item.tax);
+    if (index !== -1) {
+      item.taxValue = this.util.getTax(item.price, Constants.optionsTaxValue[index]);
+      return item.taxValue;
+    }
+    return undefined;
+  }
+
+  getTotal(item: Item) {
+    item.total = this.util.roundOff(item.price * item.qty);
+    return item.total;
   }
 
   validateItems(): boolean {
@@ -453,7 +472,7 @@ export class EditInvoiceComponent implements OnDestroy {
     }
 
     this.updateInvoice(false);
-    const invoice = this.invoiceService.generatePDF(this.invoice, this.business);
+    const invoice = this.invoiceService.generatePDF(this.invoice, this.business, this.icon);
     const pdf: ArrayBuffer = invoice.output('arraybuffer');
 
     const modal = await this.modalController.create({
@@ -507,7 +526,7 @@ export class EditInvoiceComponent implements OnDestroy {
     version.items = this.items;
 
     this.generateItemTotal();
-    version.totalTaxableValue = this.totalAmount;
+    version.totalTaxableValue = this.totalTaxableValue;
     version.totalTax = this.totalTax;
     version.total = this.total;
 
@@ -592,15 +611,14 @@ export class EditInvoiceComponent implements OnDestroy {
   }
 
   generateItemTotal() {
-    this.totalAmount = 0;
+    this.totalTaxableValue = 0;
     this.totalTax = 0;
     this.total = 0;
 
     this.items.forEach((item) => {
-      const a = item.price * item.qty;
-      this.totalAmount += (a - item.discount);
-      this.totalTax += item.taxValue;
-      this.total += item.total;
+      this.totalTaxableValue = this.util.roundOff(this.totalTaxableValue + this.util.roundOff(this.util.roundOff(item.price - item.taxValue) * item.qty));
+      this.totalTax = this.util.roundOff(this.totalTax + this.util.roundOff(item.taxValue * item.qty));
+      this.total = this.util.roundOff(this.total + item.total);
     });
   }
 
@@ -615,6 +633,12 @@ export class EditInvoiceComponent implements OnDestroy {
   }
 
   getBusinessInfo() {
+    this.fbutil
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
+
     this.fbutil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.INFO)

@@ -24,6 +24,8 @@ export class Constants {
   static readonly USER = 'USER';
   static readonly CART = 'CART';
 
+  static readonly STATS = 'STATS';
+
   // UI
   static readonly TAX_STRING_SGST = 'Tax (SGST + CGST)';
   static readonly TAX_STRING_IGST = 'Tax (IGST)';

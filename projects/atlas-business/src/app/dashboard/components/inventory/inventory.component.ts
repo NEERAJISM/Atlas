@@ -91,7 +91,7 @@ export class InventoryDashboardComponent implements AfterViewInit, OnDestroy {
 
   addNewProduct() {
     this.dialog.open(NewProductComponent, {
-      position: { top: '20px' },
+      position: { top: '80px' },
     });
   }
 

@@ -5,6 +5,7 @@ export * from './lib/models/address';
 export * from './lib/models/business';
 export * from './lib/models/oms/cart';
 export * from './lib/models/client';
+export * from './lib/models/stats';
 export * from './lib/models/oms/invoice';
 export * from './lib/models/oms/invoice.preview';
 export * from './lib/models/oms/order';

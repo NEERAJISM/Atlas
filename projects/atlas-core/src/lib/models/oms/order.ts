@@ -45,7 +45,7 @@ export class Item {
 
   qty: number;
 
-  discount: number;
+  discount: number = 0;
   tax: string;
   taxValue: number;
 

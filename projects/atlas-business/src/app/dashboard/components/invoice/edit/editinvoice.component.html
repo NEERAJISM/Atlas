@@ -458,7 +458,7 @@
 
       <!-- Product -->
 
-      <div class="col-lg-4">
+      <div class="col-lg-2 pr-0">
         <p class="m-0">
           <mat-form-field appearance="outline" style="width: 100%">
             <mat-label> Type / Select Product name</mat-label>
@@ -493,7 +493,7 @@
 
       <!-- Unit -->
 
-      <div class="col-lg-1">
+      <div class="col-lg-2 pr-0">
         <p class="m-0">
           <mat-form-field appearance="outline" style="width: 100%">
             <mat-label>Unit</mat-label>
@@ -528,10 +528,10 @@
 
       <!-- Price -->
 
-      <div class="col-lg-1">
+      <div class="col-lg-1 pr-0">
         <p class="m-0">
           <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>Price (&#8377;)</mat-label>
+            <mat-label>Price</mat-label>
             <input
               name="price_{{ i }}"
               [(ngModel)]="item.price"
@@ -546,9 +546,59 @@
         </p>
       </div>
 
-      <!-- Qty / Pcs -->
+      <!-- TAX / GST -->
 
-      <div class="col-lg-1">
+      <div class="col-lg-1 pr-0">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>TAX/GST %</mat-label>
+
+            <mat-select required name="tax_{{ i }}" [(ngModel)]="item.tax">
+              <mat-option *ngFor="let option of optionsTax" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </p>
+      </div>
+
+      <!-- Unit Price -->
+
+      <div class="col-lg-1 pr-0">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Unit Price</mat-label>
+            <input
+              name="unit_price_{{ i }}"
+              [value]="getUnitPrice(item)"
+              matInput
+              disabled
+              type="number"
+            />
+          </mat-form-field>
+        </p>
+      </div>
+
+       <!-- TAX -->
+
+      <div class="col-lg-1 pr-0">
+        <p class="m-0">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>TAX (&#8377;)</mat-label>
+            <input
+              disabled
+              name="taxValue_{{ i }}"
+              [value]="getTaxValue(item)"
+              matInput
+              type="number"
+            />
+          </mat-form-field>
+        </p>
+      </div>
+
+       <!-- Qty / Pcs -->
+
+       <div class="col-lg-1 pr-0">
         <p class="m-0">
           <mat-form-field appearance="outline" style="width: 100%">
             <mat-label>Qty / Pcs</mat-label>
@@ -568,7 +618,7 @@
 
       <!-- Discount -->
 
-      <div class="col-lg-1">
+      <!-- <div class="col-lg-1">
         <p class="m-0">
           <mat-form-field appearance="outline" style="width: 100%">
             <mat-label>Discount (&#8377;)</mat-label>
@@ -582,53 +632,23 @@
             />
           </mat-form-field>
         </p>
-      </div>
-
-      <!-- TAX / GST -->
-
-      <div class="col-lg-1">
-        <p class="m-0">
-          <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>TAX / GST (%)</mat-label>
-
-            <mat-select required name="tax_{{ i }}" [(ngModel)]="item.tax">
-              <mat-option *ngFor="let option of optionsTax" [value]="option">
-                {{ option }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </p>
-      </div>
-
-      <!-- TAX -->
-
-      <div class="col-lg-1">
-        <p class="m-0">
-          <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>TAX (&#8377;)</mat-label>
-            <input
-              readonly
-              name="taxValue_{{ i }}"
-              value="{{ calculate(item) }}"
-              matInput
-              type="number"
-            />
-          </mat-form-field>
-        </p>
-      </div>
+      </div> -->
 
       <!-- Total -->
 
-      <div class="col-lg-1">
+      <div class="col-lg-1 pr-0">
         <p class="m-0">
           <mat-form-field appearance="outline" style="width: 100%">
             <mat-label>Total (&#8377;)</mat-label>
             <input
-              readonly
+              disabled
               name="total_{{ i }}"
-              [(ngModel)]="item.total"
+              [value]="getTotal(item)"
+              (ngModelChange)="itemChange()"
               matInput
               type="number"
+              min="0"
+              onkeyup="if(this.value<0){this.value= this.value * -1}"
             />
           </mat-form-field>
         </p>

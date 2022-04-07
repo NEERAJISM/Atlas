@@ -1,6 +1,5 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   AlertController,
   ModalController
@@ -22,6 +21,7 @@ import {
   Status,
   Unit
 } from 'atlas-core';
+import * as firebase from 'firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { AppService } from '../app.service';
 
@@ -347,7 +347,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       i.price = this.units.get(i.id + '-' + item.unit).price;
       i.unit = item.unit;
 
-      // discount & tax
+      // TODO update discount & tax
       i.tax = '0';
       i.taxValue = 0;
       i.total = i.price * i.qty + i.taxValue;
@@ -383,10 +383,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.cartItems = [];
         this.syncCart();
         this.updateClient();
+        this.updateOrderStats(order.total);
         this.service.go('/account');
       })
       .catch(() => this.service.presentToast('Error occurred, Please check Internet connectivity'))
       .finally(() => this.service.dismissLoading());
+  }
+
+  updateOrderStats(total){
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)
+      .doc(new Date().toISOString().substring(0, 10).split('-').join(''))
+      .set({ 
+        orders: firebase.default.firestore.FieldValue.increment(1), 
+        revenue: firebase.default.firestore.FieldValue.increment(total) 
+      }, { merge: true });
   }
 
   account() {

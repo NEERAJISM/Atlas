@@ -13,6 +13,7 @@ import {
 } from 'atlas-core';
 import { AppService } from '../app.service';
 import { SlideModal } from './modal/modal.slide';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-profile',
@@ -189,12 +190,19 @@ export class ProfileComponent {
       .doc(this.bizId)
       .get()
       .subscribe((doc) => {
-        if (doc.data()) {
-          Object.assign(this.profile, doc.data());
-        }
+        Object.assign(this.profile, doc.data());
         this.initialized = true;
         this.getPages();
+        this.updateViews();
       });
+  }
+
+  updateViews(){
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)
+      .doc(new Date().toISOString().substring(0, 10).split('-').join(''))
+      .set({ views: firebase.default.firestore.FieldValue.increment(1) }, { merge: true });
   }
 
   getPages() {

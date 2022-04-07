@@ -26,11 +26,10 @@ export class InvoiceService {
       'No.',
       'Item Description (Unit)',
       'Code',
-      'Qty',
-      'Price',
-      'Amount',
-      'Discount',
+      'Unit Price',
       'Tax / GST',
+      'Net Amount',
+      'Qty',
       'Total (Inc. Tax)',
     ],
   ];
@@ -43,7 +42,7 @@ export class InvoiceService {
 
   constructor(private http: HttpClient, private util: CommonUtil) { }
 
-  public generatePDF(invoice: Invoice, business: Business): jsPDF {
+  public generatePDF(invoice: Invoice, business: Business, icon: string): jsPDF {
     let i: InvoiceVersion = invoice.allVersions[invoice.allVersions.length - 1];
 
     // Only show a non-draft version as Preview
@@ -59,7 +58,9 @@ export class InvoiceService {
     // TODO remove all comments
     // Comes from settings Icon - default is colorful backfround with initials
     // Icon / logo creator - font + color or photo
-    doc.addImage('../../assets/icons/atlas-small.png', 'PNG', 7, 12, 17, 17);
+    var img = document.createElement('img');
+    img.src = icon;
+    doc.addImage(img, 'PNG', 7, 12, img.width, 17);
 
     this.headOwnerAddress[0][0] = business.name;
 
@@ -73,7 +74,7 @@ export class InvoiceService {
       head: this.headOwnerAddress,
       body: this.dataOwnerAddress,
       theme: 'plain',
-      margin: { left: 27 },
+      margin: { left: 75 },
       headStyles: { fontSize: '12', textColor: '#01579b' },
       styles: {
         cellWidth: 95,
@@ -163,18 +164,18 @@ export class InvoiceService {
 
     let finalY = (doc as any).lastAutoTable.finalY;
 
-    this.bodyTotal[0][1] = String(i.totalTaxableValue);
+    this.bodyTotal[0][1] = "Rs. " + String(i.totalTaxableValue);
 
     if (i.supplyState === i.shippingAddress.state) {
       this.bodyTotal[1][0] = Constants.TAX_STRING_SGST;
     } else {
       this.bodyTotal[1][0] = Constants.TAX_STRING_IGST;
     }
-    this.bodyTotal[1][1] = String(i.totalTax);
+    this.bodyTotal[1][1] = "Rs. " + String(i.totalTax);
 
     const tot = Math.floor(i.total);
     const dec = Math.floor((i.total - tot) * 100);
-    this.bodyTotal[2][1] = i.total + '\n' + this.inWords(tot) + 'Rupees ' + (dec > 0 ? this.inWords(dec) + 'Paise ' : '');
+    this.bodyTotal[2][1] = "Rs. " + i.total + '\n' + this.inWords(tot) + 'Rupees ' + (dec > 0 ? this.inWords(dec) + 'Paise ' : '');
 
     (doc as any).autoTable({
       startY: finalY + 5,
@@ -238,16 +239,13 @@ export class InvoiceService {
       dataItem.push(counter);
       dataItem.push(item.name + '\n(' + item.unit + ')');
       dataItem.push(item.id);
-      dataItem.push(item.qty);
-      dataItem.push(item.price);
 
-      const a = item.price * item.qty;
-      dataItem.push(a);
-      dataItem.push(item.discount);
-
+      dataItem.push(this.util.roundOff(item.price - item.taxValue));
       // Trimming off other value after total tax
       dataItem.push(item.taxValue + '\n(' + item.tax.substring(0, 3).trim() + ')');
+      dataItem.push(item.price);
 
+      dataItem.push(item.qty);
       dataItem.push(item.total);
 
       dataArr.push(dataItem);

@@ -34,6 +34,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   ];
 
   bizId = '';
+  icon = '';
   business: Business = new Business();
 
   constructor(
@@ -65,6 +66,12 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   }
 
   getBusinessInfo() {
+    this.fbutil
+      .downloadImage(Constants.PROFILE + '/' + this.bizId + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
+
     this.fbutil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.INFO)
@@ -135,6 +142,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   }
 
   preview(id: string) {
+    this.app.presentLoading();
     this.fbutil.getInvoiceRef(this.bizId).doc(id).get().forEach((invoice) => {
       if (invoice.exists) {
         const i: Invoice = new Invoice();
@@ -142,12 +150,13 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
         this.presentPdfModal(i)
       }
     }).catch(e => {
+      this.app.dismissLoading();
       this.app.presentToast('Error while loading invoice data!');
     });
   }
 
   async presentPdfModal(invoice: Invoice) {
-    const invoicePdf = this.invoiceService.generatePDF(invoice, this.business);
+    const invoicePdf = this.invoiceService.generatePDF(invoice, this.business, this.icon);
     const pdf: ArrayBuffer = invoicePdf.output('arraybuffer');
     const modal = await this.modalController.create({
       component: PdfModal,
@@ -157,6 +166,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
         isEdit: false
       },
     });
+    this.app.dismissLoading();
     return await modal.present();
   }
 
@@ -169,7 +179,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
       if (invoice.exists) {
         const i: Invoice = new Invoice();
         Object.assign(i, invoice.data());
-        this.invoiceService.generatePDF(i, this.business).save('atlas.pdf');
+        this.invoiceService.generatePDF(i, this.business, this.icon).save('atlas.pdf');
       }
     }).catch(e => {
       this.app.presentToast('Error while loading invoice data!');
@@ -181,7 +191,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
       if (invoice.exists) {
         const i: Invoice = new Invoice();
         Object.assign(i, invoice.data());
-        this.invoiceService.generatePDF(i, this.business).output('dataurlnewwindow').open();
+        this.invoiceService.generatePDF(i, this.business, this.icon).output('dataurlnewwindow').open();
       }
     }).catch(e => {
       this.app.presentToast('Error while loading invoice data!');

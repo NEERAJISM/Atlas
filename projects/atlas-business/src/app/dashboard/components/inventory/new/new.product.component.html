@@ -106,10 +106,10 @@
   </div>
 
   <div class="row" *ngFor="let unit of product.units; index as i">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
       <p>
         <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Unit (ex - 500ml / 1Kg etc.)</mat-label>
+          <mat-label>Unit (500ml / 1Kg etc.)</mat-label>
           <input
             matInput
             required
@@ -120,10 +120,10 @@
         </mat-form-field>
       </p>
     </div>
-    <div class="col-lg-3">
+    <div class="col-lg-2">
       <p>
         <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Price</mat-label>
+          <mat-label>Price (inc Tax)</mat-label>
           <input
             matInput
             required
@@ -135,7 +135,37 @@
       </p>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-lg-2">
+      <p>
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Unit Price (Calculated)</mat-label>
+          <input
+            matInput
+            readonly
+            [value]="getUnitPrice(unit.price)"
+            type="number"
+            name="unit_price_{{ i }}"
+          />
+        </mat-form-field>
+      </p>
+    </div>
+
+    <div class="col-lg-2">
+      <p>
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Tax Value (Calculated)</mat-label>
+          <input
+            matInput
+            readonly
+            [value]="getTaxValue(unit.price)"
+            type="number"
+            name="tax_value_{{ i }}"
+          />
+        </mat-form-field>
+      </p>
+    </div>
+
+    <div class="col-lg-2">
       <p>
         <mat-form-field appearance="outline" style="width: 100%">
           <mat-label>Qty in Stock</mat-label>
@@ -150,7 +180,7 @@
       </p>
     </div>
 
-    <div class="col-lg-2">
+    <div class="col-lg-1">
       <button
         class="py-1 mt-1"
         style="font-size: 1.3em"

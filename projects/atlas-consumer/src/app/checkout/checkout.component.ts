@@ -391,11 +391,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   updateOrderStats(total){
+    var date = new Date().toISOString().substring(0, 10).split('-').join('');
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)
-      .doc(new Date().toISOString().substring(0, 10).split('-').join(''))
-      .set({ 
+      .doc(date)
+      .set({
+        date: Number(date),
         orders: firebase.default.firestore.FieldValue.increment(1), 
         revenue: firebase.default.firestore.FieldValue.increment(total) 
       }, { merge: true });

@@ -82,6 +82,6 @@ export class ModalPage {
       .getInstance()
       .collection(Constants.USER)
       .doc(id)
-      .set(this.fbUtil.toJson(client), { merge: true });
+      .set({ id: id, address: { mobile: this.mobile } }, { merge: true });
   }
 }

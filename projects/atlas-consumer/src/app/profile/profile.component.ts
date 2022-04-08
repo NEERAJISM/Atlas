@@ -198,11 +198,15 @@ export class ProfileComponent {
   }
 
   updateViews(){
+    var date = new Date().toISOString().substring(0, 10).split('-').join('');
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)
-      .doc(new Date().toISOString().substring(0, 10).split('-').join(''))
-      .set({ views: firebase.default.firestore.FieldValue.increment(1) }, { merge: true });
+      .doc(date)
+      .set({ 
+        date: Number(date),
+        views: firebase.default.firestore.FieldValue.increment(1) 
+      }, { merge: true });
   }
 
   getPages() {

@@ -146,6 +146,6 @@ export class RegisterComponent {
       .getInstance()
       .collection(Constants.BUSINESS)
       .doc(id)
-      .set({ invoiceNo: 1, visitor: 1 })
+      .set({ invoiceNo: 1 })
   }
 }

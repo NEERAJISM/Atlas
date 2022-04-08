@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ChartType, ChartOptions } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { AuthService, Constants, FirebaseUtil, Stats } from 'atlas-core';
+import { AppService } from '../../../app.service';
 
 @Component({
   selector: 'app-maindashboard',
@@ -9,38 +9,8 @@ import { Label } from 'ng2-charts';
 })
 export class MainDashboardComponent {
   chartOptions = {
-    responsive: true,
-    scales: {
-      xAxes: [
-        {
-          gridLines: {
-            display: false,
-          },
-        },
-      ],
-      yAxes: [
-        {
-          gridLines: {
-            display: false,
-          },
-        },
-      ],
-    },
-  };
-
-  chartData = [
-    { data: [330, 600, 260, 700], label: 'Account A' },
-    { data: [120, 455, 100, 340], label: 'Account B' },
-    { data: [45, 67, 800, 500], label: 'Account C' },
-  ];
-
-  chartLabels = ['January', 'February', 'March', 'April'];
-
-  // order chart
-
-  orderChartOptions = {
     title: {
-      text: 'Order History',
+      text: '',
       display: true
     },
     responsive: true,
@@ -63,67 +33,86 @@ export class MainDashboardComponent {
     },
   };
 
-  orderChartLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  orderChartData = [
-    { data: [10, 6, 12, 17, 8, 5, 7], label: 'Orders This Week' },
-  ];
+  chartLabels = [];
+  viewsChartData = [{ data: [], label: 'Views' }];
+  viewsChartColors = [{ backgroundColor: [] }];
+  viewsChartOptions = JSON.parse(JSON.stringify(this.chartOptions));
 
-  public orderChartColors = [
-    {
-      backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(0,255,0,0.3)', 'rgba(0,255,0,0.3)', 'rgba(0,255,0,0.3)', 'rgba(0,255,0,0.3)', 'rgba(0,255,0,0.3)', 'rgba(0,255,0,0.3)'],
-    },
-  ];
+  ordersChartData = [{ data: [], label: 'Orders' }];
+  ordersChartColors = [{ backgroundColor: [] }];
+  ordersChartOptions = JSON.parse(JSON.stringify(this.chartOptions));
 
+  revenueChartData = [{ data: [], label: 'Revenue' }];
+  revenueChartColors = [{ backgroundColor: [] }];
+  revenueChartOptions = JSON.parse(JSON.stringify(this.chartOptions));
 
-  // Pie
-  public pieChartOptions: ChartOptions = {
-    responsive: true,
-    title: {
-      text: 'Top 5 Products',
-      display: true
-    },
-    legend: {
-      position: 'bottom',
-    }
-  };
+  bizId = '';
+  stats: Stats = new Stats();
 
-  public pieChartLabels: Label[] = ['Sodium Hypochlorite', 'Sulphuric Acid', 'Hydrochloric Acid', 'Sanitizer', 'Phenyl'];
-  public pieChartData: number[] = [300, 500, 100, 400, 250];
-  public pieChartType: ChartType = 'pie';
-  public pieChartLegend = true;
-  public pieChartColors = [
-    {
-      backgroundColor: ['rgba(255,0,0,0.3)', 'rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)', 'rgba(0,255,255,0.3)', 'rgba(255,0,255,0.3)'],
-    },
-  ];
+  constructor(private fbUtil: FirebaseUtil, private service: AppService, private auth: AuthService) {
+    this.service.presentLoading();
+    this.viewsChartOptions.title.text = 'Views per Day';
+    this.ordersChartOptions.title.text = 'Orders per Day';
+    this.revenueChartOptions.title.text = 'Revenue per Day';
 
-  onChartClick(event) {
-    console.log(event);
+    this.auth.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.bizId = user.uid;
+        this.init();
+      }
+    });
   }
 
-
-
-
-
-  // events
-  public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {
-    console.log(event, active);
+  init() {
+    this.getTodaysStats();
+    this.getRangeStats();
   }
 
-  public chartHovered({ event, active }: { event: MouseEvent, active: {}[] }): void {
-    console.log(event, active);
+  getTodaysStats() {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)
+      .doc(new Date().toISOString().substring(0, 10).split('-').join(''))
+      .get().subscribe((doc) => {
+        if (doc.exists) {
+          Object.assign(this.stats, doc.data());
+        }
+        this.service.dismissLoading();
+      });
   }
 
-  addSlice() {
-    this.pieChartLabels.push(['Line 1', 'Line 2', 'Line 3']);
-    this.pieChartData.push(400);
-    this.pieChartColors[0].backgroundColor.push('rgba(196,79,244,0.3)');
+  getRangeStats() {
+    this.fbUtil
+      .getInstance()
+      .collection(
+        Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS
+        , (ref) => ref.orderBy('date', 'desc').limit(10)
+      )
+      .get()
+      .forEach((res) =>
+        res.forEach((data) => {
+          if (data.data()) {
+            const stats = new Stats();
+            Object.assign(stats, data.data());
+            this.chartLabels.unshift(this.getLabel(String(stats.date)));
+
+            // views
+            this.viewsChartData[0].data.unshift(stats.views);
+            this.viewsChartColors[0].backgroundColor.push('rgba(0,188,212,0.4)');
+
+            // orders
+            this.ordersChartData[0].data.unshift(stats.orders);
+            this.ordersChartColors[0].backgroundColor.push('rgba(255,0,0,0.4)');
+
+            // revenue
+            this.revenueChartData[0].data.unshift(stats.revenue);
+            this.revenueChartColors[0].backgroundColor.push('rgba(76,175,79,0.6)');
+          }
+        })
+      );
   }
 
-  removeSlice() {
-    this.pieChartLabels.pop();
-    this.pieChartData.pop();
-    this.pieChartColors[0].backgroundColor.pop();
+  getLabel(x: string) {
+    return x.substring(6) + '-' + x.substring(4, 6) + '-' + x.substring(0, 4);
   }
-
 }

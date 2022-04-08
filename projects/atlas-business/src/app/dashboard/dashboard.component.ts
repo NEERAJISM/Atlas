@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { AuthService, Business, Constants, FirebaseUtil } from 'atlas-core';
 import { AppService } from '../app.service';
+import { Location } from '@angular/common';
 
 export interface MenuItem {
   name: string;
@@ -20,6 +21,7 @@ export class DashboardComponent {
 
   showFiller = false;
   showMenuName = false;
+  selected = '/dashboard/main';
 
   business = new Business();
 
@@ -36,17 +38,17 @@ export class DashboardComponent {
     },
     {
       name: 'Orders',
-      icon: 'fas fa-dolly',
+      icon: 'fas fa-shopping-cart',
       link: '/dashboard/orders',
     },
     {
       name: 'Biiling / Invoice',
-      icon: 'fas fa-receipt pl-1',
+      icon: 'fas fa-file-alt pl-2',
       link: '/dashboard/invoice',
     },
     {
       name: 'Inventory',
-      icon: 'fab fa-buffer pl-1',
+      icon: 'fas fa-box pl-1',
       link: '/dashboard/inventory',
     },
     {
@@ -66,9 +68,10 @@ export class DashboardComponent {
     },
   ];
 
-  constructor(private service: AppService, private alertController: AlertController, private auth: AuthService, private fbUtil: FirebaseUtil) {
+  constructor(private service: AppService, private alertController: AlertController, private auth: AuthService, private fbUtil: FirebaseUtil, private location: Location) {
     this.isDesktop = service.isDesktop;
     this.init();
+    this.selected = this.location.path();
   }
 
   init() {
@@ -80,6 +83,7 @@ export class DashboardComponent {
   }
 
   go(url: string) {
+    this.selected = url;
     this.service.go(url);
   }
 

@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import {
   AuthService,
   Cart,
@@ -9,7 +9,7 @@ import {
   Constants,
   FirebaseUtil,
   Product,
-  Profile,
+  Profile
 } from 'atlas-core';
 import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';

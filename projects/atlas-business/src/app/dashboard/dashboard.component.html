@@ -11,12 +11,14 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content style="--ion-background-color: #1c324b;">
       <ion-list class="pt-0">
-        <ion-row *ngFor="let menuItem of menu" class="ion-text-center" [matTooltip]="menuItem.name" matTooltipPosition="right">
+        <ion-row *ngFor="let menuItem of menu" class="ion-text-center" [matTooltip]="menuItem.name"
+          matTooltipPosition="right">
           <ion-col class="px-0">
             <ion-item lines="none" button (click)="go(menuItem.link)">
-              <i class="{{ menuItem.icon }}" style="font-size: x-large"></i>
+              <i class="{{ menuItem.icon }}" style="font-size: x-large"
+                [style.color]=" menuItem.link === selected ? '#659df5' : '#d0d5d9'"></i>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -34,9 +36,7 @@
             <ion-title class="h-100">{{ business.name }}</ion-title>
           </ion-col>
           <ion-col>
-            <ion-button color="danger" class="float-right" (click)="logout()"
-              >Logout</ion-button
-            >
+            <ion-button color="danger" class="float-right" (click)="logout()">Logout</ion-button>
           </ion-col>
         </ion-row>
       </ion-toolbar>

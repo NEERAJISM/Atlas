@@ -3,7 +3,7 @@
   <ion-menu side="start" content-id="main" class="my-custom-menu">
     <ion-header>
       <ion-toolbar translucent>
-        <ion-row class="ion-text-center">
+        <ion-row class="ion-text-center" matTooltip="Atlas" matTooltipPosition="right">
           <ion-col>
             <img style="height: 30px" src="assets/images/atlas-small.png" />
           </ion-col>
@@ -13,8 +13,7 @@
 
     <ion-content style="--ion-background-color: #1c324b;">
       <ion-list class="pt-0">
-        <ion-row *ngFor="let menuItem of menu" class="ion-text-center" [matTooltip]="menuItem.name"
-          matTooltipPosition="right">
+        <ion-row *ngFor="let menuItem of menu" class="ion-text-center" [matTooltip]="menuItem.name" matTooltipPosition="right">
           <ion-col class="px-0">
             <ion-item lines="none" button (click)="go(menuItem.link)">
               <i class="{{ menuItem.icon }}" style="font-size: x-large"

@@ -2,3 +2,7 @@
   max-width: 50px;
   min-width: 65px;
 }
+
+::ng-deep .mat-tooltip {
+  font-size: 12px !important;
+}

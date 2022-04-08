@@ -72,7 +72,7 @@ export class MainDashboardComponent {
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)
-      .doc(new Date().toISOString().substring(0, 10).split('-').join(''))
+      .doc(new Date().toLocaleDateString().split('/').reverse().join(''))
       .get().subscribe((doc) => {
         if (doc.exists) {
           Object.assign(this.stats, doc.data());
@@ -112,7 +112,36 @@ export class MainDashboardComponent {
       );
   }
 
-  getLabel(x: string) {
-    return x.substring(6) + '-' + x.substring(4, 6) + '-' + x.substring(0, 4);
+  getLabel(x: string, short?: boolean) {
+    return x.substring(6) + ' ' + this.month(x.substring(4, 6));
+  }
+
+  month(x: string) {
+    switch (x) {
+      case "01":
+        return "Jan";
+      case "02":
+        return "Feb";
+      case "03":
+        return "Mar";
+      case "04":
+        return "Apr";
+      case "05":
+        return "May";
+      case "06":
+        return "Jun";
+      case "07":
+        return "Jul";
+      case "08":
+        return "Aug";
+      case "09":
+        return "Sep";
+      case "10":
+        return "Oct";
+      case "11":
+        return "Nov";
+      default:
+        return "Dec";
+    }
   }
 }

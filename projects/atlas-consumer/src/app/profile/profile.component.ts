@@ -198,7 +198,7 @@ export class ProfileComponent {
   }
 
   updateViews(){
-    var date = new Date().toISOString().substring(0, 10).split('-').join('');
+    var date = new Date().toLocaleDateString().split('/').reverse().join('');
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)

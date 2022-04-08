@@ -13,7 +13,7 @@
 
     <ion-content>
       <ion-list class="pt-0">
-        <ion-row *ngFor="let menuItem of menu" class="ion-text-center">
+        <ion-row *ngFor="let menuItem of menu" class="ion-text-center" [matTooltip]="menuItem.name" matTooltipPosition="right">
           <ion-col class="px-0">
             <ion-item lines="none" button (click)="go(menuItem.link)">
               <i class="{{ menuItem.icon }}" style="font-size: x-large"></i>

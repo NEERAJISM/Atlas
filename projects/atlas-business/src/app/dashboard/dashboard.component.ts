@@ -55,7 +55,7 @@ export class DashboardComponent {
       link: '/dashboard/customers',
     },
     {
-      name: '  Tax / GST',
+      name: 'Settings',
       icon: 'fas fa-cog pl-1',
       link: '/dashboard/settings',
     },

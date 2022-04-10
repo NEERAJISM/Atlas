@@ -22,11 +22,15 @@ export class RegisterComponent {
 
   name = '';
   email = '';
+  // TODO update
   profile = '';
   pass = '';
   pass2 = '';
 
   showPassword = false;
+
+  delim = '~#~';
+  script = 'https://script.google.com/macros/s/AKfycbycj016swR1wCcB54WKZBmhlfGWTKX8DVHrVInMqLHEi8lfVtWP81Xi3j65aKWP5A4z/exec'; 
 
   constructor(
     private auth: AuthService,
@@ -90,6 +94,7 @@ export class RegisterComponent {
         this.setupProfile(x[1]);
         this.setupBusiness(x[1]);
         this.setupCounters(x[1]);
+        this.sendWelcomeEmail();
       } else {
         this.inProgress = false;
         this.app.presentToast(
@@ -147,5 +152,28 @@ export class RegisterComponent {
       .collection(Constants.BUSINESS)
       .doc(id)
       .set({ invoiceNo: 1 })
+  }
+
+  sendWelcomeEmail(){
+    var input = {
+      Detail$:
+        this.email +
+        this.delim +
+        this.first + ' ' + this.last +
+        this.delim +
+        this.name +
+        '^^',
+    };
+
+    fetch(this.script, {
+      method: 'POST',
+      mode: 'no-cors',
+      cache: 'no-cache',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      body: JSON.stringify(input),
+    });
   }
 }

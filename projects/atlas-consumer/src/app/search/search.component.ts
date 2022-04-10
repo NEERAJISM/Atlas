@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Business, CommonUtil, Constants, FirebaseUtil } from 'atlas-core';
+import { Business, Constants, FirebaseUtil } from 'atlas-core';
 import { Observable } from 'rxjs';
 import { AppService } from '../app.service';
 

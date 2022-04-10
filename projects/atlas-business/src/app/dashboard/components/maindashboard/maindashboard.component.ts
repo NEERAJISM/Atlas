@@ -112,7 +112,7 @@ export class MainDashboardComponent {
       );
   }
 
-  getLabel(x: string, short?: boolean) {
+  getLabel(x: string) {
     return x.substring(6) + ' ' + this.month(x.substring(4, 6));
   }
 

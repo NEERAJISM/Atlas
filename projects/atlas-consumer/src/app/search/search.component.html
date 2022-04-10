@@ -1,110 +1,61 @@
 <ion-header *ngIf="isDesktop">
-  <ion-toolbar
-    style="--background: linear-gradient(315deg, #0abcf9 0%, #2c69d1 74%)"
-  >
-    <ion-title style="font-family: 'Mulish', sans-serif; color: white"
-      ><b>ATLAS</b> SEARCH</ion-title
-    >
+  <ion-toolbar>
+    <ion-title style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'">
+      <img style="height: 30px" src="assets/images/atlas-small.png" />
+      <b>&nbsp; ATLAS </b> Business Search
+    </ion-title>
+
+    <ion-buttons class="hidden-md-down" slot="primary" collapse="true">
+      <ion-button style="background: #494cf3; color: white; text-transform: none;" href="https://atlas-business.web.app"
+        target="_blank">Try Atlas for Business</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="4" size-md="1">
-        <ion-item class="ion-no-padding">
-          <ion-icon name="location-outline"></ion-icon>
-          <ion-input
-            type="text"
-            maxlength="6"
-            clearOnEdit="true"
-            placeholder="pin-code"
-            value="314025"
-            [(ngModel)]="pincode"
-            (ngModelChange)="pinCheck($event)"
-          ></ion-input>
-        </ion-item>
+<ion-content>
+  <ion-grid class="xbody p-5">
+    <ion-row class="ion-text-center">
+      <ion-col>
+        <img style="width: 150px; height: 150px;" src="assets/images/atlas.png" alt="Atlas" class="splash" />
       </ion-col>
-      <ion-col size="12" size-md="auto" class="ion-text-center">
-        <h5 style="font-family: 'Mulish', sans-serif;" *ngIf="displayLoc">{{location}}</h5>
-      </ion-col>
-    </ion-row>
-
-    <ion-row class="ion-justify-content-center">
     </ion-row>
 
     <ion-row class="ion-margin-top ion-margin-bottom">
       <ion-col size-md="6" offset-md="3">
-        <ion-input
-          class="search_box"
-          clearInput
-          placeholder="Search business..."
-        ></ion-input>
+        <ion-input class="search_box" clearInput placeholder="Search by business name / profile..."
+          (keyup.enter)="search()" [(ngModel)]="query"></ion-input>
       </ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col>
-        <h1>Top Business based on your search</h1>
+        <ion-button class="float-right" style="text-transform: none; --background: #494cf3;"
+          [disabled]="!enableSearch()" (click)="search()">Search Business</ion-button>
       </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="12" size-sm>
-        <ion-card (click)="route()">
-          <img src="https://mdbootstrap.com/img/Photos/Others/images/41.jpg" />
-          <ion-card-header>
-            <ion-card-subtitle>Destination</ion-card-subtitle>
-            <ion-card-title>Madison, WI</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
-            Madison was named the capital of the Wisconsin Territory in 1836.
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-sm>
-        <ion-card>
-          <img src="https://mdbootstrap.com/img/Photos/Others/images/48.jpg" />
-          <ion-card-header>
-            <ion-card-subtitle>Destination</ion-card-subtitle>
-            <ion-card-title>Madison, WI</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
-            Madison was named the capital of the Wisconsin Territory in 1836.
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-sm>
-        <ion-card>
-          <img src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg" />
-          <ion-card-header>
-            <ion-card-subtitle>Destination</ion-card-subtitle>
-            <ion-card-title>Madison, WI</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
-            Madison was named the capital of the Wisconsin Territory in 1836.
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-sm>
-        <ion-card>
-          <img src="https://mdbootstrap.com/img/Photos/Others/images/44.jpg" />
-          <ion-card-header>
-            <ion-card-subtitle>Destination</ion-card-subtitle>
-            <ion-card-title>Madison, WI</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
-            Madison was named the capital of the Wisconsin Territory in 1836.
-          </ion-card-content>
-        </ion-card>
+      <ion-col>
+        <ion-button class="float-left" color="light" style="text-transform: none; --background: #fd6f61;"
+          (click)="clear()">Clear</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+
+  <ion-row *ngIf="businesses.length > 0">
+    <ion-col>
+      <h5 class="ml-2 mt-2">Top Business based on your search - <q>{{query}}</q></h5>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col *ngFor="let business of businesses" size-lg="3" size-md="4" size-sm="6" size="12">
+      <ion-card (click)="route(business.profile)">
+        <img style="height: 300px; width: 100%;"
+          [src]="imgMap.has(business.id) ? imgMap.get(business.id) : 'https://via.placeholder.com/350?text=Image'" />
+        <ion-card-header>
+          <ion-card-subtitle>{{'@' + business.profile}}</ion-card-subtitle>
+          <ion-card-title>{{business.name}}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 </ion-content>

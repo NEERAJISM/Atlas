@@ -197,7 +197,9 @@ export class PageEditModal implements OnInit {
           this.infoUrl = url;
         }
         this.appService.dismissLoading();
-      });
+      },
+      error => {this.appService.dismissLoading();}
+      );
   }
 
   onFileChangedFull(event) {

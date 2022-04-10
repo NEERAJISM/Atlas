@@ -336,10 +336,10 @@
             style="width: 60px"
           />
           <p>
-            <i class="fas fa-home mr-1"></i> {{ business.address.line1 }},
-            <br />
-            {{ business.address.line2 }}, <br />
-            {{ business.address.district }}-{{ business.address.pin }},
+            <i class="fas fa-home mr-1"></i> {{ business.address.line1 ? business.address.line1 + ',' : '' }}
+           <br>
+            {{ business.address.line2 ? business.address.line2 + ',' : '' }} <br />
+            {{ business.address.district ? business.address.district + '-' : '' + (business.address.pin ? business.address.pin + ',' : '') }}
             {{ business.address.state }}
           </p>
           <p>

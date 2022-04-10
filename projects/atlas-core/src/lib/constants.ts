@@ -78,8 +78,9 @@ export class Constants {
   ];
   static readonly optionsTaxValue: number[] = [0, 0.05, 0.12, 0.18, 0.28];
 
+  static readonly multipleSpaces = /\s+/g;
   static readonly mailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   static readonly passRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  static readonly usernameRegEx = /^[A-Za-z0-9](?:(?:[A-Za-z0-9_-]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9]))?$/;
+  static readonly usernameRegEx = /^[a-z0-9](?:(?:[a-z0-9-]|(?:\.(?!\.))){0,28}(?:[a-z0-9]))?$/;
   static readonly ytbRegEx = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
 }

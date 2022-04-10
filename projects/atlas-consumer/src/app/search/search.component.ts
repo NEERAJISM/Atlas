@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonUtil } from 'atlas-core';
+import { Business, CommonUtil, Constants, FirebaseUtil } from 'atlas-core';
 import { Observable } from 'rxjs';
 import { AppService } from '../app.service';
 
@@ -21,39 +21,71 @@ export class SearchComponent {
 
   filteredOptions: Observable<string[]>;
 
-  public appPages = [
-    { title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/Archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/Trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/Spam', icon: 'warning' },
-  ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+  query = '';
+  searchQuery = '';
+  businesses: Business[] = [];
+  imgMap: Map<string, string> = new Map();
 
-  constructor(private util: CommonUtil, public router: Router, private app: AppService) {
+  constructor(public router: Router, private app: AppService, private fbUtil: FirebaseUtil) {
     this.isDesktop = app.isDesktop;
   }
 
-  pinCheck(pin) {
-    if (this.pincode.length == 6) {
-      this.util
-        .httpGet('https://api.postalpincode.in/pincode/' + this.pincode)
-        .subscribe((d) => {
-          if (d && d[0] && d[0].PostOffice && d[0].PostOffice[0]) {
-            this.location = d[0].PostOffice[0].District + ', ' + d[0].PostOffice[0].State;
-            this.displayLoc = true;
-          } else {
-            this.displayLoc = false;
-          }
-        });
-    } else {
-      this.displayLoc = false;
-    }
+  clear() {
+    this.query = '';
   }
 
-  route(){
-    console.log('.. Routing ....')
-    this.router.navigateByUrl('/profile');
+  search() {
+    this.app.presentLoading();
+    this.businesses = [];
+
+    this.fbUtil.getInstance()
+      .collection(Constants.PROFILE, (ref) => ref.where('keywords', 'array-contains', this.searchQuery).limit(4))
+      .get()
+      .forEach((res) => {
+        if(res.empty){
+          this.app.presentToast('No businesses found for query - ' + this.query);
+          return;
+        }
+        res.forEach((doc) => {
+          this.loadBusiness((doc.data() as any).id);
+        })
+      }).finally(() => this.app.dismissLoading());
+  }
+
+  loadBusiness(id: string) {
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.BUSINESS + '/' + id + '/' + Constants.INFO)
+      .doc(id)
+      .get()
+      .subscribe((doc) => {
+        if (doc.data()) {
+          var b = new Business();
+          Object.assign(b, doc.data());
+          this.businesses.push(b);
+        }
+      });
+
+    this.fbUtil
+      .downloadImage(Constants.PROFILE + '/' + id + '/home')
+      .subscribe((url) => {
+        this.imgMap.set(id, url);
+      });
+  }
+
+  enableSearch() {
+    this.searchQuery = this.query.trim().toLowerCase();
+    if (this.searchQuery.length < 6) {
+      return false;
+    }
+
+    if (this.searchQuery.indexOf(' ') !== -1) {
+      this.searchQuery = this.searchQuery.split(Constants.multipleSpaces).join('-');
+    }
+    return this.searchQuery.length > 5;
+  }
+
+  route(profile) {
+    this.router.navigateByUrl('/' + profile);
   }
 }

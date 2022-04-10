@@ -109,7 +109,7 @@ export class SettingsDashboardComponent {
       }
 
       if (!this.business.profile || this.business.profile.length < 6 || !Constants.usernameRegEx.test(this.business.profile)) {
-        this.app.presentToast("Please enter a valid username - min 6 characters, only letter, number, '-' or '_'");
+        this.app.presentToast("Please enter a valid username - min 6 characters, only letter, number or '-'");
         this.business.profile = this.backup.profile;
         return;
       }
@@ -128,7 +128,11 @@ export class SettingsDashboardComponent {
           this.updateBusinessInfo({ profile: this.business.profile });
           this.updateProfile();
           this.editProfile = false;
-        });
+        },
+          error => {
+            this.app.presentToast("This username is not available!");
+            return;
+          });
     }
 
     if (!this.editProfile) {
@@ -277,17 +281,30 @@ export class SettingsDashboardComponent {
 
   updateProfile() {
     // delete previous
-    this.fbUtil
+    if(this.backup.profile) {
+      this.fbUtil
       .getInstance()
       .collection(Constants.PROFILE)
       .doc(this.backup.profile)
       .delete();
-
+    }
+    
+    var keywords = [];
+    if(this.business.profile.indexOf('-') !== -1) {
+      keywords.push(this.business.profile);
+      keywords.push(...this.business.profile.split('-'));
+      keywords.push(this.business.profile.split('-').join(''));
+    } else {
+      for (let i = 6; i <= this.business.profile.length; i++) {
+        keywords.push(this.business.profile.substring(0, i));
+      }
+    }
+  
     this.fbUtil
       .getInstance()
       .collection(Constants.PROFILE)
       .doc(this.business.profile)
-      .set({ id: this.business.id })
+      .set({ id: this.business.id, keywords: keywords })
       .catch(() =>
         this.app.presentToast(
           'Error occurred, Please check Internet connectivity'

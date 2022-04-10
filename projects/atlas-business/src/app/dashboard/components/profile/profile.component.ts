@@ -100,7 +100,7 @@ export class ProfileDashboardComponent implements OnInit {
       .subscribe((doc) => {
         if (doc.data()) {
           Object.assign(this.business, doc.data());
-          this.url = 'http://localhost:49489/' + this.business.profile;
+          this.url = 'https://theatlas.co.in/' + this.business.profile;
           this.reload();
         }
       });

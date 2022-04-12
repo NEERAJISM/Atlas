@@ -3,7 +3,7 @@
     <ion-col offsetMd="3" sizeMd="6">
       <ion-row>
         <ion-col>
-          <h1>Step {{ step }} / 4</h1>
+          <h1>Step {{ step }} / 5</h1>
         </ion-col>
       </ion-row>
 
@@ -73,6 +73,22 @@
       </ion-row>
 
       <ion-row class="mt-4" *ngIf="step > 3">
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating" style="font-size: 20px"
+              >Business Profile Name (min. 6 letters, only a-z, 0-9 & -)</ion-label
+            >
+            <ion-input
+              [style]="isDesktop ? 'font-size: 30px' : 'font-size: 20px'"
+              placeholder="example - abc-company"
+              [disabled]="step > 4"
+              [(ngModel)]="profile"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-4" *ngIf="step > 4">
         <ion-col sizeMd="6">
           <ion-item>
             <ion-label position="floating" style="font-size: 20px"
@@ -90,7 +106,7 @@
               type="{{ showPassword ? 'text' : 'password' }}"
               [style]="isDesktop ? 'font-size: 30px' : 'font-size: 20px'"
               placeholder="********"
-              [disabled]="step > 4"
+              [disabled]="step > 5"
               [(ngModel)]="pass"
             ></ion-input>
           </ion-item>
@@ -112,7 +128,7 @@
               type="{{ showPassword ? 'text' : 'password' }}"
               [style]="isDesktop ? 'font-size: 30px' : 'font-size: 20px'"
               placeholder="********"
-              [disabled]="step > 4"
+              [disabled]="step > 5"
               [(ngModel)]="pass2"
             ></ion-input>
           </ion-item>
@@ -121,21 +137,15 @@
 
       <ion-row class="mt-5">
         <ion-col>
-          <ion-button [disabled]="step == 1 || step == 5" (click)="back()"
+          <ion-button [disabled]="step == 1 || step == 6" (click)="back()"
             >Previous</ion-button
           >
         </ion-col>
         <ion-col class="ion-text-end">
           <ion-button
-            [disabled]="
-              inProgress || step == 5 ||
-              (step == 1 && (first.length == 0 || last.length == 0)) ||
-              (step == 2 && name.length == 0) ||
-              (step == 3 && checkEmail()) ||
-              (step == 4 && checkPassword())
-            "
+            [disabled]="disableNext()"
             (click)="next()"
-            >{{ step > 3 ? "Create Account" : "Next" }}<ion-spinner *ngIf="inProgress" name="crescent"></ion-spinner></ion-button
+            >{{ step > 4 ? "Create Account" : "Next" }}<ion-spinner *ngIf="inProgress" name="crescent"></ion-spinner></ion-button
           >
         </ion-col>
       </ion-row>

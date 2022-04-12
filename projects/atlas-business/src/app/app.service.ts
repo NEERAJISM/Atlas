@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
-import { Page, Product, Profile, Unit } from 'atlas-core';
+import { Constants, FirebaseUtil, Page, Profile } from 'atlas-core';
 import { BehaviorSubject } from 'rxjs';
 
 
@@ -11,7 +11,6 @@ export class AppService {
   isDesktop = false;
   private loading;
   
-  items: Product[] = [];
   private profile: Profile = new Profile();
   private pages: Page[] = [];
 
@@ -25,11 +24,10 @@ export class AppService {
   private cart = new BehaviorSubject<string>('');
   cartUpdatedEvent = this.cart.asObservable();
 
-  constructor(private router: Router, private location: Location, private toastController: ToastController, private loadingController: LoadingController) {
+  constructor(private router: Router, private location: Location, private toastController: ToastController, private loadingController: LoadingController, private fbUtil: FirebaseUtil) {
     if (window.innerWidth > 1000) {
       this.isDesktop = true;
     }
-    this.init();
   }
 
   closeModal(s: string) {
@@ -82,15 +80,6 @@ export class AppService {
     this.location.back();
   }
 
-  private init() {
-
-    this.initItems();
-  }
-
-  public getItems() {
-    return this.items;
-  }
-
   public getProfile() {
     return this.profile;
   }
@@ -99,72 +88,36 @@ export class AppService {
     return this.pages;
   }
 
-  private initItems() {
-    const unit1 = new Unit();
-    unit1.unit = '500 gm';
-    unit1.price = 500;
+  updateProfile(id: string, profile: string, backup?: string) {
+    // delete previous
+    if (backup) {
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.PROFILE)
+        .doc(backup)
+        .delete();
+    }
 
-    const unit2 = new Unit();
-    unit2.unit = '1 kg';
-    unit2.price = 1000;
+    var keywords = [];
+    if (profile.indexOf('-') !== -1) {
+      keywords.push(profile);
+      keywords.push(...profile.split('-'));
+      keywords.push(profile.split('-').join(''));
+    } else {
+      for (let i = 6; i <= profile.length; i++) {
+        keywords.push(profile.substring(0, i));
+      }
+    }
 
-    const unit3 = new Unit();
-    unit3.unit = '5 kg';
-    unit3.price = 2500;
-
-    const product1 = new Product();
-    product1.name = 'Veg Pasta';
-    product1.id = '1';
-    product1.units.push(unit1);
-    product1.units.push(unit2);
-    product1.units.push(unit3);
-    product1.photoUrl.push('assets/images/profile/food1.jpg');
-
-    const product2 = new Product();
-    product2.name = 'French Toast';
-    product2.id = '2';
-    product2.units.push(unit1);
-    product2.units.push(unit2);
-    product2.units.push(unit3);
-    product2.photoUrl.push('assets/images/profile/food2.jpg');
-
-    const product3 = new Product();
-    product3.name = 'Yoghurt';
-    product3.id = '3';
-    product3.units.push(unit1);
-    product3.units.push(unit2);
-    product3.units.push(unit3);
-    product3.photoUrl.push('assets/images/profile/food3.jpg');
-
-    const product4 = new Product();
-    product4.name = 'Pancake';
-    product4.id = '4';
-    product4.units.push(unit1);
-    product4.units.push(unit2);
-    product4.units.push(unit3);
-    product4.photoUrl.push('assets/images/profile/food4.jpg');
-
-    const product5 = new Product();
-    product5.name = 'Pancake - Banana';
-    product5.id = '5';
-    product5.units.push(unit1);
-    product5.units.push(unit2);
-    product5.units.push(unit3);
-    product5.photoUrl.push('assets/images/profile/food4.jpg');
-
-    const product6 = new Product();
-    product6.name = 'Yoghurt - Honey';
-    product6.id = '6';
-    product6.units.push(unit1);
-    product6.units.push(unit2);
-    product6.units.push(unit3);
-    product6.photoUrl.push('assets/images/profile/food3.jpg');
-
-    this.items.push(product1);
-    this.items.push(product2);
-    this.items.push(product3);
-    this.items.push(product4);
-    this.items.push(product5);
-    this.items.push(product6);
+    this.fbUtil
+      .getInstance()
+      .collection(Constants.PROFILE)
+      .doc(profile)
+      .set({ id: id, keywords: keywords })
+      .catch(() =>
+        this.presentToast(
+          'Error occurred, Please check Internet connectivity'
+        )
+      );
   }
 }

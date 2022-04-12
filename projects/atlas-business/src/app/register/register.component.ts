@@ -22,7 +22,6 @@ export class RegisterComponent {
 
   name = '';
   email = '';
-  // TODO update
   profile = '';
   pass = '';
   pass2 = '';
@@ -30,7 +29,7 @@ export class RegisterComponent {
   showPassword = false;
 
   delim = '~#~';
-  script = 'https://script.google.com/macros/s/AKfycbycj016swR1wCcB54WKZBmhlfGWTKX8DVHrVInMqLHEi8lfVtWP81Xi3j65aKWP5A4z/exec'; 
+  script = 'https://script.google.com/macros/s/AKfycbycj016swR1wCcB54WKZBmhlfGWTKX8DVHrVInMqLHEi8lfVtWP81Xi3j65aKWP5A4z/exec';
 
   constructor(
     private auth: AuthService,
@@ -47,6 +46,11 @@ export class RegisterComponent {
     }
 
     if (this.step == 4) {
+      this.checkIfUsernameExists();
+      return;
+    }
+
+    if (this.step == 5) {
       this.register();
       return;
     }
@@ -63,6 +67,10 @@ export class RegisterComponent {
 
   checkEmail() {
     return !this.email || !Constants.mailRegEx.test(this.email);
+  }
+
+  checkUsername() {
+    return this.profile.length < 6 || !Constants.usernameRegEx.test(this.profile);
   }
 
   checkPassword() {
@@ -87,6 +95,27 @@ export class RegisterComponent {
       .finally(() => (this.inProgress = false));
   }
 
+  checkIfUsernameExists() {
+    this.inProgress = true;
+    this.fbUtil
+        .getInstance()
+        .collection(Constants.PROFILE)
+        .doc(this.profile)
+        .get()
+        .subscribe((doc) => {
+          if (doc.exists) {
+            this.app.presentToast("This username is not available!");
+          } else {
+            this.step++;
+          }
+          this.inProgress = false;
+        },
+        error => {
+          this.app.presentToast("Error occurred, Please check your internet connectivity!");
+          this.inProgress = false;
+        });
+  }
+
   register() {
     this.inProgress = true;
     this.auth.signUp(this.email, this.pass).then((x) => {
@@ -94,6 +123,7 @@ export class RegisterComponent {
         this.setupProfile(x[1]);
         this.setupBusiness(x[1]);
         this.setupCounters(x[1]);
+        this.app.updateProfile(x[1], this.profile);
         this.sendWelcomeEmail();
       } else {
         this.inProgress = false;
@@ -154,7 +184,7 @@ export class RegisterComponent {
       .set({ invoiceNo: 1 })
   }
 
-  sendWelcomeEmail(){
+  sendWelcomeEmail() {
     var input = {
       Detail$:
         this.email +
@@ -175,5 +205,28 @@ export class RegisterComponent {
       },
       body: JSON.stringify(input),
     });
+  }
+
+  disableNext(): boolean {
+    if (this.inProgress) {
+      return true;
+    }
+
+    switch (this.step) {
+      case 1:
+        return (this.first.length == 0 || this.last.length == 0);
+      case 2:
+        return this.name.length == 0;
+      case 3:
+        return this.checkEmail();
+      case 4:
+        return this.checkUsername();
+      case 5:
+        return this.checkPassword();
+      case 6:
+        return true;
+    }
+
+    return false;
   }
 }

@@ -126,7 +126,7 @@ export class SettingsDashboardComponent {
             return;
           }
           this.updateBusinessInfo({ profile: this.business.profile });
-          this.updateProfile();
+          this.app.updateProfile(this.business.id, this.business.profile, this.backup.profile);
           this.editProfile = false;
         },
           error => {
@@ -278,38 +278,4 @@ export class SettingsDashboardComponent {
         )
       );
   }
-
-  updateProfile() {
-    // delete previous
-    if(this.backup.profile) {
-      this.fbUtil
-      .getInstance()
-      .collection(Constants.PROFILE)
-      .doc(this.backup.profile)
-      .delete();
-    }
-    
-    var keywords = [];
-    if(this.business.profile.indexOf('-') !== -1) {
-      keywords.push(this.business.profile);
-      keywords.push(...this.business.profile.split('-'));
-      keywords.push(this.business.profile.split('-').join(''));
-    } else {
-      for (let i = 6; i <= this.business.profile.length; i++) {
-        keywords.push(this.business.profile.substring(0, i));
-      }
-    }
-  
-    this.fbUtil
-      .getInstance()
-      .collection(Constants.PROFILE)
-      .doc(this.business.profile)
-      .set({ id: this.business.id, keywords: keywords })
-      .catch(() =>
-        this.app.presentToast(
-          'Error occurred, Please check Internet connectivity'
-        )
-      );
-  }
-
 }

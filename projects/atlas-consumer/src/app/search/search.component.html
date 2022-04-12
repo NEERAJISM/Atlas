@@ -49,8 +49,12 @@
   <ion-row>
     <ion-col *ngFor="let business of businesses" size-lg="3" size-md="4" size-sm="6" size="12">
       <ion-card (click)="route(business.profile)">
-        <img style="height: 300px; width: 100%;"
-          [src]="imgMap.has(business.id) ? imgMap.get(business.id) : 'https://via.placeholder.com/350?text=Image'" />
+        <ion-row class="ion-text-center">
+          <ion-col class="ion-no-padding">
+            <img style="height: 250px" [style.width]="imgMap.has(business.id) ? 'width: 100%;': 'width: 50%;'"
+              [src]="imgMap.has(business.id) ? imgMap.get(business.id) : 'assets/images/mall.png'" />
+          </ion-col>
+        </ion-row>
         <ion-card-header>
           <ion-card-subtitle>{{'@' + business.profile}}</ion-card-subtitle>
           <ion-card-title>{{business.name}}</ion-card-title>

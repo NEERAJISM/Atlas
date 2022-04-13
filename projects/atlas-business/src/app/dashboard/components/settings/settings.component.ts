@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AlertController } from '@ionic/angular';
 import { AuthService, Business, Constants, FirebaseUtil } from 'atlas-core';
@@ -10,6 +10,8 @@ import { AppService } from '../../../app.service';
   templateUrl: './settings.component.html',
 })
 export class SettingsDashboardComponent {
+  @ViewChild('file') file: ElementRef;
+
   initialized = false;
 
   user: firebase.User;
@@ -28,6 +30,12 @@ export class SettingsDashboardComponent {
 
   locationSrc: any;
 
+  editIcon = false;
+  icon;
+  placeholder = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+  imgFile;
+  blob;
+
   constructor(private auth: AuthService, private app: AppService, private fbUtil: FirebaseUtil, private sanitizer: DomSanitizer, private alertController: AlertController) {
     this.app.presentLoading();
     this.init();
@@ -45,6 +53,12 @@ export class SettingsDashboardComponent {
   }
 
   getBusinessInfo() {
+    this.fbUtil
+      .downloadImage(Constants.PROFILE + '/' + this.user.uid + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
+
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.user.uid + '/' + Constants.INFO)
@@ -343,5 +357,56 @@ export class SettingsDashboardComponent {
           'Error occurred, Please check Internet connectivity'
         )
       );
+  }
+
+  onFileChanged(event) {
+    const files = event.target.files;
+    if (files.length === 0) {
+      this.editIcon = false;
+      return;
+    }
+
+    if (files[0].size > 200000) {
+      this.imgFile = '';
+      this.app.presentToast('Please select a file less than 200KB');
+      this.editIcon = false;
+      return;
+    }
+
+    const mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.imgFile = '';
+      this.app.presentToast(
+        'Image format not supported, use either jpg/jpeg/png'
+      );
+      this.editIcon = false;
+      return;
+    }
+
+    this.blob = files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(files[0]);
+    reader.onload = (e) => {
+      this.icon = reader.result;
+    };
+  }
+
+  edit_Icon() {
+    if (this.editIcon) {
+      if (this.blob) {
+        this.app.presentLoading();
+        this.fbUtil
+          .uploadImage(
+            this.blob,
+            Constants.PROFILE + '/' + this.user.uid + '/icon'
+          )
+          .then(() => {
+            this.app.dismissLoading();
+          });
+      }
+    } else {
+      this.file.nativeElement.click();
+    }
+    this.editIcon = !this.editIcon;
   }
 }

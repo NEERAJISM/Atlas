@@ -93,6 +93,42 @@
             >
           </ion-col>
         </ion-row>
+
+        <ion-row class="mt-4 ion-align-items-center">
+          <ion-col size="3">
+            <span><b>Company Logo</b></span>
+          </ion-col>
+
+          <ion-col size="5">
+            <ion-item lines="none">
+              <ion-avatar slot="start">
+                <img
+                  [src]="icon ? icon : placeholder"
+                  (click)="editIcon = true; file.click()"
+                />
+              </ion-avatar>
+            </ion-item>
+            <input
+            style="display: none"
+            type="file"
+            accept="image/*"
+            #file
+            (change)="onFileChanged($event)"
+            [(ngModel)]="imgFile"
+          />
+          </ion-col>
+
+          <ion-col offsetMd="1" size="3">
+            <i
+              class="fa fa-pen"
+              *ngIf="!editIcon"
+              (click)="edit_Icon()"
+            ></i>
+            <ion-button *ngIf="editIcon" (click)="edit_Icon()"
+              >Save</ion-button
+            >
+          </ion-col>
+        </ion-row>
       </div>
 
       <!-- Business Details -->

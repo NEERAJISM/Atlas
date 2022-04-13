@@ -43,8 +43,7 @@ export class ProfileDashboardComponent implements OnInit {
   home = 'true';
 
   icon;
-  placeholder =
-    'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+  placeholder = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
   imgFile;
   blob;
 

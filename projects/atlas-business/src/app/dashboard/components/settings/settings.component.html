@@ -16,9 +16,9 @@
             <span>{{ business.address.email }}</span>
           </ion-col>
           <ion-col offsetMd="1" size="3">
-            <ion-button *ngIf="emailVerified !== undefined" (click)="emailVerified === true ? resetPassword(): verifyEmail()"
-              >{{ emailVerified === true ? 'Reset Password' : 'Verify' }}</ion-button
-            >
+            <ion-button *ngIf="emailVerified !== undefined"
+              (click)="emailVerified === true ? resetPassword(): verifyEmail()">{{ emailVerified === true ? 'Reset
+              Password' : 'Verify' }}</ion-button>
           </ion-col>
         </ion-row>
 
@@ -28,24 +28,16 @@
           </ion-col>
 
           <ion-col size="5">
-            <span *ngIf="!editMobile"
-              >{{ initialized ? "+91 -" : "" }} {{ business.address.mobile }}
+            <span *ngIf="!editMobile">{{ initialized ? "+91 -" : "" }} {{ business.address.mobile }}
             </span>
 
-            <ion-item
-              *ngIf="editMobile"
-              style="
+            <ion-item *ngIf="editMobile" style="
                 border: solid 0.5px;
                 border-radius: 20px;
                 --highlight-color-focused: none;
-              "
-            >
+              ">
               <ion-label>+91</ion-label>
-              <ion-input
-                maxlength="10"
-                placeholder="10-digit number"
-                [(ngModel)]="business.address.mobile"
-              ></ion-input>
+              <ion-input maxlength="10" placeholder="10-digit number" [(ngModel)]="business.address.mobile"></ion-input>
             </ion-item>
           </ion-col>
 
@@ -62,35 +54,22 @@
 
           <ion-col size="5">
             <span *ngIf="!editProfile">
-              {{ initialized ? "@  " : "" }}{{ business.profile }}
+              {{ initialized ? "@ " : "" }}{{ business.profile }}
             </span>
 
-            <ion-item
-              *ngIf="editProfile"
-              style="
+            <ion-item *ngIf="editProfile" style="
                 border: solid 0.5px;
                 border-radius: 20px;
                 --highlight-color-focused: none;
-              "
-            >
+              ">
               <ion-label>@</ion-label>
-              <ion-input
-                maxlength="30"
-                placeholder=""
-                [(ngModel)]="business.profile"
-              ></ion-input>
+              <ion-input maxlength="30" placeholder="" [(ngModel)]="business.profile"></ion-input>
             </ion-item>
           </ion-col>
 
           <ion-col offsetMd="1" size="3">
-            <i
-              class="fa fa-pen"
-              *ngIf="!editProfile"
-              (click)="edit_Profile()"
-            ></i>
-            <ion-button *ngIf="editProfile" (click)="edit_Profile()"
-              >Save</ion-button
-            >
+            <i class="fa fa-pen" *ngIf="!editProfile" (click)="edit_Profile()"></i>
+            <ion-button *ngIf="editProfile" (click)="edit_Profile()">Save</ion-button>
           </ion-col>
         </ion-row>
 
@@ -100,33 +79,15 @@
           </ion-col>
 
           <ion-col size="5">
-            <ion-item lines="none">
-              <ion-avatar slot="start">
-                <img
-                  [src]="icon ? icon : placeholder"
-                  (click)="editIcon = true; file.click()"
-                />
-              </ion-avatar>
-            </ion-item>
-            <input
-            style="display: none"
-            type="file"
-            accept="image/*"
-            #file
-            (change)="onFileChanged($event)"
-            [(ngModel)]="imgFile"
-          />
+            <img style="height: 48px" [src]="icon ? icon : placeholder" (click)="editIcon = true; file.click()" />
+
+            <input style="display: none" type="file" accept="image/*" #file (change)="onFileChanged($event)"
+              [(ngModel)]="imgFile" />
           </ion-col>
 
           <ion-col offsetMd="1" size="3">
-            <i
-              class="fa fa-pen"
-              *ngIf="!editIcon"
-              (click)="edit_Icon()"
-            ></i>
-            <ion-button *ngIf="editIcon" (click)="edit_Icon()"
-              >Save</ion-button
-            >
+            <i class="fa fa-pen" *ngIf="!editIcon" (click)="edit_Icon()"></i>
+            <ion-button *ngIf="editIcon" (click)="edit_Icon()">Save</ion-button>
           </ion-col>
         </ion-row>
       </div>
@@ -147,26 +108,18 @@
           <ion-col size="5">
             <span *ngIf="!editBName"> {{ business.name }} </span>
 
-            <ion-item
-              *ngIf="editBName"
-              style="
+            <ion-item *ngIf="editBName" style="
                 border: solid 0.5px;
                 border-radius: 20px;
                 --highlight-color-focused: none;
-              "
-            >
-              <ion-input
-                placeholder="Ex - ABC Company Pvt. Ltd."
-                [(ngModel)]="business.name"
-              ></ion-input>
+              ">
+              <ion-input placeholder="Ex - ABC Company Pvt. Ltd." [(ngModel)]="business.name"></ion-input>
             </ion-item>
           </ion-col>
 
           <ion-col offsetMd="1" size="3">
             <i class="fa fa-pen" *ngIf="!editBName" (click)="edit_BName()"></i>
-            <ion-button *ngIf="editBName" (click)="edit_BName()"
-              >Save</ion-button
-            >
+            <ion-button *ngIf="editBName" (click)="edit_BName()">Save</ion-button>
           </ion-col>
         </ion-row>
 
@@ -178,19 +131,12 @@
           <ion-col size="5">
             <span *ngIf="!editBGST"> {{ business.gst }} </span>
 
-            <ion-item
-              *ngIf="editBGST"
-              style="
+            <ion-item *ngIf="editBGST" style="
                 border: solid 0.5px;
                 border-radius: 20px;
                 --highlight-color-focused: none;
-              "
-            >
-              <ion-input
-                maxlength="15"
-                placeholder="15-digit GST number"
-                [(ngModel)]="business.gst"
-              ></ion-input>
+              ">
+              <ion-input maxlength="15" placeholder="15-digit GST number" [(ngModel)]="business.gst"></ion-input>
             </ion-item>
           </ion-col>
 
@@ -208,27 +154,18 @@
           <ion-col size="5">
             <span *ngIf="!editBYear"> {{ business.year }} </span>
 
-            <ion-item
-              *ngIf="editBYear"
-              style="
+            <ion-item *ngIf="editBYear" style="
                 border: solid 0.5px;
                 border-radius: 20px;
                 --highlight-color-focused: none;
-              "
-            >
-              <ion-input
-                maxlength="4"
-                placeholder="Ex - 1994"
-                [(ngModel)]="business.year"
-              ></ion-input>
+              ">
+              <ion-input maxlength="4" placeholder="Ex - 1994" [(ngModel)]="business.year"></ion-input>
             </ion-item>
           </ion-col>
 
           <ion-col offsetMd="1" size="3">
             <i class="fa fa-pen" *ngIf="!editBYear" (click)="edit_BYear()"></i>
-            <ion-button *ngIf="editBYear" (click)="edit_BYear()"
-              >Save</ion-button
-            >
+            <ion-button *ngIf="editBYear" (click)="edit_BYear()">Save</ion-button>
           </ion-col>
         </ion-row>
 
@@ -240,31 +177,18 @@
           <ion-col size="5">
             <span *ngIf="!editBPhone"> {{ business.address.phone }} </span>
 
-            <ion-item
-              *ngIf="editBPhone"
-              style="
+            <ion-item *ngIf="editBPhone" style="
                 border: solid 0.5px;
                 border-radius: 20px;
                 --highlight-color-focused: none;
-              "
-            >
-              <ion-input
-                maxlength="20"
-                placeholder="02946 - 233333"
-                [(ngModel)]="business.address.phone"
-              ></ion-input>
+              ">
+              <ion-input maxlength="20" placeholder="02946 - 233333" [(ngModel)]="business.address.phone"></ion-input>
             </ion-item>
           </ion-col>
 
           <ion-col offsetMd="1" size="3">
-            <i
-              class="fa fa-pen"
-              *ngIf="!editBPhone"
-              (click)="edit_BPhone()"
-            ></i>
-            <ion-button *ngIf="editBPhone" (click)="edit_BPhone()"
-              >Save</ion-button
-            >
+            <i class="fa fa-pen" *ngIf="!editBPhone" (click)="edit_BPhone()"></i>
+            <ion-button *ngIf="editBPhone" (click)="edit_BPhone()">Save</ion-button>
           </ion-col>
         </ion-row>
 
@@ -274,19 +198,18 @@
           </ion-col>
 
           <ion-col *ngIf="!editBAddress" size="5">
-            <span
-              >{{
-                (business.address.line1 ? business.address.line1 : "") +
-                  (business.address.line2
-                    ? ", " + business.address.line2
-                    : "") +
-                  (business.address.district
-                    ? ", " + business.address.district
-                    : "") +
-                  (business.address.state
-                    ? ", " + business.address.state
-                    : "") +
-                  (business.address.pin ? " - " + business.address.pin : "")
+            <span>{{
+              (business.address.line1 ? business.address.line1 : "") +
+              (business.address.line2
+              ? ", " + business.address.line2
+              : "") +
+              (business.address.district
+              ? ", " + business.address.district
+              : "") +
+              (business.address.state
+              ? ", " + business.address.state
+              : "") +
+              (business.address.pin ? " - " + business.address.pin : "")
               }}
             </span>
           </ion-col>
@@ -294,100 +217,66 @@
           <ion-col *ngIf="editBAddress" size="5" class="ion-no-padding">
             <ion-row>
               <ion-col>
-                <ion-item
-                  style="
+                <ion-item style="
                     border: solid 0.5px;
                     border-radius: 20px;
                     --highlight-color-focused: none;
-                  "
-                >
-                  <ion-input
-                    maxlength="50"
-                    placeholder="Address Line 1"
-                    [(ngModel)]="business.address.line1"
-                  ></ion-input>
+                  ">
+                  <ion-input maxlength="50" placeholder="Address Line 1" [(ngModel)]="business.address.line1">
+                  </ion-input>
                 </ion-item>
               </ion-col>
             </ion-row>
 
             <ion-row>
               <ion-col sizeMd="8">
-                <ion-item
-                  style="
+                <ion-item style="
                     border: solid 0.5px;
                     border-radius: 20px;
                     --highlight-color-focused: none;
-                  "
-                >
-                  <ion-input
-                    maxlength="50"
-                    placeholder="Address Line 2"
-                    [(ngModel)]="business.address.line2"
-                  ></ion-input>
+                  ">
+                  <ion-input maxlength="50" placeholder="Address Line 2" [(ngModel)]="business.address.line2">
+                  </ion-input>
                 </ion-item>
               </ion-col>
 
               <ion-col sizeMd="4">
-                <ion-item
-                  style="
+                <ion-item style="
                     border: solid 0.5px;
                     border-radius: 20px;
                     --highlight-color-focused: none;
-                  "
-                >
-                  <ion-input
-                    maxlength="6"
-                    placeholder="pin code"
-                    [(ngModel)]="business.address.pin"
-                  ></ion-input>
+                  ">
+                  <ion-input maxlength="6" placeholder="pin code" [(ngModel)]="business.address.pin"></ion-input>
                 </ion-item>
               </ion-col>
             </ion-row>
 
             <ion-row>
               <ion-col>
-                <ion-item
-                  style="
+                <ion-item style="
                     border: solid 0.5px;
                     border-radius: 20px;
                     --highlight-color-focused: none;
-                  "
-                >
-                  <ion-input
-                    maxlength="50"
-                    placeholder="District"
-                    [(ngModel)]="business.address.district"
-                  ></ion-input>
+                  ">
+                  <ion-input maxlength="50" placeholder="District" [(ngModel)]="business.address.district"></ion-input>
                 </ion-item>
               </ion-col>
 
               <ion-col>
-                <ion-item
-                  style="
+                <ion-item style="
                     border: solid 0.5px;
                     border-radius: 20px;
                     --highlight-color-focused: none;
-                  "
-                >
-                  <ion-input
-                    maxlength="50"
-                    placeholder="State"
-                    [(ngModel)]="business.address.state"
-                  ></ion-input>
+                  ">
+                  <ion-input maxlength="50" placeholder="State" [(ngModel)]="business.address.state"></ion-input>
                 </ion-item>
               </ion-col>
             </ion-row>
           </ion-col>
 
           <ion-col offsetMd="1" size="3">
-            <i
-              class="fa fa-pen"
-              *ngIf="!editBAddress"
-              (click)="edit_BAddress()"
-            ></i>
-            <ion-button *ngIf="editBAddress" (click)="edit_BAddress()"
-              >Save</ion-button
-            >
+            <i class="fa fa-pen" *ngIf="!editBAddress" (click)="edit_BAddress()"></i>
+            <ion-button *ngIf="editBAddress" (click)="edit_BAddress()">Save</ion-button>
           </ion-col>
         </ion-row>
 
@@ -398,40 +287,23 @@
           </ion-col>
 
           <ion-col size="5">
-            <iframe
-              *ngIf="!editBLocation"
-              [src]="locationSrc"
-              width="300"
-              height="300"
-              style="border: 0"
-              allowfullscreen=""
-              loading="lazy"
-            ></iframe>
+            <iframe *ngIf="!editBLocation" [src]="locationSrc" width="300" height="300" style="border: 0"
+              allowfullscreen="" loading="lazy"></iframe>
 
-            <ion-item
-              *ngIf="editBLocation"
-              style="
+            <ion-item *ngIf="editBLocation" style="
                 border: solid 0.5px;
                 border-radius: 20px;
                 --highlight-color-focused: none;
-              "
-            >
+              ">
               <ion-textarea
                 placeholder="Go to your Google Maps location -> Share -> Embed a Map -> Copy HTML & paste here!"
-                [(ngModel)]="business.address.location"
-              ></ion-textarea>
+                [(ngModel)]="business.address.location"></ion-textarea>
             </ion-item>
           </ion-col>
 
           <ion-col offsetMd="1" size="3">
-            <i
-              class="fa fa-pen"
-              *ngIf="!editBLocation"
-              (click)="edit_BLocation()"
-            ></i>
-            <ion-button *ngIf="editBLocation" (click)="edit_BLocation()"
-              >Save</ion-button
-            >
+            <i class="fa fa-pen" *ngIf="!editBLocation" (click)="edit_BLocation()"></i>
+            <ion-button *ngIf="editBLocation" (click)="edit_BLocation()">Save</ion-button>
           </ion-col>
         </ion-row>
       </div>

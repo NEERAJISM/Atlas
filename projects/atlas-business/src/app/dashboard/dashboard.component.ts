@@ -23,6 +23,7 @@ export class DashboardComponent {
   showMenuName = false;
   selected = '/dashboard/main';
 
+  icon = '';
   business = new Business();
 
   menu: MenuItem[] = [
@@ -112,6 +113,12 @@ export class DashboardComponent {
   }
 
   getBusiness(id) {
+    this.fbUtil
+      .downloadImage(Constants.PROFILE + '/' + id + '/icon')
+      .subscribe((url) => {
+        this.icon = url;
+      });
+
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + id + '/' + Constants.INFO)

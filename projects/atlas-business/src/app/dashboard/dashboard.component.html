@@ -32,7 +32,9 @@
       <ion-toolbar>
         <ion-row>
           <ion-col>
-            <ion-title class="h-100">{{ business.name }}</ion-title>
+            <ion-title class="h-100 pl-2">
+              <img *ngIf="icon" style="height: 48px" [src]="icon" />
+              {{ business.name }}</ion-title>
           </ion-col>
           <ion-col>
             <ion-button color="danger" class="float-right" (click)="logout()">Logout</ion-button>

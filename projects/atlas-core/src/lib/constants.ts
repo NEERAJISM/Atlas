@@ -1,3 +1,4 @@
+// @dynamic
 export class Constants {
   static readonly SUCCESS = 'Success';
   static readonly FAILURE = 'Failure';

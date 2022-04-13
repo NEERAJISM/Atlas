@@ -15,7 +15,7 @@ import { SplashComponent } from './splash/splash.component';
 @NgModule({
   imports: [
     AngularFireAuthModule,
-    AngularFirestoreModule.enablePersistence(),
+    AngularFirestoreModule,
     AngularFireStorageModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,

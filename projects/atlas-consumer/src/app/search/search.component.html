@@ -51,7 +51,7 @@
       <ion-card (click)="route(business.profile)">
         <ion-row class="ion-text-center">
           <ion-col class="ion-no-padding">
-            <img style="height: 250px" [style.width]="imgMap.has(business.id) ? 'width: 100%;': 'width: 50%;'"
+            <img style="height: 250px" [style.width]="imgMap.has(business.id) ? '100%': '75%'"
               [src]="imgMap.has(business.id) ? imgMap.get(business.id) : 'assets/images/mall.png'" />
           </ion-col>
         </ion-row>

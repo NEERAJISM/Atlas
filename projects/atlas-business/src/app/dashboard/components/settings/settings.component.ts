@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AlertController } from '@ionic/angular';
 import { AuthService, Business, Constants, FirebaseUtil } from 'atlas-core';
 import firebase from 'firebase/app';
 import { AppService } from '../../../app.service';
@@ -15,7 +16,7 @@ export class SettingsDashboardComponent {
   backup: Business = new Business();
   business: Business = new Business();
 
-  emailVerified = true;
+  emailVerified;
   editMobile = false;
   editProfile = false;
   editBName = false;
@@ -27,8 +28,7 @@ export class SettingsDashboardComponent {
 
   locationSrc: any;
 
-  constructor(private auth: AuthService, private app: AppService, private fbUtil: FirebaseUtil, private sanitizer: DomSanitizer
-  ) {
+  constructor(private auth: AuthService, private app: AppService, private fbUtil: FirebaseUtil, private sanitizer: DomSanitizer, private alertController: AlertController) {
     this.app.presentLoading();
     this.init();
     this.updateLocationUrl();
@@ -82,6 +82,72 @@ export class SettingsDashboardComponent {
     }).catch(() => {
       this.app.presentToast('Error while sending verification email');
     });
+  }
+
+  async resetPassword() {
+    const alert = await this.alertController.create({
+      header: 'Update Password',
+      inputs: [
+        {
+          name: 'current',
+          type: 'password',
+          placeholder: "Current Password"
+        },
+        {
+          name: 'new1',
+          type: 'password',
+          placeholder: "New Password (min 8 length)"
+        },
+        {
+          name: 'new2',
+          type: 'text',
+          placeholder: "Confirm New Password"
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Update Password',
+          handler: (alertData) => {
+            if (alertData.current === alertData.new1) {
+              this.app.presentToast("Please enter a different new password");
+              return false;
+            }
+
+            if (!alertData.new1 || alertData.new1.trim().length < 8) {
+              this.app.presentToast('Please enter a valid new password!');
+              return false;
+            }
+
+            if (alertData.new1 !== alertData.new2) {
+              this.app.presentToast("New Passwords don't match");
+              return false;
+            }
+
+            this.app.presentLoading();
+            this.auth.resetPassword(alertData.current, alertData.new1)
+              .then((x) => {
+                if(x === Constants.SUCCESS) {
+                  this.app.presentToast("Password changed successfully!");
+                  alert.dismiss();
+                } else if( x === "Invalid") {
+                  this.app.presentToast("Please Enter a valid current password");
+                } else {
+                  this.app.presentToast("Error occurred");
+                }
+              })
+              .finally(() => {
+                this.app.dismissLoading();
+              });
+            return false;
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   editMob() {

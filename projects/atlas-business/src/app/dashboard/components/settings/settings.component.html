@@ -16,8 +16,8 @@
             <span>{{ business.address.email }}</span>
           </ion-col>
           <ion-col offsetMd="1" size="3">
-            <ion-button *ngIf="!emailVerified" (click)="verifyEmail()"
-              >Verify</ion-button
+            <ion-button *ngIf="emailVerified !== undefined" (click)="emailVerified === true ? resetPassword(): verifyEmail()"
+              >{{ emailVerified === true ? 'Reset Password' : 'Verify' }}</ion-button
             >
           </ion-col>
         </ion-row>

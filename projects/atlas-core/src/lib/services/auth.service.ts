@@ -69,6 +69,15 @@ export class AuthService {
     return this.afAuth.sendPasswordResetEmail(passwordResetEmail);
   }
 
+  resetPassword(currentPassword, newPassword) {
+    var credential = firebase.auth.EmailAuthProvider.credential(this.userData.email, currentPassword);
+    return this.userData.reauthenticateWithCredential(credential).then(() => {
+      return this.userData.updatePassword(newPassword).then(() => { return Constants.SUCCESS; }).catch((x) => { return Constants.FAILURE; })
+    }).catch((x) => {
+      return Promise.resolve("Invalid");
+    })
+  }
+
   get isLoggedIn(): boolean {
     return this.userData && this.userData !== null;
   }

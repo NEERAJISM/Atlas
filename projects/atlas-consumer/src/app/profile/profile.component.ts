@@ -48,28 +48,12 @@ export class ProfileComponent {
   landingFont = '70px';
   isDesktop = false;
 
-  // **** Assets for Custom web  *****
-
-  service1 = 'assets/images/profile/service-1.jpg';
-  service2 = 'assets/images/profile/service-2.jpg';
-  service3 = 'assets/images/profile/service-3.jpg';
-
-  project1 = 'assets/images/profile/project-1.jpg';
-  project2 = 'assets/images/profile/project-2.jpg';
-  project3 = 'assets/images/profile/project-3.jpg';
-
-  rameshji = 'assets/images/profile/rameshji.jpg';
-  aashika = 'assets/images/profile/aashika.jpg';
-  deepikaji = 'assets/images/profile/deepikaji.jpg';
-  chirag = 'assets/images/profile/chirag.jpg';
-  logo = 'assets/images/profile/logo.jpg';
-
-  // **************
   business: Business = new Business();
   profile: Profile = new Profile();
   pagesMap: Map<string, Page> = new Map();
   pages = [];
   displayPages = [];
+  hasProducts = false;
 
   home = true;
   hashes: string[] = []
@@ -123,6 +107,7 @@ export class ProfileComponent {
         this.bizId = (doc.data() as any).id;
         this.getBusiness();
         this.getProfile();
+        this.getItems()
         this.updateLocationUrl();
       });
   }
@@ -197,15 +182,28 @@ export class ProfileComponent {
       });
   }
 
-  updateViews(){
+  getItems() {
+    this.fbUtil
+      .getProductRef(this.bizId)
+      .get()
+      .forEach((res) =>
+        res.forEach((data) => {
+          if (data.data()) {
+            this.hasProducts = true;
+          }
+        })
+      );
+  }
+
+  updateViews() {
     var date = new Date().toLocaleDateString().split('/').reverse().join('');
     this.fbUtil
       .getInstance()
       .collection(Constants.BUSINESS + '/' + this.bizId + '/' + Constants.STATS)
       .doc(date)
-      .set({ 
+      .set({
         date: Number(date),
-        views: firebase.default.firestore.FieldValue.increment(1) 
+        views: firebase.default.firestore.FieldValue.increment(1)
       }, { merge: true });
   }
 

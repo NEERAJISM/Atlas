@@ -8,7 +8,7 @@
       <ion-row>
         <ion-col class="ion-text-start">
           <h5>
-            Website Preview
+            Open Website
             <a [href]="url" target="_blank">
               <i class="fas fa-external-link-alt"></i>
             </a>
@@ -30,7 +30,7 @@
         height="100%"
         allowfullscreen=""
         loading="lazy"
-        style="pointer-events: none;border: none;"
+        style="border: none;"
       ></iframe>
     </ion-col>
     <ion-col size="3">
@@ -174,7 +174,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="ion-text-start">
+      <ion-row class="ion-text-start px-2">
         <ion-col>
           <ion-segment mode="md" scrollable value="true" [(ngModel)]="home">
             <ion-segment-button
@@ -198,6 +198,17 @@
       </ion-row>
 
       <div *ngIf="home === 'true'">
+        <ion-row class="px-2">
+          <ion-col>
+            <ion-button expand="full" color="warning" (click)="presentAlert()"
+              >Add Menu</ion-button
+            >
+          </ion-col>
+          <ion-col>
+            <ion-button expand="full" (click)="presentModal()">Add Page</ion-button>
+          </ion-col>
+        </ion-row>
+
         <ion-row>
           <ion-col>
             <ion-card>
@@ -234,17 +245,6 @@
                 </ion-item>
               </ion-reorder-group>
             </ion-card>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-button color="warning" (click)="presentAlert()"
-              >Add Menu</ion-button
-            >
-          </ion-col>
-          <ion-col>
-            <ion-button (click)="presentModal()">Add New Page</ion-button>
           </ion-col>
         </ion-row>
       </div>

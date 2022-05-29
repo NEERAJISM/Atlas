@@ -160,20 +160,20 @@
     </section>
 
     <!-- Info -->
-    <section class="fwh-slide" *ngIf="page.type == 'Info'">
+    <section class="fwh-slide-half" *ngIf="page.type == 'Info'">
       <ion-row
         *ngIf="complete"
         style="height: 100%"
         [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse' : 'row'"
       >
         <ion-col
-          sizeMd="7"
+          sizeMd="6"
           style=" background: url({{
             imgMap.get(page.id)
           }}) no-repeat center center / cover"
         >
         </ion-col>
-        <ion-col sizeMd="5">
+        <ion-col sizeMd="6">
           <ion-row
             class="ion-padding"
             [ngClass]="{
@@ -187,11 +187,21 @@
                 style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
                 [style.color]="page.color"
                 [ngClass]="{
-                  'display-4': page.font == 's',
-                  'display-3': page.font == 'm',
-                  'display-1': page.font == 'l'
+                  'h3': page.font == 's',
+                  'h2': page.font == 'm',
+                  'h1': page.font == 'l'
                 }"
-                >{{ page.info }}</span
+                >{{ page.heading }}</span
+              >
+              <span
+                style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
+                [style.color]="page.color"
+                [ngClass]="{
+                  '': page.font == 's',
+                  'h5': page.font == 'm',
+                  'h4': page.font == 'l'
+                }"
+                ><br><br>{{ page.info }}</span
               >
             </ion-col>
           </ion-row>
@@ -214,6 +224,7 @@
           <ion-slides [options]="sliderConfig">
             <ion-slide *ngFor="let slide of page.slides">
               <ion-card
+                style="width: 100%;"
                 button
                 (click)="
                   presentSlideModal(
@@ -223,7 +234,7 @@
                   )
                 "
               >
-                <img style="height: 400px" src="{{ imgMap.get(slide.id) }}" />
+                <img style="height: 400px; width: 100%; object-fit: cover;" src="{{ imgMap.get(slide.id) }}" />
                 <ion-card-header>
                   <ion-card-title>{{ slide.title }}</ion-card-title>
                   <ion-card-subtitle class="ion-text-center"
@@ -254,7 +265,7 @@
               )
             "
           >
-            <img style="height: 400px; width: 100%;" src="{{ imgMap.get(slide.id) }}" />
+            <img style="height: 400px; width: 100%; object-fit: cover;" src="{{ imgMap.get(slide.id) }}" />
             <ion-card-header>
               <ion-card-title>{{ slide.title }}</ion-card-title>
               <ion-card-subtitle class="ion-text-center"
@@ -324,6 +335,7 @@
     </section>
   </div>
 
+  <!-- Contact Us -->
   <section #footer style="background: #224353">
     <ion-row class="py-5">
       <ion-col size="12" offset-md="1" size-md="3" class="text-light">
@@ -396,7 +408,7 @@
     </ion-row>
   </section>
 
-  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+  <ion-fab *ngIf="hasProducts" horizontal="end" vertical="bottom" slot="fixed">
     <ion-button
       style="text-transform: none"
       class="m-5"

@@ -12,7 +12,7 @@
         "
       >
         <ion-label><b>Title</b></ion-label>
-        <ion-input maxlength="15" [(ngModel)]="pageTitle"></ion-input>
+        <ion-input maxlength="30" [(ngModel)]="pageTitle"></ion-input>
       </ion-item>
     </ion-col>
     <ion-col>
@@ -118,11 +118,11 @@
           [style.flex-direction]="info.reverse === 'Y' ? 'row-reverse': 'row'"
         >
           <ion-col
-            sizeMd="7"
+            sizeMd="6"
             style=" background: url({{infoUrl}}) no-repeat center center / cover;"
           >
           </ion-col>
-          <ion-col sizeMd="5">
+          <ion-col sizeMd="6">
             <ion-row
               class="ion-padding"
               [ngClass]="{
@@ -139,11 +139,24 @@
                   "
                   [style.color]="info.color"
                   [ngClass]="{
-                      'h3': info.font == 's',
-                      'h2': info.font == 'm',
-                      'h1': info.font == 'l'
+                      'h5 ': info.font == 's',
+                      'h4': info.font == 'm',
+                      'h3': info.font == 'l'
                     }"
-                  >{{info.info}}</span
+                  >{{info.heading}}</span
+                >
+                <span
+                  style="
+                    font-family: 'Mulish', sans-serif;
+                    white-space: pre-wrap;
+                  "
+                  [style.color]="info.color"
+                  [ngClass]="{
+                      '': info.font == 's',
+                      'h5': info.font == 'm',
+                      'h4': info.font == 'l'
+                    }"
+                  ><br><br>{{info.info}}</span
                 >
               </ion-col>
             </ion-row>
@@ -407,7 +420,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="mt-2">
+      <ion-row>
         <ion-col>
           <ion-segment
             mode="md"
@@ -427,7 +440,22 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="mt-2">
+      <ion-row>
+        <ion-col>
+          <ion-item
+            style="
+              border: solid 0.5px;
+              border-radius: 20px;
+              --highlight-color-focused: none;
+            "
+          >
+            <ion-label><b>Heading</b></ion-label>
+            <ion-input maxlength="50" [(ngModel)]="info.heading"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
         <ion-col>
           <ion-item
             style="
@@ -437,17 +465,16 @@
             "
           >
             <ion-textarea
-              rows="5"
+              rows="4"
               style="--highlight-color-focused: none"
               placeholder="Description"
-              maxlength="50"
               [(ngModel)]="info.info"
             ></ion-textarea>
           </ion-item>
         </ion-col>
       </ion-row>
 
-      <ion-row class="mt-2">
+      <ion-row>
         <ion-col>
           <ion-item lines="none">
             <input type="color" [(ngModel)]="info.color" />
@@ -496,7 +523,7 @@
             "
           >
             <ion-label><b>Heading</b></ion-label>
-            <ion-input maxlength="30" [(ngModel)]="text.heading"></ion-input>
+            <ion-input maxlength="50" [(ngModel)]="text.heading"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -643,7 +670,7 @@
           >
             <ion-label><b>Heading {{currentSlide*1 + 1}}</b></ion-label>
             <ion-input
-              maxlength="30"
+              maxlength="50"
               [(ngModel)]="slides.slides[currentSlide].title"
             ></ion-input>
           </ion-item>
@@ -683,7 +710,7 @@
           >
             <ion-label><b>Title</b></ion-label>
             <ion-input
-              maxlength="30"
+              maxlength="50"
               [(ngModel)]="video.videoTitle"
             ></ion-input>
           </ion-item>
@@ -796,7 +823,7 @@
           >
             <ion-label><b>Name</b></ion-label>
             <ion-input
-              maxlength="30"
+              maxlength="50"
               [(ngModel)]="team.members[currentMember].name"
             ></ion-input>
           </ion-item>
@@ -814,7 +841,7 @@
           >
             <ion-label><b>Designation</b></ion-label>
             <ion-input
-              maxlength="30"
+              maxlength="50"
               [(ngModel)]="team.members[currentMember].designation"
             ></ion-input>
           </ion-item>

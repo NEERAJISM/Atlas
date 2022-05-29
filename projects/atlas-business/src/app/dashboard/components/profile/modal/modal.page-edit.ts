@@ -325,7 +325,7 @@ export class PageEditModal implements OnInit {
       if (this.infoUrl === this.default) {
         this.appService.presentToast('Please select a background image');
         return;
-      } else if (!this.info.info || this.info.info.trim().length == 0) {
+      } else if (!this.info.heading || this.info.heading.trim().length == 0) {
         this.appService.presentToast('Please provide info');
         return;
       }

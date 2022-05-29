@@ -6,8 +6,9 @@ export class Info implements Page {
   readonly type: Type = Type.Info;
 
   reverse: string = 'N';
-  info: string = '\n\n\nAdd\nDescription\nHere!!';
+  heading: string = 'Heading';
+  info: string = 'Add\nDescription\nHere!!';
   align: string = 'Left';
   color: string = '#000000';
-  font: string = 'm';
+  font: string = 's';
 }

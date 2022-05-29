@@ -321,16 +321,11 @@ export class PageEditModal implements OnInit {
     } else if (this.pageType === Type.Full.toString() && this.fullUrl === this.default) {
       this.appService.presentToast('Please select a background image');
       return;
-    } else if (this.pageType === Type.Info.toString()) {
-      if (this.infoUrl === this.default) {
-        this.appService.presentToast('Please select a background image');
-        return;
-      } else if (!this.info.heading || this.info.heading.trim().length == 0) {
-        this.appService.presentToast('Please provide info');
-        return;
-      }
-    } else if (this.pageType === Type.Text.toString() && (!this.text.heading || !this.text.paragraph)) {
-      this.appService.presentToast('Please provide heading/info');
+    } else if (this.pageType === Type.Info.toString() && this.infoUrl === this.default) {
+      this.appService.presentToast('Please select a background image');
+      return;
+    } else if (this.pageType === Type.Text.toString() && (!this.text.heading)) {
+      this.appService.presentToast('Please provide heading');
       return;
     } else if (this.pageType === Type.Slides.toString()) {
       for (let i = 0; i < this.slides.slides.length; i++) {

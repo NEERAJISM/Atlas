@@ -138,11 +138,7 @@
                     white-space: pre-wrap;
                   "
                   [style.color]="info.color"
-                  [ngClass]="{
-                      'h5 ': info.font == 's',
-                      'h4': info.font == 'm',
-                      'h3': info.font == 'l'
-                    }"
+                  class="h5"
                   >{{info.heading}}</span
                 >
                 <span
@@ -151,11 +147,6 @@
                     white-space: pre-wrap;
                   "
                   [style.color]="info.color"
-                  [ngClass]="{
-                      '': info.font == 's',
-                      'h5': info.font == 'm',
-                      'h4': info.font == 'l'
-                    }"
                   ><br><br>{{info.info}}</span
                 >
               </ion-col>
@@ -555,7 +546,7 @@
             <ion-textarea
               rows="7"
               style="--highlight-color-focused: none"
-              placeholder="Description"
+              placeholder="Description (Optional)"
               [(ngModel)]="text.paragraph"
             ></ion-textarea>
           </ion-item>

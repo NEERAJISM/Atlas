@@ -208,7 +208,7 @@
             <ion-row class="ion-text-center">
               <ion-col class="ion-no-padding">
                 <img
-                  style="height: 300px"
+                  style="height: 300px; width: 100%;; object-fit: cover;"
                   [src]="slideImgs[currentSlide].url ? slideImgs[currentSlide].url: (imgMap.has(slides.slides[currentSlide].id) ?  imgMap.get(slides.slides[currentSlide].id) : 'https://via.placeholder.com/150?text=Image')"
                 />
               </ion-col>

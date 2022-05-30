@@ -28,6 +28,10 @@ export class AppService {
     }
   }
 
+  isMobileView(){
+    return !this.isDesktop;
+  }
+
   async presentLoading() {
     this.loading = await this.loadingController.create({
       message: 'Please wait...',

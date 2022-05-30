@@ -53,9 +53,12 @@
                 style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
                 [style.color]="profile.home.fullTitleColor"
                 [ngClass]="{
-                  'display-4': profile.home.fullTitleFont == 's',
-                  'display-3': profile.home.fullTitleFont == 'm',
-                  'display-1': profile.home.fullTitleFont == 'l'
+                  'display-4': !mobileView &&  profile.home.fullTitleFont == 's',
+                  'display-3': !mobileView && profile.home.fullTitleFont == 'm',
+                  'display-1': !mobileView && profile.home.fullTitleFont == 'l',
+                  'h5': mobileView &&  profile.home.fullTitleFont == 's',
+                  'h3': mobileView && profile.home.fullTitleFont == 'm',
+                  'h1': mobileView && profile.home.fullTitleFont == 'l'
                 }"
               >
                 {{ profile.home.fullTitle }}
@@ -103,9 +106,12 @@
                   "
                   [style.color]="page.fullTitleColor"
                   [ngClass]="{
-                    'display-4': page.fullTitleFont == 's',
-                    'display-3': page.fullTitleFont == 'm',
-                    'display-1': page.fullTitleFont == 'l'
+                    'display-4': !mobileView &&  profile.home.fullTitleFont == 's',
+                    'display-3': !mobileView && profile.home.fullTitleFont == 'm',
+                    'display-1': !mobileView && profile.home.fullTitleFont == 'l',
+                    'h5': mobileView &&  profile.home.fullTitleFont == 's',
+                    'h3': mobileView && profile.home.fullTitleFont == 'm',
+                    'h1': mobileView && profile.home.fullTitleFont == 'l'
                   }"
                 >
                   {{ page.fullTitle }}
@@ -163,17 +169,18 @@
     <section class="fwh-slide-half" *ngIf="page.type == 'Info'">
       <ion-row
         *ngIf="complete"
-        style="height: 100%"
+        style="min-height: 50vh"
         [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse' : 'row'"
       >
         <ion-col
+          size="12"
           sizeMd="6"
-          style=" background: url({{
+          style="min-height: 50vh; background: url({{
             imgMap.get(page.id)
           }}) no-repeat center center / cover"
         >
         </ion-col>
-        <ion-col sizeMd="6">
+        <ion-col size="12" sizeMd="6">
           <ion-row
             class="ion-padding"
             [ngClass]="{

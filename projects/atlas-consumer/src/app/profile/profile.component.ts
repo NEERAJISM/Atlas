@@ -45,8 +45,7 @@ export class ProfileComponent {
     autoplay: true,
   };
 
-  landingFont = '70px';
-  isDesktop = false;
+  mobileView = false;
 
   business: Business = new Business();
   profile: Profile = new Profile();
@@ -79,13 +78,18 @@ export class ProfileComponent {
     private sanitizer: DomSanitizer,
     private modalController: ModalController
   ) {
-    if (window.innerWidth > 1000) {
-      this.landingFont = '120px';
-      this.isDesktop = true;
+    if (appService.isMobileView()) {
+      this.setupMobileView();
     }
     this.appService.presentLoading();
     this.init();
     this.updateLocationUrl();
+  }
+
+  setupMobileView(){
+    this.mobileView = true;
+    this.sliderConfig.slidesPerView = 1;
+    this.sliderConfigTeam.slidesPerView = 1;
   }
 
   init() {

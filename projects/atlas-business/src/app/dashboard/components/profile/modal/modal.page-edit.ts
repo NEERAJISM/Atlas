@@ -44,7 +44,7 @@ export class PageEditModal implements OnInit {
   text = new Text();
   video = new Video();
 
-  default = 'assets/images/profile/white.jpg';
+  default = 'assets/images/white.jpg';
 
   //form
   fullUrl = this.default;

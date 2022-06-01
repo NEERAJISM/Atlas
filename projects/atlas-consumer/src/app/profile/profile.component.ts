@@ -26,7 +26,7 @@ export class ProfileComponent {
   // Business
   bizInfo: Business;
 
-  url = 'assets/images/profile/white.jpg';
+  url = 'assets/images/white.jpg';
   icon = '';
 
   // slider config

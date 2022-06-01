@@ -1,120 +1,80 @@
-<ion-header *ngIf="initialized">
-  <ion-toolbar
-    style="--background: {{ profile.color }}; --color: {{ profile.fontColor }}"
-  >
-    <ion-title style="font-family: 'Mulish', sans-serif">
-      <img style="height: 60px" [src]="icon" />
-      <b>&nbsp; {{ profile.title }} </b></ion-title
-    >
+<ion-menu *ngIf="mobileView" side="start" menuId="first" content-id="main-content" a>
+  <ion-header>
+    <ion-toolbar translucent>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-menu-toggle>
+        <ion-item (click)="header('home')">
+          <ion-label>Home</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle *ngFor="let menu of menus; index as i">
+        <ion-item (click)="header(menu, i + 1)">
+          <ion-label>{{ menu }}</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle>
+        <ion-item (click)="header('contact')">
+          <ion-label>Contact Us</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
-    <ion-buttons class="hidden-md-down" slot="primary" collapse="true">
-      <ion-button (click)="header('home')">Home</ion-button>
+<div class="ion-page" id="main-content" main>
+  <ion-header *ngIf="initialized">
+    <ion-toolbar style="--background: {{ profile.color }}; --color: {{ profile.fontColor }}">
+      <ion-buttons *ngIf="mobileView" slot="start">
+        <ion-menu-button style="--color: {{ profile.fontColor }}"></ion-menu-button>
+      </ion-buttons>
+      <ion-title style="font-family: 'Mulish', sans-serif">
+        <img style="height: 60px" [src]="icon" />
+        <b>&nbsp; {{ profile.title }} </b>
+      </ion-title>
 
-      <ion-button
-        *ngFor="let menu of menus; index as i"
-        (click)="header(menu, i + 1)"
-        >{{ menu }}</ion-button
-      >
+      <ion-buttons class="hidden-md-down" slot="primary" collapse="true">
+        <ion-button (click)="header('home')">Home</ion-button>
 
-      <ion-button (click)="header('contact')">Contact us</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+        <ion-button *ngFor="let menu of menus; index as i" (click)="header(menu, i + 1)">{{ menu }}</ion-button>
 
-<ion-content *ngIf="initialized">
-  <!-- Full  - ignore error in section css-->
-  <section
-    *ngIf="home"
-    style="
+        <ion-button (click)="header('contact')">Contact us</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content *ngIf="initialized">
+    <!-- Full  - ignore error in section css-->
+    <section *ngIf="home" style="
             background: url({{ url }}) no-repeat center center / cover;
             height: 100%;
-          "
-    class="fwh-slide"
-  >
-    <ion-row
-      class="mt-2 pb-3 h-100"
-      [ngClass]="{
+          " class="fwh-slide">
+      <ion-row class="mt-2 pb-3 h-100" [ngClass]="{
         'ion-text-start': profile.home.fullTitleX == 'Left',
         'ion-text-center': profile.home.fullTitleX == 'Mid',
         'ion-text-end': profile.home.fullTitleX == 'Right',
         'ion-align-items-start': profile.home.fullTitleY == 'Top',
         'ion-align-items-center': profile.home.fullTitleY == 'Mid',
         'ion-align-items-end': profile.home.fullTitleY == 'Bottom'
-      }"
-    >
-      <ion-col>
-        <ion-row>
-          <ion-col
-            sizeMd="{{ profile.home.fullTitleW == 'NA' ? '12' : '4' }}"
-            offsetMd="{{ profile.home.fullTitleW == 'E' ? '8' : '0' }}"
-          >
-            <span>
-              <p
-                style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
-                [style.color]="profile.home.fullTitleColor"
-                [ngClass]="{
+      }">
+        <ion-col>
+          <ion-row>
+            <ion-col sizeMd="{{ profile.home.fullTitleW == 'NA' ? '12' : '4' }}"
+              offsetMd="{{ profile.home.fullTitleW == 'E' ? '8' : '0' }}">
+              <span>
+                <p style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
+                  [style.color]="profile.home.fullTitleColor" [ngClass]="{
                   'display-4': !mobileView &&  profile.home.fullTitleFont == 's',
                   'display-3': !mobileView && profile.home.fullTitleFont == 'm',
                   'display-1': !mobileView && profile.home.fullTitleFont == 'l',
                   'h5': mobileView &&  profile.home.fullTitleFont == 's',
                   'h3': mobileView && profile.home.fullTitleFont == 'm',
                   'h1': mobileView && profile.home.fullTitleFont == 'l'
-                }"
-              >
-                {{ profile.home.fullTitle }}
-              </p>
-            </span>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-  </section>
-
-  <div *ngFor="let page of displayPages">
-    <!-- Full  - ignore error in section css-->
-    <section
-      class="fwh-slide"
-      *ngIf="page.type === 'Full'"
-      style="
-          background: url({{
-        imgMap.get(page.id)
-      }}) no-repeat center center / cover;
-        "
-    >
-      <ion-row
-        class="mt-2 pb-3 h-100"
-        [ngClass]="{
-          'ion-text-start': page.fullTitleX == 'Left',
-          'ion-text-center': page.fullTitleX == 'Mid',
-          'ion-text-end': page.fullTitleX == 'Right',
-          'ion-align-items-start': page.fullTitleY == 'Top',
-          'ion-align-items-center': page.fullTitleY == 'Mid',
-          'ion-align-items-end': page.fullTitleY == 'Bottom'
-        }"
-      >
-        <ion-col>
-          <ion-row>
-            <ion-col
-              sizeMd="{{ page.fullTitleW == 'NA' ? '12' : '4' }}"
-              offsetMd="{{ page.fullTitleW == 'E' ? '8' : '0' }}"
-            >
-              <span>
-                <p
-                  style="
-                    font-family: 'Mulish', sans-serif;
-                    white-space: pre-wrap;
-                  "
-                  [style.color]="page.fullTitleColor"
-                  [ngClass]="{
-                    'display-4': !mobileView &&  profile.home.fullTitleFont == 's',
-                    'display-3': !mobileView && profile.home.fullTitleFont == 'm',
-                    'display-1': !mobileView && profile.home.fullTitleFont == 'l',
-                    'h5': mobileView &&  profile.home.fullTitleFont == 's',
-                    'h3': mobileView && profile.home.fullTitleFont == 'm',
-                    'h1': mobileView && profile.home.fullTitleFont == 'l'
-                  }"
-                >
-                  {{ page.fullTitle }}
+                }">
+                  {{ profile.home.fullTitle }}
                 </p>
               </span>
             </ion-col>
@@ -123,304 +83,270 @@
       </ion-row>
     </section>
 
-    <!-- Text -->
-    <section #about *ngIf="page.type === 'Text'">
-      <div class="ion-padding">
-        <ion-row class="ion-text-center my-5">
-          <ion-col offset-md="2" size-md="8">
-            <span
-              [style.color]="page.headingColor"
-              style="font-family: 'Mulish', sans-serif"
-              [ngClass]="{
+    <div *ngFor="let page of displayPages">
+      <!-- Full  - ignore error in section css-->
+      <section class="fwh-slide" *ngIf="page.type === 'Full'" style="
+          background: url({{
+        imgMap.get(page.id)
+      }}) no-repeat center center / cover;
+        ">
+        <ion-row class="mt-2 pb-3 h-100" [ngClass]="{
+          'ion-text-start': page.fullTitleX == 'Left',
+          'ion-text-center': page.fullTitleX == 'Mid',
+          'ion-text-end': page.fullTitleX == 'Right',
+          'ion-align-items-start': page.fullTitleY == 'Top',
+          'ion-align-items-center': page.fullTitleY == 'Mid',
+          'ion-align-items-end': page.fullTitleY == 'Bottom'
+        }">
+          <ion-col>
+            <ion-row>
+              <ion-col sizeMd="{{ page.fullTitleW == 'NA' ? '12' : '4' }}"
+                offsetMd="{{ page.fullTitleW == 'E' ? '8' : '0' }}">
+                <span>
+                  <p style="
+                    font-family: 'Mulish', sans-serif;
+                    white-space: pre-wrap;
+                  " [style.color]="page.fullTitleColor" [ngClass]="{
+                    'display-4': !mobileView &&  profile.home.fullTitleFont == 's',
+                    'display-3': !mobileView && profile.home.fullTitleFont == 'm',
+                    'display-1': !mobileView && profile.home.fullTitleFont == 'l',
+                    'h5': mobileView &&  profile.home.fullTitleFont == 's',
+                    'h3': mobileView && profile.home.fullTitleFont == 'm',
+                    'h1': mobileView && profile.home.fullTitleFont == 'l'
+                  }">
+                    {{ page.fullTitle }}
+                  </p>
+                </span>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </section>
+
+      <!-- Text -->
+      <section #about *ngIf="page.type === 'Text'">
+        <div class="ion-padding">
+          <ion-row class="ion-text-center my-5">
+            <ion-col offset-md="2" size-md="8">
+              <span [style.color]="page.headingColor" style="font-family: 'Mulish', sans-serif" [ngClass]="{
                 h3: page.headingFont == 's',
                 h2: page.headingFont == 'm',
                 h1: page.headingFont == 'l'
-              }"
-            >
-              {{ page.heading }}
-            </span>
-          </ion-col>
-        </ion-row>
+              }">
+                {{ page.heading }}
+              </span>
+            </ion-col>
+          </ion-row>
 
-        <ion-row *ngIf="page.paragraph.length > 0" class="mb-5">
-          <ion-col
-            offset-md="2"
-            size-md="8"
-            style="
+          <ion-row *ngIf="page.paragraph.length > 0" class="mb-5">
+            <ion-col offset-md="2" size-md="8" style="
               font-family: 'Mulish', sans-serif;
               text-align: justify;
               text-justify: inter-word;
-            "
-          >
-            <span
-              class="ion-text-center"
-              style="white-space: pre-wrap"
-              [style.font-style]="page.paragraphStyle"
-              [style.color]="page.paragraphColor"
-            >
-              {{ page.paragraph }}
-            </span>
-          </ion-col>
-        </ion-row>
-      </div>
-    </section>
+            ">
+              <span class="ion-text-center" style="white-space: pre-wrap" [style.font-style]="page.paragraphStyle"
+                [style.color]="page.paragraphColor">
+                {{ page.paragraph }}
+              </span>
+            </ion-col>
+          </ion-row>
+        </div>
+      </section>
 
-    <!-- Info -->
-    <section class="fwh-slide-half" *ngIf="page.type == 'Info'">
-      <ion-row
-        *ngIf="complete"
-        style="min-height: 50vh"
-        [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse' : 'row'"
-      >
-        <ion-col
-          size="12"
-          sizeMd="6"
-          style="min-height: 50vh; background: url({{
+      <!-- Info -->
+      <section class="fwh-slide-half" *ngIf="page.type == 'Info'">
+        <ion-row *ngIf="complete" style="min-height: 50vh"
+          [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse' : 'row'">
+          <ion-col size="12" sizeMd="6" style="min-height: 50vh; background: url({{
             imgMap.get(page.id)
-          }}) no-repeat center center / cover"
-        >
-        </ion-col>
-        <ion-col size="12" sizeMd="6">
-          <ion-row
-            class="ion-padding"
-            [ngClass]="{
+          }}) no-repeat center center / cover">
+          </ion-col>
+          <ion-col size="12" sizeMd="6">
+            <ion-row class="ion-padding" [ngClass]="{
               'ion-text-start': page.align == 'Left',
               'ion-text-center': page.align == 'Mid',
               'ion-text-end': page.align == 'Right'
-            }"
-          >
-            <ion-col>
-              <span
-                style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
-                [style.color]="page.color"
-                [ngClass]="{
+            }">
+              <ion-col>
+                <span style="font-family: 'Mulish', sans-serif; white-space: pre-wrap" [style.color]="page.color"
+                  [ngClass]="{
                   'h3': page.font == 's',
                   'h2': page.font == 'm',
                   'h1': page.font == 'l'
-                }"
-                >{{ page.heading }}</span
-              >
-              <span
-                style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
-                [style.color]="page.color"
-                [ngClass]="{
+                }">{{ page.heading }}</span>
+                <span style="font-family: 'Mulish', sans-serif; white-space: pre-wrap" [style.color]="page.color"
+                  [ngClass]="{
                   '': page.font == 's',
                   'h5': page.font == 'm',
                   'h4': page.font == 'l'
-                }"
-                ><br><br>{{ page.info }}</span
-              >
-            </ion-col>
-          </ion-row>
-        </ion-col>
-      </ion-row>
-    </section>
+                }"><br><br>{{ page.info }}</span>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </section>
 
-    <!-- Slides -->
-    <section *ngIf="page.type === 'Slides'">
-      <ion-row class="my-5">
-        <ion-col offset-md="3" size-md="6">
-          <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
-            {{ page.title }}
-          </h1>
-        </ion-col>
-      </ion-row>
+      <!-- Slides -->
+      <section *ngIf="page.type === 'Slides'">
+        <ion-row class="my-5">
+          <ion-col offset-md="3" size-md="6">
+            <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
+              {{ page.title }}
+            </h1>
+          </ion-col>
+        </ion-row>
 
-      <ion-row class="mb-5" *ngIf="home">
-        <ion-col>
-          <ion-slides [options]="sliderConfig">
-            <ion-slide *ngFor="let slide of page.slides">
-              <ion-card
-                style="width: 100%;"
-                button
-                (click)="
+        <ion-row class="mb-5" *ngIf="home">
+          <ion-col>
+            <ion-slides [options]="sliderConfig">
+              <ion-slide *ngFor="let slide of page.slides">
+                <ion-card style="width: 100%;" button (click)="
                   presentSlideModal(
                     imgMap.get(slide.id),
                     slide.title,
                     slide.description
                   )
-                "
-              >
-                <img style="height: 400px; width: 100%; object-fit: cover;" src="{{ imgMap.get(slide.id) }}" />
-                <ion-card-header>
-                  <ion-card-title>{{ slide.title }}</ion-card-title>
-                  <ion-card-subtitle class="ion-text-center"
-                    ><i>Click to see detail</i></ion-card-subtitle
-                  >
-                </ion-card-header>
-              </ion-card>
-            </ion-slide>
-          </ion-slides>
-        </ion-col>
-      </ion-row>
+                ">
+                  <img style="height: 400px; width: 100%; object-fit: cover;" src="{{ imgMap.get(slide.id) }}" />
+                  <ion-card-header>
+                    <ion-card-title>{{ slide.title }}</ion-card-title>
+                    <ion-card-subtitle class="ion-text-center"><i>Click to see detail</i></ion-card-subtitle>
+                  </ion-card-header>
+                </ion-card>
+              </ion-slide>
+            </ion-slides>
+          </ion-col>
+        </ion-row>
 
-      <ion-row noWrap class="mx-md-5 mb-5" *ngIf="!home">
-        <ion-col
-          *ngFor="let slide of page.slides"
-          size-lg="4"
-          size-md="4"
-          size-sm="6"
-          size="12"
-        >
-          <ion-card
-            button
-            (click)="
+        <ion-row noWrap class="mx-md-5 mb-5" *ngIf="!home">
+          <ion-col *ngFor="let slide of page.slides" size-lg="4" size-md="4" size-sm="6" size="12">
+            <ion-card button (click)="
               presentSlideModal(
                 imgMap.get(slide.id),
                 slide.title,
                 slide.description
               )
-            "
-          >
-            <img style="height: 400px; width: 100%; object-fit: cover;" src="{{ imgMap.get(slide.id) }}" />
-            <ion-card-header>
-              <ion-card-title>{{ slide.title }}</ion-card-title>
-              <ion-card-subtitle class="ion-text-center"
-                ><i>Click to see detail</i></ion-card-subtitle
-              >
-            </ion-card-header>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </section>
+            ">
+              <img style="height: 400px; width: 100%; object-fit: cover;" src="{{ imgMap.get(slide.id) }}" />
+              <ion-card-header>
+                <ion-card-title>{{ slide.title }}</ion-card-title>
+                <ion-card-subtitle class="ion-text-center"><i>Click to see detail</i></ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </section>
 
-    <!-- Video -->
-    <section
-      class="mb-5 pb-5"
-      style="height: 100%"
-      *ngIf="page.type == 'Video'"
-    >
-      <ion-row class="my-5">
-        <ion-col offset-md="3" size-md="6">
-          <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
-            {{ page.videoTitle ? page.videoTitle : "Video" }}
-          </h1>
-        </ion-col>
-      </ion-row>
-      <ion-row class="mt-4">
-        <ion-col offsetMd="3" sizeMd="6">
-          <iframe
-            width="100%"
-            height="400px"
-            [src]="ytbUrl.get(page.id)"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </ion-col>
-      </ion-row>
-    </section>
+      <!-- Video -->
+      <section class="mb-5 pb-5" style="height: 100%" *ngIf="page.type == 'Video'">
+        <ion-row class="my-5">
+          <ion-col offset-md="3" size-md="6">
+            <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
+              {{ page.videoTitle ? page.videoTitle : "Video" }}
+            </h1>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-4">
+          <ion-col offsetMd="3" sizeMd="6">
+            <iframe width="100%" height="400px" [src]="ytbUrl.get(page.id)" title="YouTube video player" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+          </ion-col>
+        </ion-row>
+      </section>
 
-    <!-- Team -->
-    <section #team class="my-5 pb-5" *ngIf="page.type == 'Team'">
-      <ion-row class="my-5">
-        <ion-col offset-md="3" size-md="6">
-          <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
-            Our Team
-          </h1>
-        </ion-col>
-      </ion-row>
+      <!-- Team -->
+      <section #team class="my-5 pb-5" *ngIf="page.type == 'Team'">
+        <ion-row class="my-5">
+          <ion-col offset-md="3" size-md="6">
+            <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
+              Our Team
+            </h1>
+          </ion-col>
+        </ion-row>
 
-      <ion-row class="mb-5" style="font-family: 'Mulish', sans-serif">
-        <ion-col>
-          <ion-slides [options]="sliderConfigTeam">
-            <ion-slide *ngFor="let member of page.members">
-              <ion-col>
-                <img
-                  style="width: 150px; height: 150px; border-radius: 50%"
-                  src="{{ imgMap.get(member.id) }}"
-                />
-                <h5 class="mt-3">{{ member.name }}</h5>
-                <h6>{{ member.designation }}</h6>
-                <i>{{ member.details }}</i>
-              </ion-col>
-            </ion-slide>
-          </ion-slides>
-        </ion-col>
-      </ion-row>
-    </section>
-  </div>
+        <ion-row class="mb-5" style="font-family: 'Mulish', sans-serif">
+          <ion-col>
+            <ion-slides [options]="sliderConfigTeam">
+              <ion-slide *ngFor="let member of page.members">
+                <ion-col>
+                  <img style="width: 150px; height: 150px; border-radius: 50%" src="{{ imgMap.get(member.id) }}" />
+                  <h5 class="mt-3">{{ member.name }}</h5>
+                  <h6>{{ member.designation }}</h6>
+                  <i>{{ member.details }}</i>
+                </ion-col>
+              </ion-slide>
+            </ion-slides>
+          </ion-col>
+        </ion-row>
+      </section>
+    </div>
 
-  <!-- Contact Us -->
-  <section #footer style="background: #224353">
-    <ion-row class="py-5">
-      <ion-col size="12" offset-md="1" size-md="3" class="text-light">
-        <div class="pl-4">
-          <h6 class="text-uppercase font-weight-bold text-light">
-            <strong>Contact Us</strong>
-          </h6>
-          <hr
-            class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto"
-            style="width: 60px"
-          />
-          <p>
-            <i class="fas fa-home mr-1"></i> {{ business.address.line1 ? business.address.line1 + ',' : '' }}
-           <br>
-            {{ business.address.line2 ? business.address.line2 + ',' : '' }} <br />
-            {{ business.address.district ? business.address.district + '-' : '' + (business.address.pin ? business.address.pin + ',' : '') }}
-            {{ business.address.state }}
-          </p>
-          <p>
-            <i class="fa fa-envelope mr-1"></i>&nbsp;
-            <a href="{{ 'mailto:' + business.address.email }}">{{
-              business.address.email
-            }}</a>
-          </p>
-          <p>
-            <i class="fa fa-phone-alt mr-1"></i> &nbsp;{{
+    <!-- Contact Us -->
+    <section #footer style="background: #224353">
+      <ion-row class="py-5">
+        <ion-col size="12" offset-md="1" size-md="3" class="text-light">
+          <div class="pl-4">
+            <h6 class="text-uppercase font-weight-bold text-light">
+              <strong>Contact Us</strong>
+            </h6>
+            <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px" />
+            <p>
+              <i class="fas fa-home mr-1"></i> {{ business.address.line1 ? business.address.line1 + ',' : '' }}
+              <br>
+              {{ business.address.line2 ? business.address.line2 + ',' : '' }} <br />
+              {{ business.address.district ? business.address.district + '-' : '' + (business.address.pin ?
+              business.address.pin + ',' : '') }}
+              {{ business.address.state }}
+            </p>
+            <p>
+              <i class="fa fa-envelope mr-1"></i>&nbsp;
+              <a href="{{ 'mailto:' + business.address.email }}">{{
+                business.address.email
+                }}</a>
+            </p>
+            <p>
+              <i class="fa fa-phone-alt mr-1"></i> &nbsp;{{
               business.address.phone
-            }}
-          </p>
-          <p>
-            <i class="fas fa-mobile-alt mr-1"></i> &nbsp;{{
+              }}
+            </p>
+            <p>
+              <i class="fas fa-mobile-alt mr-1"></i> &nbsp;{{
               business.address.mobile
-            }}
-          </p>
-        </div>
-      </ion-col>
+              }}
+            </p>
+          </div>
+        </ion-col>
 
-      <ion-col size="12" size-md="4">
-        <h6 class="text-uppercase font-weight-bold text-light">
-          <strong>Write a query to us</strong>
-        </h6>
-        <hr
-          class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto"
-          style="width: 180px"
-        />
-        <ion-item>
-          <ion-label position="floating">Your Email Id / Mobile No.</ion-label>
-          <ion-input></ion-input>
-        </ion-item>
+        <ion-col size="12" size-md="4">
+          <h6 class="text-uppercase font-weight-bold text-light">
+            <strong>Write a query to us</strong>
+          </h6>
+          <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 180px" />
+          <ion-item>
+            <ion-label position="floating">Your Email Id / Mobile No.</ion-label>
+            <ion-input></ion-input>
+          </ion-item>
 
-        <!-- Textarea in an item with a floating label -->
-        <ion-item class="mt-3">
-          <ion-label position="floating">Description</ion-label>
-          <ion-textarea></ion-textarea>
-        </ion-item>
+          <!-- Textarea in an item with a floating label -->
+          <ion-item class="mt-3">
+            <ion-label position="floating">Description</ion-label>
+            <ion-textarea></ion-textarea>
+          </ion-item>
 
-        <ion-button class="mt-3" (click)="presentToast()">Submit</ion-button>
-      </ion-col>
+          <ion-button class="mt-3" (click)="presentToast()">Submit</ion-button>
+        </ion-col>
 
-      <ion-col size="12" offset-md="1" size-md="3">
-        <iframe
-          [src]="locationSrc"
-          width="300"
-          height="300"
-          style="border: 0"
-          allowfullscreen=""
-          loading="lazy"
-        ></iframe>
-      </ion-col>
-    </ion-row>
-  </section>
+        <ion-col size="12" offset-md="1" size-md="3">
+          <iframe [src]="locationSrc" width="300" height="300" style="border: 0" allowfullscreen=""
+            loading="lazy"></iframe>
+        </ion-col>
+      </ion-row>
+    </section>
 
-  <ion-fab *ngIf="hasProducts" horizontal="end" vertical="bottom" slot="fixed">
-    <ion-button
-      style="text-transform: none"
-      class="m-5"
-      (click)="routeToOrder()"
-      >Our Products!</ion-button
-    >
-  </ion-fab>
-</ion-content>
+    <ion-fab *ngIf="hasProducts" horizontal="end" vertical="bottom" slot="fixed">
+      <ion-button style="text-transform: none" class="m-5" (click)="routeToOrder()">Our Products!</ion-button>
+    </ion-fab>
+  </ion-content>
+
+</div>

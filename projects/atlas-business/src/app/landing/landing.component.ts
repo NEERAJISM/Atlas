@@ -47,6 +47,9 @@ export class LandingComponent {
     private auth: AuthService
   ) {
     this.isDesktop = service.isDesktop;
+    if(!this.isDesktop) {
+      this.sliderConfig.slidesPerView = 1;
+    }
   }
 
   ngOnInit(): void {
@@ -54,7 +57,7 @@ export class LandingComponent {
       this.service.modalCloseEvent.subscribe((s) => {
         if (s === 'success') {
           this.modalController.dismiss();
-          setTimeout(() => this.service.go('/dashboard'), 1000);
+          setTimeout(() => this.service.go('/dashboard', true), 1000);
         }
       })
     );
@@ -67,7 +70,7 @@ export class LandingComponent {
 
   async presentModal() {
     if (this.auth.userData) {
-      this.service.go('/dashboard');
+      this.service.go('/dashboard', true);
       return;
     }
 

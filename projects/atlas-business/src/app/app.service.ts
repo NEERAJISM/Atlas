@@ -72,8 +72,8 @@ export class AppService {
     }
   }
 
-  go(url: string) {
-    this.router.navigateByUrl(url);
+  go(url: string, login?: boolean) {
+    this.router.navigateByUrl(url, { replaceUrl: login });
   }
 
   goBack() {

@@ -149,7 +149,7 @@ export class RegisterComponent {
       .set(this.fbUtil.toJson(business))
       .then(() => {
         this.app.presentToast('Business Registered Successfully');
-        this.app.go('/dashboard');
+        this.app.go('/dashboard', true);
       })
       .catch(() =>
         this.app.presentToast(

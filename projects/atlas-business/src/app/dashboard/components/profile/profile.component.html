@@ -8,16 +8,17 @@
       <ion-row>
         <ion-col class="ion-text-start">
           <h5>
-            Open Website
-            <a [href]="url" target="_blank">
-              <i class="fas fa-external-link-alt"></i>
+            Refresh
+            <a href="javascript:void(0);" (click)="reload()">
+              <i class="fas fa-redo"></i>
             </a>
           </h5>
         </ion-col>
         <ion-col class="ion-text-end">
           <h5>
-            <a href="javascript:void(0);" (click)="reload()">
-              <i class="fas fa-redo"></i>
+            Open Your Website
+            <a [href]="url" target="_blank">
+              <i class="fas fa-external-link-alt"></i>
             </a>
           </h5>
         </ion-col>

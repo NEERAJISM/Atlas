@@ -66,7 +66,7 @@
     <ion-row>
       <ion-col offsetMd="1" sizeMd="10">
         <ion-row class="my-5">
-          <ion-col size="8">
+          <ion-col size="12" size-md="8">
             <img
               src="assets/images/landing/launch.jpg"
               style="max-height: 500px"
@@ -74,7 +74,11 @@
           </ion-col>
           <ion-col sizeMd="4">
             <h1
-              class="ion-text-start display-2 pt-5"
+              class="pt-5"
+              [ngClass]="{
+                'ion-text-start display-4' : isDesktop,
+                'ion-text-center h1' : !isDesktop
+              }"
               style="font-family: 'Mulish', sans-serif"
             >
               <b style="color: #494cf3">#1</b> - Setup & Manage your
@@ -89,27 +93,21 @@
           </ion-col>
         </ion-row>
 
-        <ion-row class="my-5">
-          <ion-col *ngIf="isDesktop" sizeMd="5">
-            <h1
-              class="ion-text-start display-2 pt-5"
-              style="font-family: 'Mulish', sans-serif"
-            >
-              <b style="color: #494cf3">#2</b> - Receive /
-              <b style="color: #494cf3">Manage Orders </b> from online customers
-            </h1>
-          </ion-col>
-
-          <ion-col size="7" class="ion-text-end">
+        <ion-row class="my-5" [style.flex-direction]="isDesktop ? 'row-reverse' : 'row'">
+          <ion-col size="12" size-md="7" class="ion-text-end">
             <img
               src="assets/images/landing/oms.jpg"
               style="max-height: 500px"
             />
           </ion-col>
 
-          <ion-col *ngIf="!isDesktop" sizeMd="5">
+          <ion-col sizeMd="5">
             <h1
-              class="ion-text-start display-2 pt-5"
+              class="pt-5"
+              [ngClass]="{
+                'ion-text-start display-4' : isDesktop,
+                'ion-text-center h1' : !isDesktop
+              }"
               style="font-family: 'Mulish', sans-serif"
             >
               <b style="color: #494cf3">#2</b> - Receive /
@@ -125,7 +123,7 @@
         </ion-row>
 
         <ion-row class="my-5">
-          <ion-col size="8">
+          <ion-col size="12" size-md="8">
             <img
               src="assets/images/landing/invoice.jpg"
               style="max-height: 500px"
@@ -133,7 +131,11 @@
           </ion-col>
           <ion-col sizeMd="4">
             <h1
-              class="ion-text-start display-2 pt-5"
+              class="pt-5"
+              [ngClass]="{
+                'ion-text-start display-4' : isDesktop,
+                'ion-text-center h1' : !isDesktop
+              }"
               style="font-family: 'Mulish', sans-serif"
             >
               <b style="color: #494cf3">#3</b> - GST
@@ -148,27 +150,21 @@
           </ion-col>
         </ion-row>
 
-        <ion-row class="my-5">
-          <ion-col *ngIf="isDesktop" sizeMd="5">
-            <h1
-              class="ion-text-start display-2 pt-5"
-              style="font-family: 'Mulish', sans-serif"
-            >
-              <b style="color: #494cf3">#4</b> - Track & Manage your
-              <b style="color: #494cf3">product inventory</b>
-            </h1>
-          </ion-col>
-
-          <ion-col size="7" class="ion-text-end">
+        <ion-row class="my-5" [style.flex-direction]="isDesktop ? 'row-reverse' : 'row'">
+          <ion-col size="12" size-md="7" class="ion-text-end">
             <img
               src="assets/images/landing/inventory.jpg"
               style="max-height: 500px"
             />
           </ion-col>
 
-          <ion-col *ngIf="!isDesktop" sizeMd="5">
+          <ion-col sizeMd="5">
             <h1
-              class="ion-text-start display-2 pt-5"
+              class="pt-5"
+              [ngClass]="{
+                'ion-text-start display-4' : isDesktop,
+                'ion-text-center h1' : !isDesktop
+              }"
               style="font-family: 'Mulish', sans-serif"
             >
               <b style="color: #494cf3">#4</b> - Track & Manage your
@@ -184,7 +180,7 @@
         </ion-row>
 
         <ion-row class="my-5">
-          <ion-col size="7">
+          <ion-col size="12" size-md="7">
             <img
               src="assets/images/landing/data.jpg"
               style="max-height: 500px"
@@ -192,7 +188,11 @@
           </ion-col>
           <ion-col sizeMd="5">
             <h1
-              class="ion-text-start display-2 pt-5"
+              class="pt-5"
+              [ngClass]="{
+                'ion-text-start display-4' : isDesktop,
+                'ion-text-center h1' : !isDesktop
+              }"
               style="font-family: 'Mulish', sans-serif"
             >
               <b style="color: #494cf3">#5</b> - Business
@@ -208,28 +208,21 @@
           </ion-col>
         </ion-row>
 
-        <!-- <ion-row class="my-5">
-          <ion-col *ngIf="isDesktop" sizeMd="5">
-            <h1
-              class="ion-text-start display-2 pt-5"
-              style="font-family: 'Mulish', sans-serif"
-            >
-              <b style="color: #494cf3">#6</b> - Customer Management /
-              <b style="color: #494cf3">outreach</b>
-              support
-            </h1>
-          </ion-col>
-
-          <ion-col size="7" class="ion-text-end">
+        <!-- <ion-row class="my-5" [style.flex-direction]="isDesktop ? 'row-reverse' : 'row'">
+          <ion-col size="12" size-md="7" class="ion-text-end">
             <img
               src="assets/images/landing/client.jpg"
               style="max-height: 500px"
             />
           </ion-col>
 
-          <ion-col *ngIf="!isDesktop" sizeMd="5">
+          <ion-col sizeMd="5">
             <h1
-              class="ion-text-start display-2 pt-5"
+              class="pt-5"
+              [ngClass]="{
+                'ion-text-start display-4' : isDesktop,
+                'ion-text-center h1' : !isDesktop
+              }"
               style="font-family: 'Mulish', sans-serif"
             >
               <b style="color: #494cf3">#6</b> - Customer Management /
@@ -289,7 +282,7 @@
               <ion-card-header style="background: #e3ebff">
                 <ion-card-title
                   style="font-family: 'Mulish', sans-serif; color: #494cf3"
-                  ><b>Receive instant orders / requests from clients through your website</b></ion-card-title
+                  ><b>Receive instant orders/requests through your website</b></ion-card-title
                 >
               </ion-card-header>
               <img

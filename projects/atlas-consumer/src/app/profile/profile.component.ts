@@ -345,6 +345,9 @@ export class ProfileComponent {
     } else if ("contact" !== menu) {
       this.home = true;
       this.displayPages = this.pages;
+    } else if (this.mobileView) {
+      this.home = false;
+      this.displayPages = [];
     }
 
     this.content.scrollToPoint(0, (!index && "contact" === menu) ? this.footer.nativeElement.offsetTop : 0, 1000);

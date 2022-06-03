@@ -88,10 +88,6 @@ export class DashboardComponent {
     this.service.go(url);
   }
 
-  toggleMenu() {
-    this.showMenuName = !this.showMenuName;
-  }
-
   async logout() {
     const alert = await this.alertController.create({
       header: 'Confirmation',

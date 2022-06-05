@@ -84,7 +84,7 @@ export class ProfileDashboardComponent implements OnInit {
     this.service.modalProfileCloseEvent.subscribe((s) => {
       if (s === 'success') {
         this.reload(false, true);
-        this.getProfile();
+        setTimeout(() => this.getProfile(), 4000);
         this.modalController.dismiss();
       }
     });
@@ -195,7 +195,7 @@ export class ProfileDashboardComponent implements OnInit {
 
             this.createMenu(alertData.name, id);
             this.reload(false, true);
-            this.getProfile();
+            setTimeout(() => this.getProfile(), 4000);
             return true;
           },
         },
@@ -289,7 +289,7 @@ export class ProfileDashboardComponent implements OnInit {
     setTimeout(
       () =>
         (this.iframe.nativeElement.src = this.url + (order ? '/order' : '')),
-      2000
+      4000
     );
   }
 

@@ -17,7 +17,7 @@
         <ion-button *ngIf="uid" class="float-right" (click)="account()">
           <ion-icon name="person-circle-outline"></ion-icon>
         </ion-button>
-        <ion-button class="mx-4 float-right" *ngIf="isDesktop" (click)="routeToCheckout()" disabled="{{ cartSize == 0 }}">
+        <ion-button class="mx-4 float-right" *ngIf="isDesktop" (click)="routeToCheckout()" disabled="{{ cartSize === 0 }}">
           <ion-icon slot="start" name="bag-handle-outline"></ion-icon>
           <ion-text class="d-none d-md-block"> Cart &nbsp;</ion-text>
           <ion-badge color="warning">{{ cartSize }}</ion-badge>

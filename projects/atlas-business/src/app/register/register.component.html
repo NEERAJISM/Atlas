@@ -137,13 +137,20 @@
 
       <ion-row class="mt-5">
         <ion-col>
-          <ion-button [disabled]="step == 1 || step == 6" (click)="back()"
+          <ion-button [disabled]="step === 1 || step === 6" (click)="back()"
             >Previous</ion-button
           >
         </ion-col>
         <ion-col class="ion-text-end">
           <ion-button
-            [disabled]="disableNext()"
+            [disabled]="inProgress ||
+            (step === 1 && (this.first.length === 0 || this.last.length === 0)) ||
+            (step === 2 && this.name.length === 0) ||
+            (step === 3 && this.checkEmail()) ||
+            (step === 4 && this.checkUsername()) ||
+            (step === 5 && this.checkPassword()) ||
+            (step >= 6)
+            "
             (click)="next()"
             >{{ step > 4 ? "Create Account" : "Next" }}<ion-spinner *ngIf="inProgress" name="crescent"></ion-spinner></ion-button
           >

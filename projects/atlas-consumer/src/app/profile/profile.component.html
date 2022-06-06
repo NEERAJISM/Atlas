@@ -53,26 +53,26 @@
             height: 100%;
           " class="fwh-slide">
       <ion-row class="mt-2 pb-3 h-100" [ngClass]="{
-        'ion-text-start': profile.home.fullTitleX == 'Left',
-        'ion-text-center': profile.home.fullTitleX == 'Mid',
-        'ion-text-end': profile.home.fullTitleX == 'Right',
-        'ion-align-items-start': profile.home.fullTitleY == 'Top',
-        'ion-align-items-center': profile.home.fullTitleY == 'Mid',
-        'ion-align-items-end': profile.home.fullTitleY == 'Bottom'
+        'ion-text-start': profile.home.fullTitleX === 'Left',
+        'ion-text-center': profile.home.fullTitleX === 'Mid',
+        'ion-text-end': profile.home.fullTitleX === 'Right',
+        'ion-align-items-start': profile.home.fullTitleY === 'Top',
+        'ion-align-items-center': profile.home.fullTitleY === 'Mid',
+        'ion-align-items-end': profile.home.fullTitleY === 'Bottom'
       }">
         <ion-col>
           <ion-row>
-            <ion-col sizeMd="{{ profile.home.fullTitleW == 'NA' ? '12' : '4' }}"
-              offsetMd="{{ profile.home.fullTitleW == 'E' ? '8' : '0' }}">
+            <ion-col sizeMd="{{ profile.home.fullTitleW === 'NA' ? '12' : '4' }}"
+              offsetMd="{{ profile.home.fullTitleW === 'E' ? '8' : '0' }}">
               <span>
                 <p style="font-family: 'Mulish', sans-serif; white-space: pre-wrap"
                   [style.color]="profile.home.fullTitleColor" [ngClass]="{
-                  'display-4': !mobileView &&  profile.home.fullTitleFont == 's',
-                  'display-3': !mobileView && profile.home.fullTitleFont == 'm',
-                  'display-1': !mobileView && profile.home.fullTitleFont == 'l',
-                  'h5': mobileView &&  profile.home.fullTitleFont == 's',
-                  'h3': mobileView && profile.home.fullTitleFont == 'm',
-                  'h1': mobileView && profile.home.fullTitleFont == 'l'
+                  'display-4': !mobileView &&  profile.home.fullTitleFont === 's',
+                  'display-3': !mobileView && profile.home.fullTitleFont === 'm',
+                  'display-1': !mobileView && profile.home.fullTitleFont === 'l',
+                  'h5': mobileView &&  profile.home.fullTitleFont === 's',
+                  'h3': mobileView && profile.home.fullTitleFont === 'm',
+                  'h1': mobileView && profile.home.fullTitleFont === 'l'
                 }">
                   {{ profile.home.fullTitle }}
                 </p>
@@ -91,28 +91,28 @@
       }}) no-repeat center center / cover;
         ">
         <ion-row class="mt-2 pb-3 h-100" [ngClass]="{
-          'ion-text-start': page.fullTitleX == 'Left',
-          'ion-text-center': page.fullTitleX == 'Mid',
-          'ion-text-end': page.fullTitleX == 'Right',
-          'ion-align-items-start': page.fullTitleY == 'Top',
-          'ion-align-items-center': page.fullTitleY == 'Mid',
-          'ion-align-items-end': page.fullTitleY == 'Bottom'
+          'ion-text-start': page.fullTitleX === 'Left',
+          'ion-text-center': page.fullTitleX === 'Mid',
+          'ion-text-end': page.fullTitleX === 'Right',
+          'ion-align-items-start': page.fullTitleY === 'Top',
+          'ion-align-items-center': page.fullTitleY === 'Mid',
+          'ion-align-items-end': page.fullTitleY === 'Bottom'
         }">
           <ion-col>
             <ion-row>
-              <ion-col sizeMd="{{ page.fullTitleW == 'NA' ? '12' : '4' }}"
-                offsetMd="{{ page.fullTitleW == 'E' ? '8' : '0' }}">
+              <ion-col sizeMd="{{ page.fullTitleW === 'NA' ? '12' : '4' }}"
+                offsetMd="{{ page.fullTitleW === 'E' ? '8' : '0' }}">
                 <span>
                   <p style="
                     font-family: 'Mulish', sans-serif;
                     white-space: pre-wrap;
                   " [style.color]="page.fullTitleColor" [ngClass]="{
-                    'display-4': !mobileView &&  profile.home.fullTitleFont == 's',
-                    'display-3': !mobileView && profile.home.fullTitleFont == 'm',
-                    'display-1': !mobileView && profile.home.fullTitleFont == 'l',
-                    'h5': mobileView &&  profile.home.fullTitleFont == 's',
-                    'h3': mobileView && profile.home.fullTitleFont == 'm',
-                    'h1': mobileView && profile.home.fullTitleFont == 'l'
+                    'display-4': !mobileView &&  profile.home.fullTitleFont === 's',
+                    'display-3': !mobileView && profile.home.fullTitleFont === 'm',
+                    'display-1': !mobileView && profile.home.fullTitleFont === 'l',
+                    'h5': mobileView &&  profile.home.fullTitleFont === 's',
+                    'h3': mobileView && profile.home.fullTitleFont === 'm',
+                    'h1': mobileView && profile.home.fullTitleFont === 'l'
                   }">
                     {{ page.fullTitle }}
                   </p>
@@ -129,9 +129,9 @@
           <ion-row class="ion-text-center my-5">
             <ion-col offset-md="2" size-md="8">
               <span [style.color]="page.headingColor" style="font-family: 'Mulish', sans-serif" [ngClass]="{
-                h3: page.headingFont == 's',
-                h2: page.headingFont == 'm',
-                h1: page.headingFont == 'l'
+                h3: page.headingFont === 's',
+                h2: page.headingFont === 'm',
+                h1: page.headingFont === 'l'
               }">
                 {{ page.heading }}
               </span>
@@ -154,7 +154,7 @@
       </section>
 
       <!-- Info -->
-      <section class="fwh-slide-half" *ngIf="page.type == 'Info'">
+      <section class="fwh-slide-half" *ngIf="page.type === 'Info'">
         <ion-row *ngIf="complete" style="min-height: 50vh"
           [style.flex-direction]="page.reverse === 'Y' ? 'row-reverse' : 'row'">
           <ion-col size="12" sizeMd="6" style="min-height: 50vh; background: url({{
@@ -163,22 +163,22 @@
           </ion-col>
           <ion-col size="12" sizeMd="6">
             <ion-row class="ion-padding" [ngClass]="{
-              'ion-text-start': page.align == 'Left',
-              'ion-text-center': page.align == 'Mid',
-              'ion-text-end': page.align == 'Right'
+              'ion-text-start': page.align === 'Left',
+              'ion-text-center': page.align === 'Mid',
+              'ion-text-end': page.align === 'Right'
             }">
               <ion-col>
                 <span style="font-family: 'Mulish', sans-serif; white-space: pre-wrap" [style.color]="page.color"
                   [ngClass]="{
-                  'h3': page.font == 's',
-                  'h2': page.font == 'm',
-                  'h1': page.font == 'l'
+                  'h3': page.font === 's',
+                  'h2': page.font === 'm',
+                  'h1': page.font === 'l'
                 }">{{ page.heading }}</span>
                 <span style="font-family: 'Mulish', sans-serif; white-space: pre-wrap" [style.color]="page.color"
                   [ngClass]="{
-                  '': page.font == 's',
-                  'h5': page.font == 'm',
-                  'h4': page.font == 'l'
+                  '': page.font === 's',
+                  'h5': page.font === 'm',
+                  'h4': page.font === 'l'
                 }"><br><br>{{ page.info }}</span>
               </ion-col>
             </ion-row>
@@ -238,7 +238,7 @@
       </section>
 
       <!-- Video -->
-      <section class="mb-5 pb-5" style="height: 100%" *ngIf="page.type == 'Video'">
+      <section class="mb-5 pb-5" style="height: 100%" *ngIf="page.type === 'Video'">
         <ion-row class="my-5">
           <ion-col offset-md="3" size-md="6">
             <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">
@@ -256,7 +256,7 @@
       </section>
 
       <!-- Team -->
-      <section #team class="my-5 pb-5" *ngIf="page.type == 'Team'">
+      <section #team class="my-5 pb-5" *ngIf="page.type === 'Team'">
         <ion-row class="my-5">
           <ion-col offset-md="3" size-md="6">
             <h1 class="ion-text-center" style="font-family: 'Mulish', sans-serif">

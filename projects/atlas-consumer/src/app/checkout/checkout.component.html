@@ -179,7 +179,7 @@
 
             <ion-row>
               <ion-col>
-                <ion-button [disabled]="cartItems.length == 0" (click)="presentAlert()">Confirm Order</ion-button>
+                <ion-button [disabled]="cartItems.length === 0" (click)="presentAlert()">Confirm Order</ion-button>
               </ion-col>
               <ion-col>
                 <ion-button expand="block" color="danger" (click)="back()">Go Back</ion-button>

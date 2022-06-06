@@ -35,7 +35,7 @@ export class AuthService {
     return this.afAuth
       .fetchSignInMethodsForEmail(email)
       .then((x) => {
-        return x.length == 0 ? Constants.SUCCESS : Constants.FAILURE;
+        return x.length === 0 ? Constants.SUCCESS : Constants.FAILURE;
       })
       .catch((error) => {
         return error.code;

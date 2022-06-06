@@ -295,7 +295,7 @@ export class PageEditModal implements OnInit {
     }
 
     const mimeType = files[0].type;
-    if (mimeType.match(/image\/*/) == null) {
+    if (mimeType.match(/image\/*/) === null) {
       this.memberImgFile = '';
       this.appService.presentToast(
         'Image format not supported, use either jpg/jpeg/png'
@@ -315,7 +315,7 @@ export class PageEditModal implements OnInit {
   publish() {
 
     // Validations
-    if (!this.isHome && (!this.pageTitle || this.pageTitle.trim().length == 0)) {
+    if (!this.isHome && (!this.pageTitle || this.pageTitle.trim().length === 0)) {
       this.appService.presentToast('Please enter the page title');
       return;
     } else if (this.pageType === Type.Full.toString() && this.fullUrl === this.default) {
@@ -786,7 +786,7 @@ export class PageEditModal implements OnInit {
 
   urlUpdate() {
     var match = this.video.url.match(Constants.ytbRegEx);
-    if (match && match.length > 1 && match[1].length == 11) {
+    if (match && match.length > 1 && match[1].length === 11) {
       this.isValidUrl = true;
       this.changeIframe('https://www.youtube-nocookie.com/embed/' + match[1]);
     } else {

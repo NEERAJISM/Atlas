@@ -40,17 +40,17 @@ export class RegisterComponent {
   }
 
   next() {
-    if (this.step == 3) {
+    if (this.step === 3) {
       this.checkIfAlreadyRegistered();
       return;
     }
 
-    if (this.step == 4) {
+    if (this.step === 4) {
       this.checkIfUsernameExists();
       return;
     }
 
-    if (this.step == 5) {
+    if (this.step === 5) {
       this.register();
       return;
     }
@@ -205,28 +205,5 @@ export class RegisterComponent {
       },
       body: JSON.stringify(input),
     });
-  }
-
-  disableNext(): boolean {
-    if (this.inProgress) {
-      return true;
-    }
-
-    switch (this.step) {
-      case 1:
-        return (this.first.length == 0 || this.last.length == 0);
-      case 2:
-        return this.name.length == 0;
-      case 3:
-        return this.checkEmail();
-      case 4:
-        return this.checkUsername();
-      case 5:
-        return this.checkPassword();
-      case 6:
-        return true;
-    }
-
-    return false;
   }
 }

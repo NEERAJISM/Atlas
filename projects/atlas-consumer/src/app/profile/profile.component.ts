@@ -270,7 +270,7 @@ export class ProfileComponent {
 
   urlUpdate(url: string): SafeResourceUrl {
     var match = url.match(Constants.ytbRegEx);
-    if (match && match.length > 1 && match[1].length == 11) {
+    if (match && match.length > 1 && match[1].length === 11) {
       return this.sanitizer.bypassSecurityTrustResourceUrl(
         'https://www.youtube-nocookie.com/embed/' + match[1]
       );
@@ -290,7 +290,7 @@ export class ProfileComponent {
           .subscribe((url) => {
             this.imgMap.set(k, url);
 
-            if (this.imgMap.size == counter) {
+            if (this.imgMap.size === counter) {
               this.complete = true;
             }
           });
@@ -304,7 +304,7 @@ export class ProfileComponent {
             .subscribe((url) => {
               this.imgMap.set(slide.id, url);
 
-              if (this.imgMap.size == counter) {
+              if (this.imgMap.size === counter) {
                 this.complete = true;
               }
             });
@@ -319,7 +319,7 @@ export class ProfileComponent {
             .subscribe((url) => {
               this.imgMap.set(member.id, url);
 
-              if (this.imgMap.size == counter) {
+              if (this.imgMap.size === counter) {
                 this.complete = true;
               }
             });

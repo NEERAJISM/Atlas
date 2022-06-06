@@ -84,7 +84,7 @@ export class ProfileDashboardComponent implements OnInit {
     this.service.modalProfileCloseEvent.subscribe((s) => {
       if (s === 'success') {
         this.reload(false, true);
-        setTimeout(() => this.getProfile(), 4000);
+        setTimeout(() => this.getProfile(), 2500);
         this.modalController.dismiss();
       }
     });
@@ -179,7 +179,7 @@ export class ProfileDashboardComponent implements OnInit {
         {
           text: menu ? 'Update Menu' : 'Create Menu',
           handler: (alertData) => {
-            if (!alertData.name || alertData.name.trim().length == 0) {
+            if (!alertData.name || alertData.name.trim().length === 0) {
               this.service.presentToast('Please add a valid menu name!');
               return false;
             }
@@ -195,7 +195,7 @@ export class ProfileDashboardComponent implements OnInit {
 
             this.createMenu(alertData.name, id);
             this.reload(false, true);
-            setTimeout(() => this.getProfile(), 4000);
+            setTimeout(() => this.getProfile(), 2500);
             return true;
           },
         },
@@ -289,7 +289,7 @@ export class ProfileDashboardComponent implements OnInit {
     setTimeout(
       () =>
         (this.iframe.nativeElement.src = this.url + (order ? '/order' : '')),
-      4000
+      2500
     );
   }
 

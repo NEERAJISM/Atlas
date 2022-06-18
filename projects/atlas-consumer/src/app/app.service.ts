@@ -2,12 +2,14 @@ import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { AuthService } from 'atlas-core';
+import { AuthService, Constants } from 'atlas-core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AppService {
   isDesktop = false;
+  customDomain = (window.location.host !== Constants.ATLAS_DOMAIN);
+
   private loading;
 
   // custom events
@@ -30,6 +32,10 @@ export class AppService {
 
   isMobileView(){
     return !this.isDesktop;
+  }
+
+  isCustomDomain(){
+    return this.customDomain;
   }
 
   async presentLoading() {

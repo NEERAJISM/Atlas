@@ -66,23 +66,51 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   init() {
-    var profileName = this.location.path().substring(1).split('/')[0];
-    this.fbUtil
-      .getInstance()
-      .collection(Constants.PROFILE)
-      .doc(profileName)
-      .get()
-      .subscribe((doc) => {
-        if (!doc.exists) {
-          this.service.presentToast('No Profile found for - ' + profileName);
-          this.service.go('');
-          return;
-        }
-        this.bizId = (doc.data() as any).id;
-        this.getProfile();
-        this.getItems();
-        this.initUser();
-      });
+    if (this.service.isCustomDomain()) { // custom url 
+      this.service.presentLoading();
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.DOMAIN)
+        .doc(window.location.host)
+        .get()
+        .subscribe((doc) => {
+          if (!doc.exists) {
+            this.service.presentToast('No Profile found!');
+            return;
+          }
+          this.bizId = (doc.data() as any).id;
+          this.getBusinessInfo();
+        });
+    }
+    else {  // if atlas url - try to get profile
+      var profileName = this.location.path().substring(1).split('/')[0];
+      if (!profileName) {
+        this.service.go('search');
+        return;
+      }
+
+      this.service.presentLoading();
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.PROFILE)
+        .doc(profileName)
+        .get()
+        .subscribe((doc) => {
+          if (!doc.exists) {
+            this.service.presentToast('No Profile found for - ' + profileName);
+            this.service.go('search');
+            return;
+          }
+          this.bizId = (doc.data() as any).id;
+          this.getBusinessInfo();
+        });
+    }
+  }
+
+  getBusinessInfo() {
+    this.getProfile();
+    this.getItems();
+    this.initUser();
   }
 
   getProfile() {

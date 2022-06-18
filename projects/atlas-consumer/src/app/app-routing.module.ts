@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { RouterModule, Routes } from '@angular/router';
+import { Constants } from 'atlas-core';
 import { AccountComponent } from './account/account.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { OmsComponent } from './oms/oms.component';
@@ -8,14 +9,15 @@ import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
+const customDomain = window.location.host !== Constants.ATLAS_DOMAIN;
 
 const routes: Routes = [
   {
     path: '',
-    component: SearchComponent,
+    component: customDomain ? ProfileComponent : SearchComponent
   },
   {
-    path: ':id/order',
+    path:  customDomain ? 'order' : ':id/order',
     component: OmsComponent,
   },
   {
@@ -25,7 +27,7 @@ const routes: Routes = [
     data: { authGuardPipe: redirectUnauthorizedToLogin },
   },
   {
-    path: ':id/checkout',
+    path: customDomain ? 'checkout' : ':id/checkout',
     component: CheckoutComponent,
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },

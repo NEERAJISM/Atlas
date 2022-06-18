@@ -51,28 +51,55 @@ export class OmsComponent implements OnInit, OnDestroy {
     private authService: AuthService,
   ) {
     this.isDesktop = service.isDesktop;
-    this.service.presentLoading();
     this.init();
   }
 
   init() {
-    this.profileName = this.location.path().substring(1).split('/')[0];
-    this.fbUtil
-      .getInstance()
-      .collection(Constants.PROFILE)
-      .doc(this.profileName)
-      .get()
-      .subscribe((doc) => {
-        if (!doc.exists) {
-          this.service.presentToast('No Profile found for - ' + this.profileName);
-          this.router.navigateByUrl('');
-          return;
-        }
-        this.bizId = (doc.data() as any).id;
-        this.getProfile();
-        this.getItems();
-        this.initUser();
-      });
+    if (this.service.isCustomDomain()) { // custom url 
+      this.service.presentLoading();
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.DOMAIN)
+        .doc(window.location.host)
+        .get()
+        .subscribe((doc) => {
+          if (!doc.exists) {
+            this.service.presentToast('No Profile found!');
+            return;
+          }
+          this.bizId = (doc.data() as any).id;
+          this.getBusinessInfo();
+        });
+    }
+    else {  // if atlas url - try to get profile
+      this.profileName = this.location.path().substring(1).split('/')[0];
+      if (!this.profileName) {
+        this.router.navigateByUrl('search');
+        return;
+      }
+
+      this.service.presentLoading();
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.PROFILE)
+        .doc(this.profileName)
+        .get()
+        .subscribe((doc) => {
+          if (!doc.exists) {
+            this.service.presentToast('No Profile found for - ' + this.profileName);
+            this.router.navigateByUrl('search');
+            return;
+          }
+          this.bizId = (doc.data() as any).id;
+          this.getBusinessInfo();
+        });
+    }
+  }
+
+  getBusinessInfo() {
+    this.getProfile();
+    this.getItems();
+    this.initUser();
   }
 
   getProfile() {

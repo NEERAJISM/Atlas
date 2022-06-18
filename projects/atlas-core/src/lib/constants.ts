@@ -1,5 +1,7 @@
 // @dynamic
 export class Constants {
+  static readonly ATLAS_DOMAIN = 'theatlas.co.in';
+
   static readonly SUCCESS = 'Success';
   static readonly FAILURE = 'Failure';
 
@@ -10,6 +12,7 @@ export class Constants {
 
   // Firebase
   static readonly BUSINESS = 'BUSINESS';
+  static readonly DOMAIN = 'DOMAIN';
   static readonly INFO = 'INFO';
   static readonly PROFILE = 'PROFILE';
   static readonly PAGES = 'PAGES';

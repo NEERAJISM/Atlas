@@ -81,7 +81,6 @@ export class ProfileComponent {
     if (appService.isMobileView()) {
       this.setupMobileView();
     }
-    this.appService.presentLoading();
     this.init();
     this.updateLocationUrl();
   }
@@ -93,27 +92,56 @@ export class ProfileComponent {
   }
 
   init() {
-    this.profileName = this.location.path().substring(1);
-    this.fbUtil
-      .getInstance()
-      .collection(Constants.PROFILE)
-      .doc(this.profileName)
-      .get()
-      .subscribe((doc) => {
-        this.appService.dismissLoading();
+    if (this.appService.isCustomDomain()) {
+      this.appService.presentLoading();
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.DOMAIN)
+        .doc(window.location.host)
+        .get()
+        .subscribe((doc) => {
+          this.appService.dismissLoading();
+          if (!doc.exists) {
+            this.appService.presentToast('No Profile found!');
+            return;
+          }
 
-        if (!doc.exists) {
-          this.appService.presentToast('No Profile found for - ' + this.profileName);
-          this.router.navigateByUrl('');
-          return;
-        }
+          this.bizId = (doc.data() as any).id;
+          this.getBusinessInfo();
+        });
+    } else {
+      // if atlas url - try to get profile
+      this.profileName = this.location.path().substring(1);
+      if (!this.profileName) {
+        this.router.navigateByUrl('search');
+        return;
+      }
 
-        this.bizId = (doc.data() as any).id;
-        this.getBusiness();
-        this.getProfile();
-        this.getItems()
-        this.updateLocationUrl();
-      });
+      this.appService.presentLoading();
+      this.fbUtil
+        .getInstance()
+        .collection(Constants.PROFILE)
+        .doc(this.profileName)
+        .get()
+        .subscribe((doc) => {
+          this.appService.dismissLoading();
+          if (!doc.exists) {
+            this.appService.presentToast('No Profile found for - ' + this.profileName);
+            this.router.navigateByUrl('search');
+            return;
+          }
+
+          this.bizId = (doc.data() as any).id;
+          this.getBusinessInfo();
+        });
+    }
+  }
+
+  getBusinessInfo(){
+    this.getBusiness();
+    this.getProfile();
+    this.getItems()
+    this.updateLocationUrl();
   }
 
   async presentSlideModal(img: string, title: string, desc: string) {

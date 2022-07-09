@@ -26,6 +26,7 @@ export class RegisterComponent {
   pass = '';
   pass2 = '';
 
+  agreeTnC = false;
   showPassword = false;
 
   delim = '~#~';

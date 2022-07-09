@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SplashComponent } from 'atlas-core';
 import { LandingComponent } from './landing/landing.component';
 import { RegisterComponent } from './register/register.component';
+import { TermsComponent } from './terms/terms.component';
 
 const routes: Routes = [
   // TODO default goto page + secure all links
@@ -14,6 +15,11 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'terms-and-conditions',
+    component: TermsComponent,
     pathMatch: 'full'
   },
   {

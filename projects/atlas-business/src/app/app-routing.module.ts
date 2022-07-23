@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SplashComponent } from 'atlas-core';
 import { LandingComponent } from './landing/landing.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 import { RegisterComponent } from './register/register.component';
 import { TermsComponent } from './terms/terms.component';
 
@@ -20,6 +21,11 @@ const routes: Routes = [
   {
     path: 'terms-and-conditions',
     component: TermsComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'privacy-policy',
+    component: PrivacyComponent,
     pathMatch: 'full'
   },
   {

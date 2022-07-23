@@ -14,6 +14,7 @@ import { AppService } from './app.service';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { LandingComponent } from './landing/landing.component';
 import { ModalPage } from './landing/modal/modal.page';
+import { PrivacyComponent } from './privacy/privacy.component';
 import { RegisterComponent } from './register/register.component';
 import { TermsComponent } from './terms/terms.component';
 
@@ -30,7 +31,7 @@ import { TermsComponent } from './terms/terms.component';
     NgbModule,
     IonicModule.forRoot(),
   ],
-  declarations: [LandingComponent, AppComponent, ModalPage, RegisterComponent, TermsComponent],
+  declarations: [LandingComponent, AppComponent, ModalPage, RegisterComponent, TermsComponent, PrivacyComponent],
   providers: [AppService],
   bootstrap: [AppComponent],
 })

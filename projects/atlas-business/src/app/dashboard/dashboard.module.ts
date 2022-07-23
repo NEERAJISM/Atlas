@@ -31,8 +31,6 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import {MatTabsModule} from '@angular/material/tabs';
 
 import { DashboardComponent } from './dashboard.component';
-import { DashboardHeaderComponent } from './header/header.component';
-import { LogoutDialogComponent } from './header/header.component';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -94,8 +92,6 @@ import { PdfModal } from './components/invoice/edit/modal/modal.pdf';
   ],
   declarations: [
     DashboardComponent,
-    DashboardHeaderComponent,
-    LogoutDialogComponent,
     MainDashboardComponent,
     InvoiceDashboardComponent,
     EditInvoiceComponent,
@@ -114,8 +110,6 @@ import { PdfModal } from './components/invoice/edit/modal/modal.pdf';
   ],
   exports: [
     DashboardComponent,
-    DashboardHeaderComponent,
-    LogoutDialogComponent,
     MainDashboardComponent,
     InvoiceDashboardComponent,
     EditInvoiceComponent,

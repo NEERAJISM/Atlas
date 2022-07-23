@@ -88,6 +88,10 @@ export class DashboardComponent {
     this.service.go(url);
   }
 
+  demo(){
+    window.open('https://youtu.be/o7INAfCiV9Q', "_blank");
+  }
+
   async logout() {
     const alert = await this.alertController.create({
       header: 'Confirmation',

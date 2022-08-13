@@ -61,7 +61,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private commonUtil: CommonUtil
   ) {
     this.isDesktop = service.isDesktop;
-    this.service.presentLoading();
     this.init();
   }
 

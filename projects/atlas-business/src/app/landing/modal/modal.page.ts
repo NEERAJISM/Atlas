@@ -24,6 +24,11 @@ export class ModalPage {
     this.forgotPassword = !this.forgotPassword;
   }
 
+  register() {
+    this.service.closeModal('register');
+    this.service.go('/register');
+  }
+
   submit() {
     if (!this.email || !Constants.mailRegEx.test(this.email)) {
       this.service.presentToast('Please enter a valid email address!');

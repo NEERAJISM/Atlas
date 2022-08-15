@@ -56,8 +56,10 @@ export class LandingComponent {
     this.subscriptions.push(
       this.service.modalCloseEvent.subscribe((s) => {
         if (s === 'success') {
-          this.modalController.dismiss();
           setTimeout(() => this.service.go('/dashboard', true), 1000);
+          this.modalController.dismiss();
+        } else if (s === 'register'){
+          this.modalController.dismiss();
         }
       })
     );

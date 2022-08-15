@@ -75,7 +75,7 @@ export class SearchComponent {
 
   enableSearch() {
     this.searchQuery = this.query.trim().toLowerCase();
-    if (this.searchQuery.length < 6) {
+    if (this.searchQuery.length < 2) {
       return false;
     }
 

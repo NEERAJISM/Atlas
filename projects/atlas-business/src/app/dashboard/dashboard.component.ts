@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, MenuController } from '@ionic/angular';
 import { AuthService, Business, Constants, FirebaseUtil } from 'atlas-core';
 import { AppService } from '../app.service';
 import { Location } from '@angular/common';
@@ -69,7 +69,7 @@ export class DashboardComponent {
     },
   ];
 
-  constructor(private service: AppService, private alertController: AlertController, private auth: AuthService, private fbUtil: FirebaseUtil, private location: Location) {
+  constructor(private service: AppService, private alertController: AlertController, private auth: AuthService, private fbUtil: FirebaseUtil, private location: Location, private menuController: MenuController) {
     this.isDesktop = service.isDesktop;
     this.init();
     this.selected = this.location.path();
@@ -86,10 +86,15 @@ export class DashboardComponent {
   go(url: string) {
     this.selected = url;
     this.service.go(url);
+    this.toggleMenu();
   }
 
   demo(){
     window.open('https://youtu.be/o7INAfCiV9Q', "_blank");
+  }
+
+  toggleMenu(){
+    this.menuController.toggle();
   }
 
   async logout() {

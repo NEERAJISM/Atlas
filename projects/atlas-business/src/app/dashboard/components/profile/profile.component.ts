@@ -26,6 +26,8 @@ export class ProfileDashboardComponent implements OnInit {
   @ViewChild('tColor') tColor: ElementRef;
   @ViewChild('fColor') fColor: ElementRef;
 
+  isDesktop = false;
+
   //TODO Remove
   url = '';
   controllerSrc: any;
@@ -62,6 +64,7 @@ export class ProfileDashboardComponent implements OnInit {
     private util: CommonUtil,
     public alertController: AlertController
   ) {
+    this.isDesktop = service.isDesktop;
     this.service.presentLoading();
     this.init();
   }

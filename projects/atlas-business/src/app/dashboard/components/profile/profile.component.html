@@ -1,12 +1,9 @@
-<ion-content class="ion-padding" style="height: 100%">
+<ion-content [ngClass]="{ 'ion-padding': isDesktop, 'ion-no-padding': !isDesktop }" style="height: 100%">
   <ion-row style="height: 100%" class="ion-text-center">
-    <ion-col
-      class="ion-padding"
-      size="9"
-      style="background: #f2f3f4; max-height: 90vh"
-    >
+    <ion-col [ngClass]="{ 'ion-padding': isDesktop, 'ion-no-padding': !isDesktop }" sizeLg="9" sizeSm="12"
+      style="background: #f2f3f4; height: 90vh" [style.height]="isDesktop ? '90vh' : '60vh'">
       <ion-row>
-        <ion-col class="ion-text-start">
+        <ion-col *ngIf="isDesktop" class="ion-text-start">
           <h5>
             Refresh
             <a href="javascript:void(0);" (click)="reload()">
@@ -14,7 +11,7 @@
             </a>
           </h5>
         </ion-col>
-        <ion-col class="ion-text-end">
+        <ion-col [ngClass]="{ 'ion-text-end': isDesktop, 'ion-text-center mt-2': !isDesktop }">
           <h5>
             Open Your Website
             <a [href]="url" target="_blank">
@@ -24,20 +21,13 @@
         </ion-col>
       </ion-row>
 
-      <iframe
-        #profile
-        [src]="controllerSrc"
-        width="100%"
-        height="100%"
-        allowfullscreen=""
-        loading="lazy"
-        style="border: none;"
-      ></iframe>
+      <iframe #profile [src]="controllerSrc" width="100%" height="100%" allowfullscreen="" loading="lazy"
+        style="border: none;"></iframe>
     </ion-col>
 
-    <ion-col size="3">
+    <ion-col sizeLg="3" sizeSm="12" [ngClass]="{ 'mt-5': !isDesktop}">
 
-      <ion-row>
+      <ion-row *ngIf="isDesktop">
         <ion-col>
           <h5>
             <a href="https://youtu.be/o7INAfCiV9Q" target="_blank">
@@ -51,26 +41,17 @@
         <ion-col>
           <ion-card>
             <ion-row class="ion-align-items-center">
-              <ion-col sizeMd="10">
+              <ion-col size="9" sizeMd="10">
                 <ion-item lines="none">
-                  <!-- <ion-label position="floating">Title</ion-label> -->
-                  <ion-input
-                    [disabled]="!editTitle"
-                    [(ngModel)]="bizProfile.title"
-                  ></ion-input>
+                  <ion-input [disabled]="!editTitle" [(ngModel)]="bizProfile.title"></ion-input>
                 </ion-item>
               </ion-col>
-              <ion-col sizeMd="2">
+              <ion-col size="3" sizeMd="2">
                 <span>
-                  <i
-                    class="fa"
-                    style="font-size: large"
-                    [ngClass]="{
+                  <i class="fa" style="font-size: large" [ngClass]="{
                       'fa-pen': !editTitle,
                       'fa-check text-success': editTitle
-                    }"
-                    (click)="edit_Title()"
-                  ></i>
+                    }" (click)="edit_Title()"></i>
                 </span>
               </ion-col>
             </ion-row>
@@ -82,36 +63,22 @@
         <ion-col>
           <ion-card>
             <ion-row class="ion-align-items-center">
-              <ion-col sizeMd="10">
+              <ion-col size="9" sizeMd="10">
                 <ion-item lines="none">
                   <ion-label>Company Logo</ion-label>
                   <ion-avatar slot="end">
-                    <img
-                      [src]="icon ? icon : placeholder"
-                      (click)="editIcon = true; file.click()"
-                    />
+                    <img [src]="icon ? icon : placeholder" (click)="editIcon = true; file.click()" />
                   </ion-avatar>
                 </ion-item>
               </ion-col>
-              <ion-col sizeMd="2">
+              <ion-col size="3" sizeMd="2">
                 <span>
-                  <input
-                    style="display: none"
-                    type="file"
-                    accept="image/*"
-                    #file
-                    (change)="onFileChanged($event)"
-                    [(ngModel)]="imgFile"
-                  />
-                  <i
-                    class="fa"
-                    style="font-size: large"
-                    [ngClass]="{
+                  <input style="display: none" type="file" accept="image/*" #file (change)="onFileChanged($event)"
+                    [(ngModel)]="imgFile" />
+                  <i class="fa" style="font-size: large" [ngClass]="{
                       'fa-pen': !editIcon,
                       'fa-check text-success': editIcon
-                    }"
-                    (click)="edit_Icon()"
-                  ></i>
+                    }" (click)="edit_Icon()"></i>
                 </span>
               </ion-col>
             </ion-row>
@@ -123,29 +90,19 @@
         <ion-col>
           <ion-card>
             <ion-row class="ion-align-items-center">
-              <ion-col sizeMd="10">
+              <ion-col size="9" sizeMd="10">
                 <ion-item lines="none">
                   <ion-label>Toolbar Color</ion-label>
-                  <input
-                    style="border: none; padding: 0"
-                    #tColor
-                    type="color"
-                    [(ngModel)]="bizProfile.color"
-                    (click)="editColor = true"
-                  />
+                  <input style="border: none; padding: 0" #tColor type="color" [(ngModel)]="bizProfile.color"
+                    (click)="editColor = true" />
                 </ion-item>
               </ion-col>
-              <ion-col sizeMd="2">
+              <ion-col size="3" sizeMd="2">
                 <span>
-                  <i
-                    class="fa"
-                    style="font-size: large"
-                    [ngClass]="{
+                  <i class="fa" style="font-size: large" [ngClass]="{
                       'fa-pen': !editColor,
                       'fa-check text-success': editColor
-                    }"
-                    (click)="edit_Color()"
-                  ></i>
+                    }" (click)="edit_Color()"></i>
                 </span>
               </ion-col>
             </ion-row>
@@ -157,29 +114,19 @@
         <ion-col>
           <ion-card>
             <ion-row class="ion-align-items-center">
-              <ion-col sizeMd="10">
+              <ion-col size="9" sizeMd="10">
                 <ion-item lines="none">
                   <ion-label>Font Color</ion-label>
-                  <input
-                    style="border: none; padding: 0"
-                    #fColor
-                    type="color"
-                    [(ngModel)]="bizProfile.fontColor"
-                    (click)="editFontColor = true"
-                  />
+                  <input style="border: none; padding: 0" #fColor type="color" [(ngModel)]="bizProfile.fontColor"
+                    (click)="editFontColor = true" />
                 </ion-item>
               </ion-col>
-              <ion-col sizeMd="2">
+              <ion-col size="3" sizeMd="2">
                 <span>
-                  <i
-                    class="fa"
-                    style="font-size: large"
-                    [ngClass]="{
+                  <i class="fa" style="font-size: large" [ngClass]="{
                       'fa-pen': !editFontColor,
                       'fa-check text-success': editFontColor
-                    }"
-                    (click)="edit_FontColor()"
-                  ></i>
+                    }" (click)="edit_FontColor()"></i>
                 </span>
               </ion-col>
             </ion-row>
@@ -190,19 +137,11 @@
       <ion-row class="ion-text-start px-2">
         <ion-col>
           <ion-segment mode="md" scrollable value="true" [(ngModel)]="home">
-            <ion-segment-button
-              value="true"
-              layout="icon-start"
-              (click)="reload(false)"
-            >
+            <ion-segment-button value="true" layout="icon-start" (click)="reload(false)">
               <i class="fas fa-home" style="font-size: larger"></i>
               <ion-label>Home</ion-label>
             </ion-segment-button>
-            <ion-segment-button
-              value="false"
-              layout="icon-start"
-              (click)="reload(true)"
-            >
+            <ion-segment-button value="false" layout="icon-start" (click)="reload(true)">
               <i class="fas fa-shopping-cart" style="font-size: larger"></i>
               <ion-label>Product Gallery</ion-label>
             </ion-segment-button>
@@ -213,9 +152,7 @@
       <div *ngIf="home === 'true'">
         <ion-row class="px-2">
           <ion-col>
-            <ion-button expand="full" color="warning" (click)="presentAlert()"
-              >Add Menu</ion-button
-            >
+            <ion-button expand="full" color="warning" (click)="presentAlert()">Add Menu</ion-button>
           </ion-col>
           <ion-col>
             <ion-button expand="full" (click)="presentModal()">Add Page</ion-button>
@@ -229,32 +166,17 @@
                 <ion-label> Home </ion-label>
               </ion-item>
 
-              <ion-reorder-group
-                (ionItemReorder)="onItemReorder($event)"
-                disabled="false"
-              >
+              <ion-reorder-group (ionItemReorder)="onItemReorder($event)" disabled="false">
                 <ion-item *ngFor="let page of pages" button>
-                  <ion-reorder
-                    *ngIf="page.type !== 'Menu'"
-                    slot="start"
-                  ></ion-reorder>
-                  <ion-label
-                    (click)="
+                  <ion-reorder *ngIf="page.type !== 'Menu'" slot="start"></ion-reorder>
+                  <ion-label (click)="
                       page.type !== 'Menu'
                         ? presentModal('Edit', page)
                         : presentAlert(page.title, page.id)
-                    "
-                  >
-                    <span
-                      [style.font-weight]="page.type === 'Menu' ? 'bold' : ''"
-                      >{{ page.title }}</span
-                    >
+                    ">
+                    <span [style.font-weight]="page.type === 'Menu' ? 'bold' : ''">{{ page.title }}</span>
                   </ion-label>
-                  <i
-                    slot="end"
-                    class="far fa-trash-alt"
-                    (click)="presentDeleteAlert(page.id)"
-                  ></i>
+                  <i slot="end" class="far fa-trash-alt" (click)="presentDeleteAlert(page.id)"></i>
                 </ion-item>
               </ion-reorder-group>
             </ion-card>

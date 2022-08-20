@@ -1,11 +1,16 @@
 <ion-header>
   <ion-toolbar class="py-2">
-    <ion-row style="flex-direction: row-reverse;">
-      <ion-title style="font-family: 'Mulish', sans-serif; --background: '#e5e5e5'">
-        <img style="height: 30px" src="assets/images/atlas-small.png" />
-        <b>&nbsp; ATLAS </b> Business
-      </ion-title>
-    <ion-button *ngIf="!isDesktop" style="--background: #fd6f61; color: white" (click)="presentModal()">Login</ion-button>
+    <ion-row>
+      <ion-col size="9">
+        <ion-title style="padding: 0; font-family: 'Mulish', sans-serif; --background: '#e5e5e5'">
+          <img style="height: 30px" src="assets/images/atlas-small.png" />
+          <b>&nbsp; ATLAS </b> Business
+        </ion-title>
+      </ion-col>
+      <ion-col size="3">
+        <ion-button *ngIf="!isDesktop" style="--background: #fd6f61; color: white" (click)="presentModal()">Login
+        </ion-button>
+      </ion-col>
     </ion-row>
 
     <ion-buttons class="hidden-md-down" slot="primary" collapse="true">

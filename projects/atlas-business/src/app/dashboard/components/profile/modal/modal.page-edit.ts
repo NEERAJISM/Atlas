@@ -69,6 +69,8 @@ export class PageEditModal implements OnInit {
   ytbUrl;
   isValidUrl = false;
 
+  isDesktop = true;
+
   constructor(
     private appService: AppService,
     private fbUtil: FirebaseUtil,
@@ -76,6 +78,7 @@ export class PageEditModal implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.isDesktop = this.appService.isDesktop;
     this.appService.presentLoading();
 
     if (this.mode === 'Home') {
@@ -95,6 +98,10 @@ export class PageEditModal implements OnInit {
       this.appService.dismissLoading();
       this.changeIframe('https://www.youtube-nocookie.com/embed');
     }
+  }
+
+  back(){
+    this.appService.closeModalProfile('close');
   }
 
   mapPage() {

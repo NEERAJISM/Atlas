@@ -89,6 +89,8 @@ export class ProfileDashboardComponent implements OnInit {
         this.reload(false, true);
         setTimeout(() => this.getProfile(), 2500);
         this.modalController.dismiss();
+      } else if (s === 'close'){
+        this.modalController.dismiss();
       }
     });
   }

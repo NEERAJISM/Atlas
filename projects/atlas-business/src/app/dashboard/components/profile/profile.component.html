@@ -1,7 +1,6 @@
-<ion-content [ngClass]="{ 'ion-padding': isDesktop, 'ion-no-padding': !isDesktop }" style="height: 100%">
+<ion-content style="height: 100%">
   <ion-row style="height: 100%" class="ion-text-center">
-    <ion-col [ngClass]="{ 'ion-padding': isDesktop, 'ion-no-padding': !isDesktop }" sizeLg="9" sizeSm="12"
-      style="background: #f2f3f4; height: 90vh" [style.height]="isDesktop ? '90vh' : '60vh'">
+    <ion-col sizeLg="9" sizeSm="12" class="ion-padding" style="background: #f2f3f4; height: 90vh" [style.height]="isDesktop ? '90vh' : '70vh'">
       <ion-row>
         <ion-col *ngIf="isDesktop" class="ion-text-start">
           <h5>

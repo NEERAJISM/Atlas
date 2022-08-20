@@ -1,6 +1,6 @@
 <ion-content class="ion-padding">
   <ion-row>
-    <ion-col>
+    <ion-col *ngIf="isDesktop">
       <h5>{{ isHome ? 'Home' : 'New'}} Section</h5>
     </ion-col>
     <ion-col *ngIf="isNew || isEdit">
@@ -16,7 +16,11 @@
       </ion-item>
     </ion-col>
     <ion-col>
-      <ion-button class="float-right  " (click)="publish()">Publish</ion-button>
+      <ion-button class="float-right" *ngIf="!isDesktop" color="danger" (click)="back()">X</ion-button>
+      <ion-button class="float-right" (click)="publish()">
+        <i *ngIf="!isDesktop" class="fas fa-check"></i>
+        {{isDesktop ? 'Publish' : ''}}
+      </ion-button>
     </ion-col>
   </ion-row>
 
@@ -60,7 +64,7 @@
   <ion-row style="height: 75%">
     <!-- ***** Display ***** -->
 
-    <ion-col sizeMd="8">
+    <ion-col size="12" sizeMd="8">
       <!-- Full -->
       <section
         *ngIf="pageType === 'Full'"

@@ -1,8 +1,10 @@
 table {
   width: 100%;
+  min-width: 1500px;
 }
 
-td, th {
+td,
+th {
   width: 10%;
 }
 
@@ -20,12 +22,16 @@ td, th {
 }
 
 .mat-header-cell {
-  background-color:#eeeeee;
+  background-color: #eeeeee;
   color: #212121;
   font-size: 16px;
   font-weight: 600;
 }
 
-.mat-row:nth-child(even){
-  background-color:#fafafa;
-  }
+.mat-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.mat-elevation-z8 {
+  overflow-x: auto;
+}

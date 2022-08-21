@@ -166,11 +166,12 @@
     </div>
   </div>
 </mat-dialog-content>
-<div mat-dialog-actions>
+<div mat-dialog-actions style="justify-content: flex-end;">
   <button
     mat-raised-button
     mat-dialog-close
     color="primary"
+    style="font-size: 1.2em"
     (click)="submit()"
     [disabled]="
       !(
@@ -189,5 +190,9 @@
     "
   >
     {{action}}
+  </button>
+
+  <button class="py-2" style="font-size: 1.2em" mat-button mat-dialog-close>
+    Cancel
   </button>
 </div>

@@ -1,19 +1,14 @@
 <ion-content class="ion-padding">
-  <h5 class="mb-3">Customer Database</h5>
+  <h5 class="mb-3">Customers</h5>
   <div class="row">
-    <div class="col-lg-3">
+    <div class="col-7 col-lg-3">
       <mat-form-field appearance="outline">
-        <mat-label>Start typing to filter clients ...</mat-label>
+        <mat-label>Type to filter clients ...</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input />
       </mat-form-field>
     </div>
-    <div class="col-lg-2">
-      <button
-        style="font-size: 16px"
-        mat-raised-button
-        class="mt-2 btn-primary"
-        (click)="addNewClient()"
-      >
+    <div class="col-5 col-lg-2">
+      <button style="font-size: 16px" mat-raised-button class="mt-2 btn-primary" (click)="addNewClient()">
         <i class="fas fa-plus text-white py-3"></i>
         &nbsp;Add Client
       </button>
@@ -24,7 +19,7 @@
     <div class="col">
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
-          <ng-container matColumnDef="name">
+          <ng-container matColumnDef="name" sticky>
             <th style="width: 15%" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
             <td style="width: 15%" mat-cell *matCellDef="let client">{{ client.address.name }}</td>
           </ng-container>
@@ -33,7 +28,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               GST/PAN ID
             </th>
-            <td mat-cell *matCellDef="let client">{{ client.gst ? client.gst : client.pan  }}</td>
+            <td mat-cell *matCellDef="let client">{{ client.gst ? client.gst : client.pan }}</td>
           </ng-container>
 
           <!-- Progress Column -->
@@ -73,18 +68,10 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
             <td mat-cell *matCellDef="let client">
-              <button
-                mat-icon-button
-                color="primary"
-                (click)="editClient(client)"
-              >
+              <button mat-icon-button color="primary" (click)="editClient(client)">
                 <i class="fas fa-edit"></i>
               </button>
-              <button
-                mat-icon-button
-                color="warn"
-                (click)="removeClient(client)"
-              >
+              <button mat-icon-button color="warn" (click)="removeClient(client)">
                 <i class="fas fa-trash"></i>
               </button>
             </td>
@@ -100,7 +87,7 @@
             </td>
           </tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        <mat-paginator style="min-width: 1500px;" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
       </div>
     </div>
   </div>

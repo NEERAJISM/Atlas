@@ -413,7 +413,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.updateOrderStats(order.total);
         this.service.go('/account');
       })
-      .catch(() => this.service.presentToast('Error occurred, Please check Internet connectivity'))
+      .catch((e) => {
+      console.log(e);
+      this.service.presentToast('Error occurred, Please check Internet connectivity');})
       .finally(() => this.service.dismissLoading());
   }
 

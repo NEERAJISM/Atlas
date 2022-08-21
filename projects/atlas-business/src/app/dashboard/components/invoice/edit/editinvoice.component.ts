@@ -84,6 +84,8 @@ export class EditInvoiceComponent implements OnDestroy {
   invoiceCreated = false;
   subscription: Subscription;
 
+  isMobile = false;
+
   constructor(
     private router: Router,
     private modalController: ModalController,
@@ -94,6 +96,7 @@ export class EditInvoiceComponent implements OnDestroy {
     private app: AppService,
     private auth: AuthService
   ) {
+    this.isMobile = !this.app.isDesktop;
     this.app.presentLoading();
     this.auth.afAuth.authState.subscribe((user) => {
       if (user) {
@@ -477,7 +480,7 @@ export class EditInvoiceComponent implements OnDestroy {
 
     const modal = await this.modalController.create({
       component: PdfModal,
-      cssClass: 'pdf-modal',
+      cssClass: this.isMobile ? 'pdf-modal-mobile' : 'pdf-modal',
       componentProps: {
         data: pdf,
         isEdit: true
@@ -555,16 +558,28 @@ export class EditInvoiceComponent implements OnDestroy {
       .doc(this.bizId)
       .get()
       .subscribe((doc) => {
+        var invoiceNo = 1;
         if (doc.exists) {
-          var invoiceNo = (doc.data() as any).invoiceNo;
-          this.invoice.invoiceNo = invoiceNo;
-          this.preview.invoiceNo = this.invoice.invoiceNo;
-          this.incrementCounter();
-          this.uploadInvoice();
+          invoiceNo = (doc.data() as any).invoiceNo;
+        } else {
+          this.setCounter()
         }
+        this.invoice.invoiceNo = invoiceNo;
+        this.preview.invoiceNo = this.invoice.invoiceNo;
+        this.incrementCounter();
+        this.uploadInvoice();
       });
   }
 
+  setCounter(){
+    this.fbutil
+    .getInstance()
+    .collection(Constants.BUSINESS)
+    .doc(this.bizId)
+    .set({ invoiceNo: 1 })
+  }
+
+  // for new invoices
   incrementCounter(){
     this.fbutil
     .getInstance()
@@ -662,7 +677,11 @@ export class EditInvoiceComponent implements OnDestroy {
     }
   }
 
-  customerDetailChange() {
+  customerDetailChange(mobile?: string) {
+    if(mobile) {
+      this.client.address.mobile = mobile;
+    }
+
     if (this.client.address.name && this.client.address.mobile) {
       this.isCustomerDetailValid = true;
     } else {

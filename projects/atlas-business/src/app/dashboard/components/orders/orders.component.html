@@ -80,12 +80,12 @@
   <ion-row>
     <ion-col>
       <mat-card class="order-card" *ngFor="let order of orders; index as i">
-        <div class="row mx-0" style="padding: 16px; background: #eeeeee">
-          <div class="col-lg-2">
+        <ion-row style="padding: 16px; background: #eeeeee">
+          <ion-col size="6" sizeLg="2">
             <h5>Date</h5>
             <p>{{ getDate(order.createdTimeUTC) }}</p>
-          </div>
-          <div class="col-lg-2">
+          </ion-col>
+          <ion-col size="6" sizeLg="2">
             <h5>Status</h5>
             <b
               [ngClass]="{
@@ -103,20 +103,20 @@
             >
               {{ order.status[order.status.length - 1].status }}</b
             >
-          </div>
-          <div class="col-lg-2">
-            <h5>Total</h5>
+            </ion-col>
+            <ion-col size="6" sizeLg="2">
+              <h5>Total</h5>
             <p>&#8377; {{ order.total }}</p>
-          </div>
-          <div class="col-lg-3">
-            <h5>Customer</h5>
+            </ion-col>
+            <ion-col size="6" sizeLg="3">
+              <h5>Customer</h5>
             <p>{{ order.client.address.name + "  (" + order.client.address.mobile + ")" }}</p>
-          </div>
-          <div class="col-lg-3">
-            <h5># Order Id</h5>
-            <p>{{ order.vId }}</p>
-          </div>
-        </div>
+            </ion-col>
+            <ion-col size="12" sizeLg="3">
+              <h5># Order Id</h5>
+            <p [style.font-size]="!isDesktop ? '13px' : ''">{{ order.vId }}</p>
+            </ion-col>
+        </ion-row>
 
         <mat-expansion-panel>
           <mat-expansion-panel-header>
@@ -138,7 +138,7 @@
                       </div>
                       <div class="row mt-2">
                         <h6>
-                          <i>{{ item.qty }} x {{ item.unit }}</i>
+                          <i> Qty - {{ item.qty }} ({{ item.unit }})</i>
                         </h6>
                       </div>
                       <div class="row mt-3">

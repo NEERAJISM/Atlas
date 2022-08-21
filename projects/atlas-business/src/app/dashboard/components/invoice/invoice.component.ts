@@ -37,6 +37,8 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
   icon = '';
   business: Business = new Business();
 
+  isMobile = false;
+
   constructor(
     private modalController: ModalController,
     private fbutil: FirebaseUtil,
@@ -45,6 +47,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private invoiceService: InvoiceService) {
     this.app.presentLoading();
+    this.isMobile = !this.app.isDesktop;
     this.dataSource = new MatTableDataSource();
 
     this.auth.afAuth.authState.subscribe((user) => {
@@ -160,7 +163,7 @@ export class InvoiceDashboardComponent implements AfterViewInit, OnDestroy {
     const pdf: ArrayBuffer = invoicePdf.output('arraybuffer');
     const modal = await this.modalController.create({
       component: PdfModal,
-      cssClass: 'pdf-modal',
+      cssClass: this.isMobile ? 'pdf-modal-mobile' : 'pdf-modal',
       componentProps: {
         data: pdf,
         isEdit: false

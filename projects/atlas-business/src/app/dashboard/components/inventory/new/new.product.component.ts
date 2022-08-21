@@ -22,6 +22,8 @@ export class NewProductComponent {
 
   bizId = '';
 
+  isDesktop = true;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
     public fbutil: FirebaseUtil,
@@ -29,6 +31,7 @@ export class NewProductComponent {
     public appService: AppService,
     private auth: AuthService
   ) {
+    this.isDesktop = appService.isDesktop;
     this.auth.afAuth.authState.subscribe((user) => {
       if (user) {
         this.bizId = user.uid;
@@ -40,7 +43,7 @@ export class NewProductComponent {
   init(data) {
     if (data) {
       this.product = data;
-      this.action = 'Update Product';
+      this.action = 'Update';
       this.loadImage();
     } else {
       this.product = new Product();

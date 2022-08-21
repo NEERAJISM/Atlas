@@ -28,7 +28,10 @@ export class OrdersDashboardComponent implements OnDestroy {
 
   bizId = '';
 
+  isDesktop = true;
+
   constructor(private fbUtil: FirebaseUtil, private util: CommonUtil, private app: AppService, private auth: AuthService) {
+    this.isDesktop = app.isDesktop;
     this.auth.afAuth.authState.subscribe((user) => {
       if (user) {
         this.bizId = user.uid;

@@ -74,6 +74,7 @@
             border: solid;
             border-color: lightgrey;
           "
+        [style.min-height]="!isDesktop ? '50vh' : ''"
       >
         <ion-row
           class="mt-2 pb-3 h-100"
@@ -114,6 +115,7 @@
       <!-- Info -->
       <section
         style="height: 100%; border: solid; border-color: lightgrey"
+        [style.min-height]="!isDesktop ? '50vh' : ''"
         *ngIf="pageType === 'Info'"
         #about
       >
@@ -122,11 +124,13 @@
           [style.flex-direction]="info.reverse === 'Y' ? 'row-reverse': 'row'"
         >
           <ion-col
+            size="12"
             sizeMd="6"
+            [style.min-height]="!isDesktop ? '50vh' : ''"
             style=" background: url({{infoUrl}}) no-repeat center center / cover;"
           >
           </ion-col>
-          <ion-col sizeMd="6">
+          <ion-col size="12" sizeMd="6">
             <ion-row
               class="ion-padding"
               [ngClass]="{

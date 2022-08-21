@@ -12,13 +12,14 @@
           <ion-col size="3">
             <span><b>Email Address</b></span>
           </ion-col>
-          <ion-col size="5">
+          <ion-col size="6" sizeMd="5">
             <span>{{ business.address.email }}</span>
           </ion-col>
           <ion-col offsetMd="1" size="3">
             <ion-button *ngIf="emailVerified !== undefined"
-              (click)="emailVerified === true ? resetPassword(): verifyEmail()">{{ emailVerified === true ? 'Reset
-              Password' : 'Verify' }}</ion-button>
+              (click)="emailVerified === true ? resetPassword(): verifyEmail()">{{ emailVerified === true ?
+              'ResetPassword' : 'Verify' }}
+            </ion-button>
           </ion-col>
         </ion-row>
 
@@ -27,7 +28,7 @@
             <span><b>Mobile Number</b></span>
           </ion-col>
 
-          <ion-col size="5">
+          <ion-col size="8" sizeMd="5">
             <span *ngIf="!editMobile">{{ initialized ? "+91 -" : "" }} {{ business.address.mobile }}
             </span>
 
@@ -41,7 +42,7 @@
             </ion-item>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+          <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editMobile" (click)="editMob()"></i>
             <ion-button *ngIf="editMobile" (click)="editMob()">Save</ion-button>
           </ion-col>
@@ -52,7 +53,7 @@
             <span><b>Profile Name</b></span>
           </ion-col>
 
-          <ion-col size="5">
+          <ion-col size="8" sizeMd="5">
             <span *ngIf="!editProfile">
               {{ initialized ? "@ " : "" }}{{ business.profile }}
             </span>
@@ -67,7 +68,7 @@
             </ion-item>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editProfile" (click)="edit_Profile()"></i>
             <ion-button *ngIf="editProfile" (click)="edit_Profile()">Save</ion-button>
           </ion-col>
@@ -78,14 +79,14 @@
             <span><b>Company Logo</b></span>
           </ion-col>
 
-          <ion-col size="5">
+          <ion-col size="8" sizeMd="5">
             <img style="height: 48px" [src]="icon ? icon : placeholder" (click)="editIcon = true; file.click()" />
 
             <input style="display: none" type="file" accept="image/*" #file (change)="onFileChanged($event)"
               [(ngModel)]="imgFile" />
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editIcon" (click)="edit_Icon()"></i>
             <ion-button *ngIf="editIcon" (click)="edit_Icon()">Save</ion-button>
           </ion-col>
@@ -105,7 +106,7 @@
             <span><b>Business Name</b></span>
           </ion-col>
 
-          <ion-col size="5">
+          <ion-col size="8" sizeMd="5">
             <span *ngIf="!editBName"> {{ business.name }} </span>
 
             <ion-item *ngIf="editBName" style="
@@ -117,7 +118,7 @@
             </ion-item>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editBName" (click)="edit_BName()"></i>
             <ion-button *ngIf="editBName" (click)="edit_BName()">Save</ion-button>
           </ion-col>
@@ -128,7 +129,7 @@
             <span><b>GST IN</b></span>
           </ion-col>
 
-          <ion-col size="5">
+          <ion-col size="8" sizeMd="5">
             <span *ngIf="!editBGST"> {{ business.gst }} </span>
 
             <ion-item *ngIf="editBGST" style="
@@ -140,7 +141,7 @@
             </ion-item>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editBGST" (click)="edit_BGST()"></i>
             <ion-button *ngIf="editBGST" (click)="edit_BGST()">Save</ion-button>
           </ion-col>
@@ -151,7 +152,7 @@
             <span><b>Year of Establishment</b></span>
           </ion-col>
 
-          <ion-col size="5">
+          <ion-col size="8" sizeMd="5">
             <span *ngIf="!editBYear"> {{ business.year }} </span>
 
             <ion-item *ngIf="editBYear" style="
@@ -163,7 +164,7 @@
             </ion-item>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editBYear" (click)="edit_BYear()"></i>
             <ion-button *ngIf="editBYear" (click)="edit_BYear()">Save</ion-button>
           </ion-col>
@@ -174,7 +175,7 @@
             <span><b>Office Number</b></span>
           </ion-col>
 
-          <ion-col size="5">
+          <ion-col size="8" sizeMd="5">
             <span *ngIf="!editBPhone"> {{ business.address.phone }} </span>
 
             <ion-item *ngIf="editBPhone" style="
@@ -186,7 +187,7 @@
             </ion-item>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editBPhone" (click)="edit_BPhone()"></i>
             <ion-button *ngIf="editBPhone" (click)="edit_BPhone()">Save</ion-button>
           </ion-col>
@@ -197,7 +198,7 @@
             <span><b>Address</b></span>
           </ion-col>
 
-          <ion-col *ngIf="!editBAddress" size="5">
+          <ion-col *ngIf="!editBAddress" size="8" sizeMd="5">
             <span>{{
               (business.address.line1 ? business.address.line1 : "") +
               (business.address.line2
@@ -214,7 +215,7 @@
             </span>
           </ion-col>
 
-          <ion-col *ngIf="editBAddress" size="5" class="ion-no-padding">
+          <ion-col *ngIf="editBAddress" size="9" sizeMd="5" class="ion-no-padding">
             <ion-row>
               <ion-col>
                 <ion-item style="
@@ -272,11 +273,15 @@
                 </ion-item>
               </ion-col>
             </ion-row>
+
+            <ion-row *ngIf="!isDesktop">
+              <ion-button *ngIf="editBAddress" (click)="edit_BAddress()">Save</ion-button>
+            </ion-row>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col size="1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editBAddress" (click)="edit_BAddress()"></i>
-            <ion-button *ngIf="editBAddress" (click)="edit_BAddress()">Save</ion-button>
+            <ion-button *ngIf="editBAddress && isDesktop" (click)="edit_BAddress()">Save</ion-button>
           </ion-col>
         </ion-row>
 
@@ -286,8 +291,8 @@
             <a target="_blank" href="https://www.google.com/maps"> (Maps Link) </a>
           </ion-col>
 
-          <ion-col size="5">
-            <iframe *ngIf="!editBLocation" [src]="locationSrc" width="300" height="300" style="border: 0"
+          <ion-col [size]="editBLocation ? 6 : 8" >
+            <iframe *ngIf="!editBLocation" [src]="locationSrc" [width]="isDesktop ? 300 : 200" [height]="isDesktop ? 300 : 200" style="border: 0"
               allowfullscreen="" loading="lazy"></iframe>
 
             <ion-item *ngIf="editBLocation" style="
@@ -301,7 +306,7 @@
             </ion-item>
           </ion-col>
 
-          <ion-col offsetMd="1" size="3">
+           <ion-col [size]="editBLocation ? 3 : 1" offsetMd="1" sizeMd="3">
             <i class="fa fa-pen" *ngIf="!editBLocation" (click)="edit_BLocation()"></i>
             <ion-button *ngIf="editBLocation" (click)="edit_BLocation()">Save</ion-button>
           </ion-col>

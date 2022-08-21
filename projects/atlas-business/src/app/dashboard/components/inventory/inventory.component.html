@@ -1,22 +1,16 @@
 <ion-content class="ion-padding">
-  <h5 class="mb-3">Inventory Status</h5>
+  <h5 class="mb-3">Inventory</h5>
 
   <div class="row">
-    <div class="col-lg-3">
+    <div class="col-7 col-lg-3">
       <mat-form-field appearance="outline">
-        <mat-label>Start typing to filter products ...</mat-label>
+        <mat-label>Type to filter products ...</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input />
       </mat-form-field>
     </div>
-    <div class="col-lg-2">
-      <button
-        style="font-size: 16px"
-        class="mt-2 btn-primary"
-        mat-raised-button
-        (click)="addNewProduct()"
-      >
-        <i class="fas fa-plus text-white py-3"></i>
-        &nbsp;Add Product
+    <div class="col-5 col-lg-2">
+      <button style="font-size: 16px" class="py-2 mt-2 btn-primary" mat-raised-button (click)="addNewProduct()">
+        Add Product
       </button>
     </div>
   </div>
@@ -25,13 +19,8 @@
     <div class="col">
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
-          <ng-container matColumnDef="name">
-            <th
-              style="width: 15%"
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-            >
+          <ng-container matColumnDef="name" sticky>
+            <th style="width: 15%" mat-header-cell *matHeaderCellDef mat-sort-header>
               Name
             </th>
             <td style="width: 15%" mat-cell *matCellDef="let product">
@@ -56,7 +45,7 @@
           <ng-container matColumnDef="gst">
             <th style="width: 5%" mat-header-cell *matHeaderCellDef mat-sort-header>GST</th>
             <td style="width: 5%" mat-cell *matCellDef="let product">
-              {{ formatGST(product.gst)  }}
+              {{ formatGST(product.gst) }}
             </td>
           </ng-container>
 
@@ -75,12 +64,7 @@
           </ng-container>
 
           <ng-container matColumnDef="desc">
-            <th
-              style="width: 30%"
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-            >
+            <th style="width: 30%" mat-header-cell *matHeaderCellDef mat-sort-header>
               Description
             </th>
             <td style="width: 30%" mat-cell *matCellDef="let product">
@@ -91,18 +75,10 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
             <td mat-cell *matCellDef="let product">
-              <button
-                mat-icon-button
-                color="primary"
-                (click)="editProduct(product)"
-              >
+              <button mat-icon-button color="primary" (click)="editProduct(product)">
                 <i class="fas fa-edit"></i>
               </button>
-              <button
-                mat-icon-button
-                color="warn"
-                (click)="removeProduct(product)"
-              >
+              <button mat-icon-button color="warn" (click)="removeProduct(product)">
                 <i class="fas fa-trash"></i>
               </button>
             </td>
@@ -119,7 +95,7 @@
           </tr>
         </table>
 
-        <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        <mat-paginator style="min-width: 1500px;" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
       </div>
     </div>
   </div>

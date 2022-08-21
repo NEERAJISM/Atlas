@@ -36,7 +36,10 @@ export class SettingsDashboardComponent {
   imgFile;
   blob;
 
+  isDesktop = true;
+
   constructor(private auth: AuthService, private app: AppService, private fbUtil: FirebaseUtil, private sanitizer: DomSanitizer, private alertController: AlertController) {
+    this.isDesktop = app.isDesktop;
     this.app.presentLoading();
     this.init();
     this.updateLocationUrl();

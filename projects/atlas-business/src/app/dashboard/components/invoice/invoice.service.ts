@@ -60,7 +60,9 @@ export class InvoiceService {
     // Icon / logo creator - font + color or photo
     var img = document.createElement('img');
     img.src = icon;
-    doc.addImage(img, 'PNG', 7, 12, img.width, 17);
+    if(icon) {
+      doc.addImage(img, 'PNG', 7, 12, img.width, 17);
+    }
 
     this.headOwnerAddress[0][0] = business.name;
 
@@ -74,7 +76,7 @@ export class InvoiceService {
       head: this.headOwnerAddress,
       body: this.dataOwnerAddress,
       theme: 'plain',
-      margin: { left: 75 },
+      margin: { left: icon ? 75 : 7 },
       headStyles: { fontSize: '12', textColor: '#01579b' },
       styles: {
         cellWidth: 95,

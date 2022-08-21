@@ -53,6 +53,21 @@
   </div>
 
   <div class="row">
+    <div *ngIf="!placeholder && !isDesktop" class="col-lg-3 my-2">
+      <div class="row">
+        <div class="col col-lg-6">
+          <button mat-icon-button (click)="file.click()" style="float: right;">
+            <i class="fas fa-edit text-secondary" style="font-size: 20px;"></i>
+          </button>
+        </div>
+        <div class="col col-lg-6">
+          <button mat-icon-button (click)="removeImage()">
+            <i class="fas fa-trash text-secondary" style="font-size: 20px;"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="col-lg-3">
       <p>
         <mat-form-field appearance="outline" style="width: 100%">
@@ -83,14 +98,14 @@
 
     <div class="col-lg-3"></div>
 
-    <div *ngIf="!placeholder" class="col-lg-3">
+    <div *ngIf="!placeholder && isDesktop" class="col-lg-3">
       <div class="row">
-        <div class="col-lg-6">
-          <button mat-icon-button (click)="file.click()">
+        <div class="col-6 col-lg-6">
+          <button mat-icon-button (click)="file.click()" style="float: right;">
             <i class="fas fa-edit text-secondary" style="font-size: 20px;"></i>
           </button>
         </div>
-        <div class="col-lg-6">
+        <div class="col-6 col-lg-6">
           <button mat-icon-button (click)="removeImage()">
             <i class="fas fa-trash text-secondary" style="font-size: 20px;"></i>
           </button>
@@ -99,13 +114,13 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row mt-2">
     <div class="col">
       <h5 class="mb-3">Units / Packaging</h5>
     </div>
   </div>
 
-  <div class="row" *ngFor="let unit of product.units; index as i">
+  <div class="row mt-3" *ngFor="let unit of product.units; index as i">
     <div class="col-lg-3">
       <p>
         <mat-form-field appearance="outline" style="width: 100%">
@@ -193,7 +208,7 @@
     </div>
   </div>
 
-  <div class="row mb-2">
+  <div class="row my-3">
     <div class="col" style="justify-content: center; display: flex">
       <button
         class="py-2"
@@ -202,13 +217,13 @@
         color="primary"
         (click)="addNewUnit()"
       >
-        <i class="fas fa-plus text-white"></i>
+        <i class="fas fa-plus text-white"></i> Add Unit
       </button>
     </div>
   </div>
 </mat-dialog-content>
 
-<div mat-dialog-actions>
+<div mat-dialog-actions style="justify-content: flex-end;">
   <button
     class="py-2"
     style="font-size: 1.2em"

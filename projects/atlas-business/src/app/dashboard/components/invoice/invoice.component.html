@@ -2,13 +2,13 @@
   <h5 class="mb-3">Billing / Invoice</h5>
 
   <div class="row">
-    <div class="col-lg-3">
+    <div class="col-6 col-lg-3">
       <mat-form-field appearance="outline">
-        <mat-label>Start typing to filter invoices ...</mat-label>
+        <mat-label>Type to filter invoice...</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input />
       </mat-form-field>
     </div>
-    <div class="col col-lg-2">
+    <div class="col-6 col-lg-2">
       <button
         style="font-size: 16px"
         class="mt-2 btn-primary"
@@ -145,7 +145,7 @@
             </td>
           </tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        <mat-paginator style="min-width: 1500px;" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
       </div>
     </div>
   </div>
